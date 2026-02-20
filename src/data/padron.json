@@ -1,0 +1,7002 @@
+[
+  {
+    "ci": "4630621",
+    "nombre": "Denis",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3969024",
+    "nombre": "Patricia",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5984135",
+    "nombre": "Paola",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1443168",
+    "nombre": "Julia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5681477",
+    "nombre": "Diana",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6837874",
+    "nombre": "Maria",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6346919",
+    "nombre": "Bruno",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4889877",
+    "nombre": "Carolina",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2941394",
+    "nombre": "Rocio",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1270321",
+    "nombre": "Jorge",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1131455",
+    "nombre": "Oscar",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "762411",
+    "nombre": "Monica",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2028800",
+    "nombre": "Carlos",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6073903",
+    "nombre": "Enrique",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1276414",
+    "nombre": "Monica",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2865664",
+    "nombre": "Patricia",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "390893",
+    "nombre": "Fernando",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4023415",
+    "nombre": "Gustavo",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5103437",
+    "nombre": "Bruno",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1386860",
+    "nombre": "Fiorella",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3541410",
+    "nombre": "Fiorella",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5583530",
+    "nombre": "Valeria",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5599519",
+    "nombre": "Rocio",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "905960",
+    "nombre": "Adrian",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3738242",
+    "nombre": "Jorge",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2422889",
+    "nombre": "Oscar",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5925576",
+    "nombre": "Gustavo",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2451033",
+    "nombre": "Carlos",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2382666",
+    "nombre": "Carolina",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6704318",
+    "nombre": "Ana",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1169966",
+    "nombre": "Diana",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1610211",
+    "nombre": "Adrian",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5446274",
+    "nombre": "Carlos",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1780331",
+    "nombre": "Patricia",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "665457",
+    "nombre": "Denis",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3719867",
+    "nombre": "Sebastian",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5538940",
+    "nombre": "Raul",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "629753",
+    "nombre": "Juan",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5035639",
+    "nombre": "Carolina",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1500610",
+    "nombre": "Fiorella",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4938292",
+    "nombre": "Julia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3346971",
+    "nombre": "Camila",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3530801",
+    "nombre": "Gustavo",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2217140",
+    "nombre": "Paola",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2019461",
+    "nombre": "Sofia",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3748638",
+    "nombre": "Carolina",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5554598",
+    "nombre": "Lucia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1024920",
+    "nombre": "Gustavo",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6421139",
+    "nombre": "Carolina",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2125793",
+    "nombre": "Maria",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6106657",
+    "nombre": "Sebastian",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1688755",
+    "nombre": "Carolina",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2287913",
+    "nombre": "Miguel",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2612770",
+    "nombre": "Fernando",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3720507",
+    "nombre": "Jorge",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3993020",
+    "nombre": "Camila",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6563035",
+    "nombre": "Diego",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4708173",
+    "nombre": "Ana",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6216483",
+    "nombre": "Monica",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5666814",
+    "nombre": "Maria",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3225536",
+    "nombre": "Denis",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2289221",
+    "nombre": "Sofia",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2372300",
+    "nombre": "Paola",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3984957",
+    "nombre": "Rocio",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4874420",
+    "nombre": "Maria",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5027433",
+    "nombre": "Patricia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4084420",
+    "nombre": "Gustavo",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "540167",
+    "nombre": "Carlos",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5598857",
+    "nombre": "Maria",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3301042",
+    "nombre": "Fiorella",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3622399",
+    "nombre": "Fiorella",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5198410",
+    "nombre": "Fiorella",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4453094",
+    "nombre": "Adrian",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4919455",
+    "nombre": "Patricia",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4829768",
+    "nombre": "Bruno",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2604242",
+    "nombre": "Fernando",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "402537",
+    "nombre": "Monica",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5031038",
+    "nombre": "Fernando",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "949535",
+    "nombre": "Fiorella",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2732106",
+    "nombre": "Sofia",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "911267",
+    "nombre": "Patricia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6508144",
+    "nombre": "Paola",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2255252",
+    "nombre": "Sofia",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2011360",
+    "nombre": "Jorge",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2839138",
+    "nombre": "Bruno",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4911396",
+    "nombre": "Enrique",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4253669",
+    "nombre": "Raul",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2040686",
+    "nombre": "Rocio",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4084132",
+    "nombre": "Luis",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2852689",
+    "nombre": "Adrian",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4913020",
+    "nombre": "Fernando",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3616174",
+    "nombre": "Bruno",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6821767",
+    "nombre": "Patricia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5009911",
+    "nombre": "Jorge",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2184682",
+    "nombre": "Gustavo",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1260707",
+    "nombre": "Camila",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5314852",
+    "nombre": "Adrian",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1634096",
+    "nombre": "Enrique",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3103614",
+    "nombre": "Sofia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5338030",
+    "nombre": "Camila",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1971462",
+    "nombre": "Lucia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2971127",
+    "nombre": "Diana",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1076998",
+    "nombre": "Valeria",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3931480",
+    "nombre": "Fernando",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3121523",
+    "nombre": "Adrian",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2991550",
+    "nombre": "Bruno",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2604737",
+    "nombre": "Rocio",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3346706",
+    "nombre": "Sofia",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2669895",
+    "nombre": "Sebastian",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4772159",
+    "nombre": "Adrian",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4213621",
+    "nombre": "Oscar",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5518916",
+    "nombre": "Valeria",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5342594",
+    "nombre": "Noelia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "593659",
+    "nombre": "Rocio",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4855602",
+    "nombre": "Sofia",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1990353",
+    "nombre": "Jorge",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "755621",
+    "nombre": "Valeria",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4626827",
+    "nombre": "Diego",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2381466",
+    "nombre": "Carolina",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6847540",
+    "nombre": "Juan",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "718817",
+    "nombre": "Sebastian",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5471334",
+    "nombre": "Diana",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2016099",
+    "nombre": "Enrique",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4621300",
+    "nombre": "Julia",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "939550",
+    "nombre": "Sebastian",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6005900",
+    "nombre": "Rocio",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1053210",
+    "nombre": "Miguel",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1571563",
+    "nombre": "Fiorella",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1329953",
+    "nombre": "Camila",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "510574",
+    "nombre": "Ana",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "516630",
+    "nombre": "Denis",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3276724",
+    "nombre": "Diego",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3510303",
+    "nombre": "Adrian",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5820274",
+    "nombre": "Jorge",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2105656",
+    "nombre": "Juan",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2259212",
+    "nombre": "Noelia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2943058",
+    "nombre": "Lucia",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3453784",
+    "nombre": "Paola",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4815679",
+    "nombre": "Ana",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "566341",
+    "nombre": "Jorge",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6081764",
+    "nombre": "Valeria",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "911212",
+    "nombre": "Carolina",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2383611",
+    "nombre": "Denis",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2322668",
+    "nombre": "Carolina",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6575669",
+    "nombre": "Carolina",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2080964",
+    "nombre": "Fiorella",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2619720",
+    "nombre": "Juan",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4732070",
+    "nombre": "Camila",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5569055",
+    "nombre": "Lucia",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "319987",
+    "nombre": "Fernando",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6000800",
+    "nombre": "Monica",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4252531",
+    "nombre": "Jorge",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "409736",
+    "nombre": "Raul",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2553626",
+    "nombre": "Juan",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1168285",
+    "nombre": "Oscar",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4598179",
+    "nombre": "Sofia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3756997",
+    "nombre": "Enrique",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6262202",
+    "nombre": "Camila",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5266906",
+    "nombre": "Julia",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3797357",
+    "nombre": "Noelia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3425602",
+    "nombre": "Lucia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "314973",
+    "nombre": "Denis",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5750356",
+    "nombre": "Camila",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1754113",
+    "nombre": "Diana",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5917212",
+    "nombre": "Camila",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5474175",
+    "nombre": "Valeria",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6465580",
+    "nombre": "Carolina",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4702772",
+    "nombre": "Jorge",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3712531",
+    "nombre": "Camila",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1770147",
+    "nombre": "Monica",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1008764",
+    "nombre": "Monica",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4784110",
+    "nombre": "Fiorella",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2132469",
+    "nombre": "Diana",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5081997",
+    "nombre": "Sofia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4548011",
+    "nombre": "Noelia",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "699849",
+    "nombre": "Gustavo",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3307947",
+    "nombre": "Sofia",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6432309",
+    "nombre": "Diana",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3577396",
+    "nombre": "Luis",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6726659",
+    "nombre": "Denis",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4034184",
+    "nombre": "Fernando",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1350388",
+    "nombre": "Adrian",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5673734",
+    "nombre": "Bruno",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2851999",
+    "nombre": "Raul",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4501613",
+    "nombre": "Raul",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6988312",
+    "nombre": "Raul",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2583486",
+    "nombre": "Adrian",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4382174",
+    "nombre": "Oscar",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4693375",
+    "nombre": "Miguel",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3135009",
+    "nombre": "Diana",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3725156",
+    "nombre": "Noelia",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4473460",
+    "nombre": "Carlos",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6952502",
+    "nombre": "Sebastian",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4659291",
+    "nombre": "Diego",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3170542",
+    "nombre": "Gustavo",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5221038",
+    "nombre": "Jorge",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "565836",
+    "nombre": "Gustavo",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3023747",
+    "nombre": "Monica",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1334465",
+    "nombre": "Denis",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4640674",
+    "nombre": "Diego",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3594125",
+    "nombre": "Patricia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5208875",
+    "nombre": "Raul",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3042417",
+    "nombre": "Fernando",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5748367",
+    "nombre": "Carolina",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2459653",
+    "nombre": "Juan",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "578831",
+    "nombre": "Bruno",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5077021",
+    "nombre": "Maria",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3146571",
+    "nombre": "Diana",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1635827",
+    "nombre": "Oscar",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1220160",
+    "nombre": "Gustavo",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4255941",
+    "nombre": "Diego",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4285467",
+    "nombre": "Sofia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3720128",
+    "nombre": "Gustavo",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5980227",
+    "nombre": "Juan",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3065196",
+    "nombre": "Valeria",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6855109",
+    "nombre": "Monica",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3510194",
+    "nombre": "Carolina",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6210909",
+    "nombre": "Jorge",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5848764",
+    "nombre": "Gustavo",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4923501",
+    "nombre": "Patricia",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3966372",
+    "nombre": "Patricia",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1067255",
+    "nombre": "Sebastian",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6617919",
+    "nombre": "Fiorella",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5346276",
+    "nombre": "Patricia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5495831",
+    "nombre": "Carlos",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5067183",
+    "nombre": "Fernando",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4645961",
+    "nombre": "Juan",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4162252",
+    "nombre": "Jorge",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1211518",
+    "nombre": "Luis",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1557257",
+    "nombre": "Jorge",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1441332",
+    "nombre": "Camila",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5856964",
+    "nombre": "Lucia",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1898196",
+    "nombre": "Carolina",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5096520",
+    "nombre": "Carolina",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3861936",
+    "nombre": "Diana",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1403152",
+    "nombre": "Luis",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2457583",
+    "nombre": "Bruno",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5733157",
+    "nombre": "Monica",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2398732",
+    "nombre": "Jorge",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3535518",
+    "nombre": "Denis",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4770239",
+    "nombre": "Juan",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6613375",
+    "nombre": "Denis",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1634345",
+    "nombre": "Lucia",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5853836",
+    "nombre": "Denis",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3188862",
+    "nombre": "Sebastian",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1460826",
+    "nombre": "Carlos",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1402406",
+    "nombre": "Adrian",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5689938",
+    "nombre": "Maria",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3358289",
+    "nombre": "Juan",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6062936",
+    "nombre": "Valeria",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2521959",
+    "nombre": "Jorge",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5450167",
+    "nombre": "Ana",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3285005",
+    "nombre": "Enrique",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6409791",
+    "nombre": "Lucia",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5230069",
+    "nombre": "Diana",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4842493",
+    "nombre": "Julia",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5576827",
+    "nombre": "Raul",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "528670",
+    "nombre": "Diana",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2669655",
+    "nombre": "Fiorella",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2752973",
+    "nombre": "Camila",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4750577",
+    "nombre": "Julia",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1456638",
+    "nombre": "Camila",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5522424",
+    "nombre": "Denis",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "738662",
+    "nombre": "Valeria",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1756434",
+    "nombre": "Denis",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4507668",
+    "nombre": "Diana",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5398760",
+    "nombre": "Diana",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2880376",
+    "nombre": "Camila",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "607438",
+    "nombre": "Luis",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1450214",
+    "nombre": "Sebastian",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2972467",
+    "nombre": "Sofia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3566672",
+    "nombre": "Rocio",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2417201",
+    "nombre": "Adrian",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4570196",
+    "nombre": "Rocio",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4407692",
+    "nombre": "Oscar",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3186876",
+    "nombre": "Paola",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6605300",
+    "nombre": "Diego",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5320491",
+    "nombre": "Enrique",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4129709",
+    "nombre": "Maria",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6143786",
+    "nombre": "Denis",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4875297",
+    "nombre": "Rocio",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4116300",
+    "nombre": "Fernando",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2157922",
+    "nombre": "Diana",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5897610",
+    "nombre": "Camila",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4595681",
+    "nombre": "Maria",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "870324",
+    "nombre": "Juan",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3674348",
+    "nombre": "Miguel",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5899098",
+    "nombre": "Julia",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2714630",
+    "nombre": "Jorge",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4259536",
+    "nombre": "Sofia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3033611",
+    "nombre": "Diana",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6540036",
+    "nombre": "Sebastian",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3965573",
+    "nombre": "Jorge",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1280830",
+    "nombre": "Valeria",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "749064",
+    "nombre": "Denis",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6379350",
+    "nombre": "Carolina",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2809664",
+    "nombre": "Sofia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4887676",
+    "nombre": "Camila",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1378241",
+    "nombre": "Carlos",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3387054",
+    "nombre": "Monica",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1304979",
+    "nombre": "Carolina",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5385079",
+    "nombre": "Rocio",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2235309",
+    "nombre": "Paola",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3011286",
+    "nombre": "Lucia",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6375091",
+    "nombre": "Enrique",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1926073",
+    "nombre": "Luis",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1564449",
+    "nombre": "Luis",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4907441",
+    "nombre": "Gustavo",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4065997",
+    "nombre": "Carolina",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6145073",
+    "nombre": "Luis",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4713808",
+    "nombre": "Bruno",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4618268",
+    "nombre": "Valeria",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "608525",
+    "nombre": "Juan",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6015172",
+    "nombre": "Enrique",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6909032",
+    "nombre": "Monica",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "785341",
+    "nombre": "Noelia",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6929462",
+    "nombre": "Monica",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4835477",
+    "nombre": "Fernando",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "747620",
+    "nombre": "Fernando",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2276144",
+    "nombre": "Camila",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6233184",
+    "nombre": "Juan",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3016431",
+    "nombre": "Rocio",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3190355",
+    "nombre": "Raul",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4075014",
+    "nombre": "Patricia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5534434",
+    "nombre": "Monica",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5324919",
+    "nombre": "Sofia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1087007",
+    "nombre": "Carolina",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "610839",
+    "nombre": "Rocio",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5125176",
+    "nombre": "Miguel",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1566095",
+    "nombre": "Carlos",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3630800",
+    "nombre": "Fernando",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3396937",
+    "nombre": "Monica",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "599048",
+    "nombre": "Rocio",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "997848",
+    "nombre": "Fernando",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "526240",
+    "nombre": "Diego",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6053692",
+    "nombre": "Juan",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5490214",
+    "nombre": "Rocio",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1866790",
+    "nombre": "Gustavo",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2698479",
+    "nombre": "Fernando",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1168317",
+    "nombre": "Luis",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4986474",
+    "nombre": "Miguel",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4500388",
+    "nombre": "Bruno",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4307099",
+    "nombre": "Raul",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4219383",
+    "nombre": "Diana",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2191016",
+    "nombre": "Julia",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "542308",
+    "nombre": "Patricia",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4124333",
+    "nombre": "Raul",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4735537",
+    "nombre": "Adrian",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2926742",
+    "nombre": "Camila",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2220851",
+    "nombre": "Diana",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2822166",
+    "nombre": "Gustavo",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1655934",
+    "nombre": "Jorge",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3022340",
+    "nombre": "Gustavo",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2338626",
+    "nombre": "Luis",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3197569",
+    "nombre": "Luis",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3493675",
+    "nombre": "Sofia",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3320517",
+    "nombre": "Noelia",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6073730",
+    "nombre": "Lucia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5795927",
+    "nombre": "Monica",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5603235",
+    "nombre": "Diana",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2627765",
+    "nombre": "Enrique",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2693343",
+    "nombre": "Carlos",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1782073",
+    "nombre": "Sebastian",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1804893",
+    "nombre": "Luis",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3385413",
+    "nombre": "Adrian",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2658427",
+    "nombre": "Patricia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2194238",
+    "nombre": "Noelia",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1714839",
+    "nombre": "Lucia",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1967243",
+    "nombre": "Valeria",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5705110",
+    "nombre": "Sofia",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1828881",
+    "nombre": "Monica",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6190603",
+    "nombre": "Paola",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2965045",
+    "nombre": "Bruno",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6477057",
+    "nombre": "Carlos",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5835013",
+    "nombre": "Camila",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5698460",
+    "nombre": "Luis",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1851533",
+    "nombre": "Diana",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2805829",
+    "nombre": "Carlos",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5915803",
+    "nombre": "Jorge",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3699721",
+    "nombre": "Paola",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6892509",
+    "nombre": "Adrian",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4606311",
+    "nombre": "Julia",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "395127",
+    "nombre": "Paola",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6971606",
+    "nombre": "Bruno",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "737585",
+    "nombre": "Raul",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2871679",
+    "nombre": "Enrique",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2634576",
+    "nombre": "Enrique",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5887328",
+    "nombre": "Noelia",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "591116",
+    "nombre": "Rocio",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6154822",
+    "nombre": "Valeria",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2114173",
+    "nombre": "Denis",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5437904",
+    "nombre": "Fiorella",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3459815",
+    "nombre": "Fiorella",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4378801",
+    "nombre": "Luis",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "321154",
+    "nombre": "Oscar",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4016089",
+    "nombre": "Carlos",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4271824",
+    "nombre": "Monica",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "321195",
+    "nombre": "Fiorella",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3559209",
+    "nombre": "Raul",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5821544",
+    "nombre": "Denis",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5969276",
+    "nombre": "Camila",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1667679",
+    "nombre": "Bruno",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5597102",
+    "nombre": "Fiorella",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1084269",
+    "nombre": "Raul",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5981642",
+    "nombre": "Patricia",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "846565",
+    "nombre": "Enrique",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3618310",
+    "nombre": "Sofia",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1449661",
+    "nombre": "Camila",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3846201",
+    "nombre": "Patricia",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5616127",
+    "nombre": "Monica",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3435912",
+    "nombre": "Enrique",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "999642",
+    "nombre": "Luis",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "806011",
+    "nombre": "Sofia",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6784803",
+    "nombre": "Noelia",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1289100",
+    "nombre": "Lucia",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3038044",
+    "nombre": "Diego",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1769619",
+    "nombre": "Diana",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5686010",
+    "nombre": "Fiorella",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1073822",
+    "nombre": "Noelia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6920263",
+    "nombre": "Denis",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "588715",
+    "nombre": "Maria",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2661260",
+    "nombre": "Jorge",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3714515",
+    "nombre": "Jorge",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1980940",
+    "nombre": "Luis",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3203570",
+    "nombre": "Carlos",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5825685",
+    "nombre": "Enrique",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2913297",
+    "nombre": "Lucia",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3381909",
+    "nombre": "Enrique",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2399346",
+    "nombre": "Paola",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6091771",
+    "nombre": "Julia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6063001",
+    "nombre": "Monica",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1123287",
+    "nombre": "Denis",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6711223",
+    "nombre": "Lucia",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6018914",
+    "nombre": "Rocio",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3742896",
+    "nombre": "Maria",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5940876",
+    "nombre": "Noelia",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5117060",
+    "nombre": "Lucia",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5482458",
+    "nombre": "Noelia",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6599672",
+    "nombre": "Juan",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3204567",
+    "nombre": "Juan",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1214168",
+    "nombre": "Juan",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6443668",
+    "nombre": "Gustavo",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5679893",
+    "nombre": "Gustavo",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5543307",
+    "nombre": "Noelia",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5075739",
+    "nombre": "Diego",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5267393",
+    "nombre": "Adrian",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1974595",
+    "nombre": "Patricia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2973763",
+    "nombre": "Noelia",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1693108",
+    "nombre": "Valeria",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "364012",
+    "nombre": "Noelia",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "941137",
+    "nombre": "Rocio",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6267179",
+    "nombre": "Enrique",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2338076",
+    "nombre": "Juan",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3463721",
+    "nombre": "Miguel",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2933234",
+    "nombre": "Denis",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4089274",
+    "nombre": "Adrian",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6268542",
+    "nombre": "Julia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5342273",
+    "nombre": "Patricia",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2125379",
+    "nombre": "Juan",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "919803",
+    "nombre": "Adrian",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "475803",
+    "nombre": "Sofia",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1801291",
+    "nombre": "Diego",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3299859",
+    "nombre": "Noelia",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5124884",
+    "nombre": "Maria",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2772374",
+    "nombre": "Diego",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "847879",
+    "nombre": "Gustavo",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5510615",
+    "nombre": "Paola",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "443589",
+    "nombre": "Gustavo",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3617943",
+    "nombre": "Carlos",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5466411",
+    "nombre": "Fernando",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6270024",
+    "nombre": "Monica",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3450801",
+    "nombre": "Juan",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3701182",
+    "nombre": "Fiorella",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2501242",
+    "nombre": "Miguel",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2926329",
+    "nombre": "Sebastian",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1469064",
+    "nombre": "Sebastian",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "496593",
+    "nombre": "Luis",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5968468",
+    "nombre": "Sofia",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5335511",
+    "nombre": "Gustavo",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2117048",
+    "nombre": "Valeria",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6848826",
+    "nombre": "Bruno",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5871185",
+    "nombre": "Paola",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6407754",
+    "nombre": "Bruno",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "334303",
+    "nombre": "Denis",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6089968",
+    "nombre": "Carlos",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3290895",
+    "nombre": "Sebastian",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5549873",
+    "nombre": "Patricia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3867845",
+    "nombre": "Maria",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "386855",
+    "nombre": "Oscar",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4936303",
+    "nombre": "Patricia",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3062418",
+    "nombre": "Miguel",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5634659",
+    "nombre": "Monica",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4797717",
+    "nombre": "Bruno",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1355145",
+    "nombre": "Camila",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4914648",
+    "nombre": "Diego",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5786411",
+    "nombre": "Ana",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2494017",
+    "nombre": "Carlos",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "852927",
+    "nombre": "Carolina",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5034870",
+    "nombre": "Valeria",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3211579",
+    "nombre": "Camila",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4312960",
+    "nombre": "Bruno",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3153959",
+    "nombre": "Diego",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1762526",
+    "nombre": "Sebastian",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6079346",
+    "nombre": "Enrique",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3419036",
+    "nombre": "Luis",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5910859",
+    "nombre": "Diego",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5971152",
+    "nombre": "Lucia",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1895638",
+    "nombre": "Enrique",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5210857",
+    "nombre": "Diego",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1503732",
+    "nombre": "Lucia",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4899549",
+    "nombre": "Enrique",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4209527",
+    "nombre": "Adrian",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2038351",
+    "nombre": "Miguel",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6285904",
+    "nombre": "Patricia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4208277",
+    "nombre": "Sofia",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "484113",
+    "nombre": "Fernando",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3386145",
+    "nombre": "Jorge",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6011962",
+    "nombre": "Raul",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2977401",
+    "nombre": "Bruno",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6252529",
+    "nombre": "Ana",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2537888",
+    "nombre": "Carolina",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "521414",
+    "nombre": "Julia",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6175691",
+    "nombre": "Valeria",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "969929",
+    "nombre": "Valeria",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4763640",
+    "nombre": "Patricia",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2384458",
+    "nombre": "Bruno",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5978591",
+    "nombre": "Oscar",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3401211",
+    "nombre": "Julia",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2073999",
+    "nombre": "Camila",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2308171",
+    "nombre": "Patricia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4121624",
+    "nombre": "Sebastian",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5703968",
+    "nombre": "Adrian",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5299311",
+    "nombre": "Fiorella",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1270120",
+    "nombre": "Julia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "683485",
+    "nombre": "Ana",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "435509",
+    "nombre": "Enrique",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1988101",
+    "nombre": "Juan",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1558039",
+    "nombre": "Denis",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3097752",
+    "nombre": "Sebastian",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1849012",
+    "nombre": "Denis",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2944793",
+    "nombre": "Maria",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1837639",
+    "nombre": "Jorge",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2862221",
+    "nombre": "Fernando",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "865544",
+    "nombre": "Jorge",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1659436",
+    "nombre": "Ana",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4988776",
+    "nombre": "Julia",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1036852",
+    "nombre": "Sebastian",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4521894",
+    "nombre": "Camila",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1284301",
+    "nombre": "Gustavo",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "489570",
+    "nombre": "Diana",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3824677",
+    "nombre": "Diego",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1854089",
+    "nombre": "Gustavo",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2046565",
+    "nombre": "Bruno",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2758597",
+    "nombre": "Bruno",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2352438",
+    "nombre": "Diego",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "478130",
+    "nombre": "Noelia",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "734017",
+    "nombre": "Denis",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4383497",
+    "nombre": "Maria",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1510793",
+    "nombre": "Fernando",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6358750",
+    "nombre": "Fiorella",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "340184",
+    "nombre": "Sebastian",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2539318",
+    "nombre": "Sebastian",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "308804",
+    "nombre": "Diana",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4261002",
+    "nombre": "Diego",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6785860",
+    "nombre": "Carolina",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2390692",
+    "nombre": "Luis",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3729148",
+    "nombre": "Monica",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5401316",
+    "nombre": "Adrian",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6899712",
+    "nombre": "Luis",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1392427",
+    "nombre": "Jorge",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3195526",
+    "nombre": "Oscar",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3282996",
+    "nombre": "Oscar",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5921122",
+    "nombre": "Julia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3857019",
+    "nombre": "Miguel",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4107182",
+    "nombre": "Sofia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6287579",
+    "nombre": "Ana",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2101602",
+    "nombre": "Monica",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "585525",
+    "nombre": "Diego",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2318869",
+    "nombre": "Diana",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1445337",
+    "nombre": "Ana",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6159983",
+    "nombre": "Sofia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5848687",
+    "nombre": "Juan",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6356936",
+    "nombre": "Carlos",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4063160",
+    "nombre": "Sebastian",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6740634",
+    "nombre": "Patricia",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4326088",
+    "nombre": "Diego",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1593925",
+    "nombre": "Julia",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2929741",
+    "nombre": "Fiorella",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "414520",
+    "nombre": "Denis",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5951644",
+    "nombre": "Juan",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2520809",
+    "nombre": "Ana",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3876724",
+    "nombre": "Diana",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6134509",
+    "nombre": "Denis",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3376279",
+    "nombre": "Raul",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6303975",
+    "nombre": "Sofia",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5089536",
+    "nombre": "Lucia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3346597",
+    "nombre": "Miguel",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6119002",
+    "nombre": "Carolina",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1033631",
+    "nombre": "Noelia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2746886",
+    "nombre": "Lucia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3227542",
+    "nombre": "Luis",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "650695",
+    "nombre": "Denis",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2336527",
+    "nombre": "Fernando",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4491166",
+    "nombre": "Fiorella",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4041958",
+    "nombre": "Enrique",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6893009",
+    "nombre": "Miguel",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3991358",
+    "nombre": "Diana",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5496047",
+    "nombre": "Diana",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "707310",
+    "nombre": "Paola",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5672400",
+    "nombre": "Diana",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4188000",
+    "nombre": "Juan",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6680752",
+    "nombre": "Diego",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4492267",
+    "nombre": "Rocio",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3842901",
+    "nombre": "Rocio",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "941110",
+    "nombre": "Noelia",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6491940",
+    "nombre": "Adrian",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4878608",
+    "nombre": "Carlos",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4349873",
+    "nombre": "Camila",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "679956",
+    "nombre": "Carlos",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5385544",
+    "nombre": "Jorge",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6501210",
+    "nombre": "Raul",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5033416",
+    "nombre": "Noelia",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3347332",
+    "nombre": "Valeria",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1766351",
+    "nombre": "Fiorella",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2749554",
+    "nombre": "Sofia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2715114",
+    "nombre": "Carolina",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4892197",
+    "nombre": "Julia",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1702287",
+    "nombre": "Sebastian",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2145463",
+    "nombre": "Noelia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3723065",
+    "nombre": "Carolina",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3224586",
+    "nombre": "Oscar",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1380807",
+    "nombre": "Sebastian",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2036238",
+    "nombre": "Oscar",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5229016",
+    "nombre": "Sebastian",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4760162",
+    "nombre": "Bruno",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6452601",
+    "nombre": "Camila",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "357710",
+    "nombre": "Ana",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4950733",
+    "nombre": "Fiorella",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3337409",
+    "nombre": "Denis",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5299998",
+    "nombre": "Bruno",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3102587",
+    "nombre": "Denis",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3462981",
+    "nombre": "Sebastian",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2368399",
+    "nombre": "Gustavo",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2834638",
+    "nombre": "Monica",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "678692",
+    "nombre": "Raul",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "573648",
+    "nombre": "Oscar",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4250762",
+    "nombre": "Adrian",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5741103",
+    "nombre": "Sofia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6630135",
+    "nombre": "Adrian",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4484060",
+    "nombre": "Bruno",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6620510",
+    "nombre": "Denis",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6468024",
+    "nombre": "Camila",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "709348",
+    "nombre": "Monica",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5272588",
+    "nombre": "Diego",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3242308",
+    "nombre": "Carolina",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3903995",
+    "nombre": "Ana",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "338080",
+    "nombre": "Luis",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2866198",
+    "nombre": "Julia",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5249886",
+    "nombre": "Sebastian",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6323628",
+    "nombre": "Enrique",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1040261",
+    "nombre": "Maria",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5174469",
+    "nombre": "Lucia",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2276158",
+    "nombre": "Bruno",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3710134",
+    "nombre": "Valeria",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5662509",
+    "nombre": "Diego",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3723126",
+    "nombre": "Patricia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3676571",
+    "nombre": "Julia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6881018",
+    "nombre": "Julia",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1816101",
+    "nombre": "Fiorella",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4051697",
+    "nombre": "Lucia",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1503798",
+    "nombre": "Enrique",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2321417",
+    "nombre": "Paola",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6837254",
+    "nombre": "Jorge",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5437299",
+    "nombre": "Carlos",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2577098",
+    "nombre": "Sofia",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5737516",
+    "nombre": "Luis",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6509995",
+    "nombre": "Rocio",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "437460",
+    "nombre": "Camila",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5488658",
+    "nombre": "Miguel",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5395357",
+    "nombre": "Diana",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2676383",
+    "nombre": "Adrian",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2800798",
+    "nombre": "Miguel",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5323716",
+    "nombre": "Juan",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1739483",
+    "nombre": "Denis",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5127679",
+    "nombre": "Bruno",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5659154",
+    "nombre": "Maria",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1633857",
+    "nombre": "Sebastian",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3186181",
+    "nombre": "Diana",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4334290",
+    "nombre": "Maria",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1746034",
+    "nombre": "Carolina",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3870709",
+    "nombre": "Fernando",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1696479",
+    "nombre": "Adrian",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5655680",
+    "nombre": "Sebastian",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5293632",
+    "nombre": "Raul",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6389977",
+    "nombre": "Gustavo",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2036673",
+    "nombre": "Carlos",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5563572",
+    "nombre": "Sofia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6586941",
+    "nombre": "Luis",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2766150",
+    "nombre": "Paola",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3135747",
+    "nombre": "Luis",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3525549",
+    "nombre": "Fiorella",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4146320",
+    "nombre": "Gustavo",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3825474",
+    "nombre": "Lucia",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2568303",
+    "nombre": "Carolina",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2660306",
+    "nombre": "Fernando",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1592920",
+    "nombre": "Bruno",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3355033",
+    "nombre": "Enrique",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6406975",
+    "nombre": "Bruno",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6591644",
+    "nombre": "Oscar",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3272964",
+    "nombre": "Paola",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4581581",
+    "nombre": "Sebastian",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6469432",
+    "nombre": "Oscar",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3180889",
+    "nombre": "Paola",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1703668",
+    "nombre": "Bruno",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "809333",
+    "nombre": "Julia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3282817",
+    "nombre": "Sofia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3092815",
+    "nombre": "Raul",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6745087",
+    "nombre": "Oscar",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4280875",
+    "nombre": "Julia",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6401446",
+    "nombre": "Diana",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4256534",
+    "nombre": "Noelia",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2478473",
+    "nombre": "Fiorella",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6081874",
+    "nombre": "Diego",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6596878",
+    "nombre": "Oscar",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1204296",
+    "nombre": "Sofia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4040915",
+    "nombre": "Enrique",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2293493",
+    "nombre": "Juan",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1662344",
+    "nombre": "Fernando",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5687787",
+    "nombre": "Fernando",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5186142",
+    "nombre": "Fernando",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4442452",
+    "nombre": "Oscar",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4404411",
+    "nombre": "Lucia",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3240566",
+    "nombre": "Adrian",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2632136",
+    "nombre": "Oscar",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5500926",
+    "nombre": "Diego",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2482501",
+    "nombre": "Fernando",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6301525",
+    "nombre": "Fiorella",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1267192",
+    "nombre": "Gustavo",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6144097",
+    "nombre": "Jorge",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1353227",
+    "nombre": "Sofia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1802547",
+    "nombre": "Fernando",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5840083",
+    "nombre": "Maria",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2227338",
+    "nombre": "Diego",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2984266",
+    "nombre": "Paola",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6349603",
+    "nombre": "Paola",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2529626",
+    "nombre": "Patricia",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3436239",
+    "nombre": "Diego",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "878946",
+    "nombre": "Bruno",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2434344",
+    "nombre": "Carlos",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2227070",
+    "nombre": "Adrian",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5666719",
+    "nombre": "Bruno",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3671574",
+    "nombre": "Luis",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1677923",
+    "nombre": "Sebastian",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6548947",
+    "nombre": "Valeria",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3518337",
+    "nombre": "Lucia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3397463",
+    "nombre": "Carolina",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "329335",
+    "nombre": "Fiorella",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5697450",
+    "nombre": "Fernando",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1189641",
+    "nombre": "Bruno",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1312901",
+    "nombre": "Sofia",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4449755",
+    "nombre": "Maria",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3507315",
+    "nombre": "Maria",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2065394",
+    "nombre": "Fernando",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5624034",
+    "nombre": "Patricia",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2477785",
+    "nombre": "Adrian",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "576172",
+    "nombre": "Miguel",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4277920",
+    "nombre": "Patricia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5357669",
+    "nombre": "Oscar",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3804226",
+    "nombre": "Fernando",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5906069",
+    "nombre": "Carlos",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4985585",
+    "nombre": "Valeria",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5744313",
+    "nombre": "Camila",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4238191",
+    "nombre": "Fernando",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2194317",
+    "nombre": "Oscar",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1492759",
+    "nombre": "Julia",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2782732",
+    "nombre": "Noelia",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4429005",
+    "nombre": "Jorge",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4975135",
+    "nombre": "Paola",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4040303",
+    "nombre": "Denis",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1705621",
+    "nombre": "Carlos",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4531129",
+    "nombre": "Fiorella",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3059299",
+    "nombre": "Denis",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1338764",
+    "nombre": "Bruno",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4054834",
+    "nombre": "Diego",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5554119",
+    "nombre": "Diego",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3991715",
+    "nombre": "Noelia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2532325",
+    "nombre": "Julia",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2169127",
+    "nombre": "Enrique",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5839601",
+    "nombre": "Maria",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6953371",
+    "nombre": "Juan",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2369418",
+    "nombre": "Gustavo",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5333332",
+    "nombre": "Valeria",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4982772",
+    "nombre": "Diana",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6256601",
+    "nombre": "Camila",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2121603",
+    "nombre": "Noelia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6348136",
+    "nombre": "Enrique",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3345904",
+    "nombre": "Enrique",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5881282",
+    "nombre": "Diana",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6544107",
+    "nombre": "Julia",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4072435",
+    "nombre": "Jorge",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4732715",
+    "nombre": "Juan",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2684293",
+    "nombre": "Raul",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "449341",
+    "nombre": "Juan",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4068607",
+    "nombre": "Enrique",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "577683",
+    "nombre": "Noelia",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3647579",
+    "nombre": "Camila",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2319684",
+    "nombre": "Maria",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2970597",
+    "nombre": "Julia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2150272",
+    "nombre": "Gustavo",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5563166",
+    "nombre": "Camila",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "580320",
+    "nombre": "Diana",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5959369",
+    "nombre": "Carolina",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1935599",
+    "nombre": "Carlos",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3938687",
+    "nombre": "Gustavo",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6210876",
+    "nombre": "Camila",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5526426",
+    "nombre": "Adrian",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3307446",
+    "nombre": "Miguel",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2733547",
+    "nombre": "Enrique",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3431352",
+    "nombre": "Raul",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1762354",
+    "nombre": "Adrian",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2414842",
+    "nombre": "Bruno",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1147927",
+    "nombre": "Fiorella",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2533495",
+    "nombre": "Juan",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6208710",
+    "nombre": "Oscar",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4455698",
+    "nombre": "Lucia",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6288861",
+    "nombre": "Julia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "860134",
+    "nombre": "Valeria",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6002190",
+    "nombre": "Sebastian",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1241049",
+    "nombre": "Sebastian",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2785344",
+    "nombre": "Patricia",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5959049",
+    "nombre": "Monica",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2525602",
+    "nombre": "Gustavo",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4096308",
+    "nombre": "Diego",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1620763",
+    "nombre": "Julia",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5502225",
+    "nombre": "Rocio",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3547625",
+    "nombre": "Raul",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5477421",
+    "nombre": "Rocio",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2214338",
+    "nombre": "Sebastian",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2809591",
+    "nombre": "Jorge",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5915854",
+    "nombre": "Lucia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6314664",
+    "nombre": "Valeria",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4724305",
+    "nombre": "Jorge",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2007655",
+    "nombre": "Carolina",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6157653",
+    "nombre": "Rocio",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5812706",
+    "nombre": "Noelia",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5182087",
+    "nombre": "Sofia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4415211",
+    "nombre": "Sofia",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5004157",
+    "nombre": "Paola",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1152656",
+    "nombre": "Carolina",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1578426",
+    "nombre": "Patricia",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6474082",
+    "nombre": "Gustavo",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4539911",
+    "nombre": "Camila",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6465807",
+    "nombre": "Fiorella",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5378811",
+    "nombre": "Denis",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2237883",
+    "nombre": "Julia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4813713",
+    "nombre": "Bruno",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1183382",
+    "nombre": "Miguel",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6560017",
+    "nombre": "Diego",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3999028",
+    "nombre": "Rocio",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4923146",
+    "nombre": "Maria",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1785574",
+    "nombre": "Enrique",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6226355",
+    "nombre": "Lucia",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5940309",
+    "nombre": "Jorge",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6127921",
+    "nombre": "Sebastian",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2145715",
+    "nombre": "Sofia",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4311160",
+    "nombre": "Diana",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6149389",
+    "nombre": "Fernando",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1586780",
+    "nombre": "Maria",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3049901",
+    "nombre": "Sofia",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1259164",
+    "nombre": "Lucia",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5530245",
+    "nombre": "Fiorella",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3624298",
+    "nombre": "Luis",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4860063",
+    "nombre": "Fernando",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6708654",
+    "nombre": "Denis",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3103290",
+    "nombre": "Diego",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6076826",
+    "nombre": "Jorge",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3675521",
+    "nombre": "Diego",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2395382",
+    "nombre": "Camila",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4762296",
+    "nombre": "Valeria",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5082052",
+    "nombre": "Diego",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6676961",
+    "nombre": "Valeria",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3073956",
+    "nombre": "Carolina",
+    "apellido": "Rojas",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6959063",
+    "nombre": "Adrian",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "474895",
+    "nombre": "Denis",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1890922",
+    "nombre": "Ana",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6033235",
+    "nombre": "Lucia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5418804",
+    "nombre": "Diego",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5454034",
+    "nombre": "Noelia",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4130746",
+    "nombre": "Sebastian",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6338651",
+    "nombre": "Patricia",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6409270",
+    "nombre": "Valeria",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3850225",
+    "nombre": "Patricia",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1801431",
+    "nombre": "Adrian",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3107503",
+    "nombre": "Diana",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "659033",
+    "nombre": "Camila",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5899524",
+    "nombre": "Valeria",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1319933",
+    "nombre": "Raul",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3615449",
+    "nombre": "Rocio",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4979919",
+    "nombre": "Monica",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2898563",
+    "nombre": "Noelia",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6808307",
+    "nombre": "Lucia",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1548563",
+    "nombre": "Patricia",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2743535",
+    "nombre": "Monica",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3540977",
+    "nombre": "Raul",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6769831",
+    "nombre": "Miguel",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6320655",
+    "nombre": "Noelia",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "831310",
+    "nombre": "Bruno",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "436966",
+    "nombre": "Fiorella",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1815641",
+    "nombre": "Sofia",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3804744",
+    "nombre": "Sofia",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "494214",
+    "nombre": "Denis",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2103530",
+    "nombre": "Sebastian",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5337197",
+    "nombre": "Miguel",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2525049",
+    "nombre": "Diana",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4966265",
+    "nombre": "Fernando",
+    "apellido": "Torres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "906387",
+    "nombre": "Enrique",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5114580",
+    "nombre": "Julia",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3540254",
+    "nombre": "Noelia",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1854779",
+    "nombre": "Diego",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "2118416",
+    "nombre": "Paola",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3830582",
+    "nombre": "Denis",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "379134",
+    "nombre": "Fiorella",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "396812",
+    "nombre": "Diego",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4862745",
+    "nombre": "Carolina",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6042257",
+    "nombre": "Luis",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3728628",
+    "nombre": "Gustavo",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3525899",
+    "nombre": "Camila",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5754667",
+    "nombre": "Fernando",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "453098",
+    "nombre": "Adrian",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6883236",
+    "nombre": "Bruno",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2868483",
+    "nombre": "Julia",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6052826",
+    "nombre": "Luis",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "1423222",
+    "nombre": "Paola",
+    "apellido": "Villalba",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3540612",
+    "nombre": "Oscar",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6435395",
+    "nombre": "Sebastian",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1838443",
+    "nombre": "Raul",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "717290",
+    "nombre": "Oscar",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2993725",
+    "nombre": "Patricia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1313375",
+    "nombre": "Maria",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4893476",
+    "nombre": "Oscar",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5160149",
+    "nombre": "Rocio",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4696229",
+    "nombre": "Patricia",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1216239",
+    "nombre": "Valeria",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2737943",
+    "nombre": "Monica",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4805907",
+    "nombre": "Oscar",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3181740",
+    "nombre": "Monica",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4846465",
+    "nombre": "Carlos",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1559065",
+    "nombre": "Gustavo",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "4889474",
+    "nombre": "Adrian",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "401752",
+    "nombre": "Rocio",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "871382",
+    "nombre": "Oscar",
+    "apellido": "Paredes",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5585216",
+    "nombre": "Rocio",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4827968",
+    "nombre": "Gustavo",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5603416",
+    "nombre": "Ana",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "3263141",
+    "nombre": "Sebastian",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2955590",
+    "nombre": "Fiorella",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5849495",
+    "nombre": "Patricia",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3547804",
+    "nombre": "Diego",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2927111",
+    "nombre": "Denis",
+    "apellido": "Ramos",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4388594",
+    "nombre": "Bruno",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4300846",
+    "nombre": "Fiorella",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2045657",
+    "nombre": "Lucia",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3388859",
+    "nombre": "Monica",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2561518",
+    "nombre": "Bruno",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "1303841",
+    "nombre": "Enrique",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4487326",
+    "nombre": "Oscar",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5323163",
+    "nombre": "Diego",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1153773",
+    "nombre": "Juan",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5858552",
+    "nombre": "Oscar",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4356447",
+    "nombre": "Julia",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "5014708",
+    "nombre": "Carlos",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "4594931",
+    "nombre": "Fernando",
+    "apellido": "Pereira",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3990169",
+    "nombre": "Fernando",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3070434",
+    "nombre": "Adrian",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4624714",
+    "nombre": "Camila",
+    "apellido": "Machuca",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "6279324",
+    "nombre": "Fernando",
+    "apellido": "Ramirez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "2278381",
+    "nombre": "Valeria",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "1072257",
+    "nombre": "Carlos",
+    "apellido": "Lopez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "6503334",
+    "nombre": "Oscar",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4263403",
+    "nombre": "Fernando",
+    "apellido": "Caceres",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "3074417",
+    "nombre": "Fernando",
+    "apellido": "Gonzalez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5018658",
+    "nombre": "Miguel",
+    "apellido": "Mendoza",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3571694",
+    "nombre": "Miguel",
+    "apellido": "Medina",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "5978001",
+    "nombre": "Diana",
+    "apellido": "Acosta",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2952938",
+    "nombre": "Raul",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2262343",
+    "nombre": "Paola",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "3185559",
+    "nombre": "Carolina",
+    "apellido": "Ortiz",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2928635",
+    "nombre": "Sofia",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "6589297",
+    "nombre": "Jorge",
+    "apellido": "Benitez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "4273788",
+    "nombre": "Camila",
+    "apellido": "Fernandez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "5321935",
+    "nombre": "Monica",
+    "apellido": "Maldonado",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "5135544",
+    "nombre": "Raul",
+    "apellido": "Gimenez",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "859681",
+    "nombre": "Jorge",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "3747669",
+    "nombre": "Ana",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "1492140",
+    "nombre": "Camila",
+    "apellido": "Cabrera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 1"
+  },
+  {
+    "ci": "6516978",
+    "nombre": "Patricia",
+    "apellido": "Cardozo",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 2"
+  },
+  {
+    "ci": "2135358",
+    "nombre": "Miguel",
+    "apellido": "Ojeda",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 4"
+  },
+  {
+    "ci": "4545862",
+    "nombre": "Diana",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "2207698",
+    "nombre": "Gustavo",
+    "apellido": "Vera",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  },
+  {
+    "ci": "704636",
+    "nombre": "Sofia",
+    "apellido": "Franco",
+    "localidad": "Fernando de la Mora",
+    "local_votacion": "Seccional 3"
+  }
+]
