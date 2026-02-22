@@ -17,10 +17,13 @@ import {
   Copy,
   Phone,
   Trash2,
+  Check,
+  X,
 } from "lucide-react";
 
 import AddPersonModal from "../AddPersonModal";
 import ModalTelefono from "./ModalTelefono";
+import ConfirmVotoModal from "./ConfirmVotoModal";
 
 import { getEstadisticas } from "../services/estadisticasService";
 
@@ -52,6 +55,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
   const [phoneTarget, setPhoneTarget] = useState(null);
   const [phoneValue, setPhoneValue] = useState("+595");
+
+  // Confirmación de voto
+  const [confirmVotoModalOpen, setConfirmVotoModalOpen] = useState(false);
+  const [confirmVotoTarget, setConfirmVotoTarget] = useState(null);
+  const [isVotoUndoing, setIsVotoUndoing] = useState(false);
+  const [isConfirmVotoLoading, setIsConfirmVotoLoading] = useState(false);
 
   // PDF MENU (ESTO FALTABA)
 const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
@@ -242,6 +251,92 @@ const canEliminar = (tipo, persona) => {
   }
 
   return false;
+};
+
+// ======================= CONFIRMACIÓN DE VOTO =======================
+
+// Verificar permisos para confirmar voto
+const canConfirmarVoto = (votante) => {
+  const role = currentUser?.role;
+  if (!role || !votante) return false;
+
+  // Superadmin no puede confirmar (no tiene rol de coordinador/subcoordinador)
+  if (role === "superadmin") return false;
+
+  // Coordinador puede confirmar votantes de su red
+  if (role === "coordinador") {
+    const miCoordCI = normalizeCI(currentUser.ci);
+    // Si el votante tiene coordinador_ci igual al del coordinador actual
+    return normalizeCI(votante.coordinador_ci) === miCoordCI;
+  }
+
+  // Subcoordinador solo puede confirmar sus votantes directos
+  if (role === "subcoordinador") {
+    return normalizeCI(votante.asignado_por) === normalizeCI(currentUser.ci);
+  }
+
+  return false;
+};
+
+// Verificar permisos para anular confirmación (solo Coordinador)
+const canAnularConfirmacion = (votante) => {
+  const role = currentUser?.role;
+  if (!role || !votante) return false;
+
+  // Solo Coordinador puede anular
+  if (role === "coordinador") {
+    const miCoordCI = normalizeCI(currentUser.ci);
+    return normalizeCI(votante.coordinador_ci) === miCoordCI;
+  }
+
+  return false;
+};
+
+// Abrir modal de confirmación
+const abrirConfirmVoto = (votante) => {
+  if (!canConfirmarVoto(votante)) return;
+  setConfirmVotoTarget(votante);
+  setIsVotoUndoing(false);
+  setConfirmVotoModalOpen(true);
+};
+
+// Abrir modal de anulación
+const abrirAnularConfirmacion = (votante) => {
+  if (!canAnularConfirmacion(votante)) return;
+  setConfirmVotoTarget(votante);
+  setIsVotoUndoing(true);
+  setConfirmVotoModalOpen(true);
+};
+
+// Confirmar/Anular voto
+const handleConfirmVoto = async () => {
+  if (!confirmVotoTarget) return;
+
+  setIsConfirmVotoLoading(true);
+  try {
+    const newStatus = !isVotoUndoing;
+    const { error } = await supabase
+      .from("votantes")
+      .update({ voto_confirmado: newStatus })
+      .eq("ci", confirmVotoTarget.ci);
+
+    if (error) {
+      console.error("Error confirmando voto:", error);
+      alert(error.message || "Error procesando confirmación");
+      setIsConfirmVotoLoading(false);
+      return;
+    }
+
+    // Recargar estructura y cerrar modal
+    setConfirmVotoModalOpen(false);
+    setConfirmVotoTarget(null);
+    await recargarEstructura();
+  } catch (e) {
+    console.error("Error confirmando voto:", e);
+    alert("Error procesando confirmación");
+  } finally {
+    setIsConfirmVotoLoading(false);
+  }
 };
 
  // ======================= BUSCADOR INTERNO POR CI (SEGÚN ROL) =======================
@@ -949,8 +1044,13 @@ const descargarPDF = () => {
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="font-semibold text-sm">
+                  <div className="font-semibold text-sm flex items-center gap-2">
                     {persona.nombre || "-"} {persona.apellido || ""}
+                    {tipo === "votante" && persona.voto_confirmado && (
+                      <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                        Voto Confirmado
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs text-gray-600">
                     <b>CI:</b> {persona.ci}{" "}
@@ -973,6 +1073,26 @@ const descargarPDF = () => {
                   >
                     <Phone className="w-4 h-4" />
                   </button>
+
+                  {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona) && (
+                    <button
+                      onClick={() => abrirConfirmVoto(persona)}
+                      className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                      title="Confirmar voto"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                  )}
+
+                  {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona) && (
+                    <button
+                      onClick={() => abrirAnularConfirmacion(persona)}
+                      className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                      title="Anular confirmación"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
 
                   <button
                     onClick={() => quitarPersona(tipo, persona)}
@@ -1094,7 +1214,14 @@ const descargarPDF = () => {
                                   key={v.ci}
                                   className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
                                 >
-                                  <DatosPersona persona={v} rol="Votante" />
+                                  <div className="flex-1">
+                                    <DatosPersona persona={v} rol="Votante" />
+                                    {v.voto_confirmado && (
+                                      <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                                        Voto Confirmado
+                                      </div>
+                                    )}
+                                  </div>
                                   <div className="flex gap-2">
                                     <button
                                       onClick={() => abrirTelefono("votante", v)}
@@ -1126,7 +1253,14 @@ const descargarPDF = () => {
                             key={v.ci}
                             className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
                           >
-                            <DatosPersona persona={v} rol="Votante" />
+                            <div className="flex-1">
+                              <DatosPersona persona={v} rol="Votante" />
+                              {v.voto_confirmado && (
+                                <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                                  Voto Confirmado
+                                </div>
+                              )}
+                            </div>
                             <div className="flex gap-2">
                               <button
                                 onClick={() => abrirTelefono("votante", v)}
@@ -1212,7 +1346,14 @@ const descargarPDF = () => {
                             key={v.ci}
                             className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
                           >
-                            <DatosPersona persona={v} rol="Votante" />
+                            <div className="flex-1">
+                              <DatosPersona persona={v} rol="Votante" />
+                              {v.voto_confirmado && (
+                                <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                                  Voto Confirmado
+                                </div>
+                              )}
+                            </div>
                             <div className="flex gap-2">
                               <button
                                 onClick={() => abrirTelefono("votante", v)}
@@ -1220,6 +1361,27 @@ const descargarPDF = () => {
                               >
                                 <Phone className="w-5 h-5" />
                               </button>
+
+                              {!v.voto_confirmado && canConfirmarVoto(v) && (
+                                <button
+                                  onClick={() => abrirConfirmVoto(v)}
+                                  className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                  title="Confirmar voto"
+                                >
+                                  <Check className="w-5 h-5" />
+                                </button>
+                              )}
+
+                              {v.voto_confirmado && canAnularConfirmacion(v) && (
+                                <button
+                                  onClick={() => abrirAnularConfirmacion(v)}
+                                  className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                                  title="Anular confirmación"
+                                >
+                                  <X className="w-5 h-5" />
+                                </button>
+                              )}
+
                               <button
                                 onClick={() => quitarPersona(v.ci, "votante")}
                                 className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -1251,7 +1413,14 @@ const descargarPDF = () => {
                         key={v.ci}
                         className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
                       >
-                        <DatosPersona persona={v} rol="Votante" />
+                        <div className="flex-1">
+                          <DatosPersona persona={v} rol="Votante" />
+                          {v.voto_confirmado && (
+                            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                              Voto Confirmado
+                            </div>
+                          )}
+                        </div>
                         <div className="flex gap-2">
                           <button
                             onClick={() => abrirTelefono("votante", v)}
@@ -1259,6 +1428,27 @@ const descargarPDF = () => {
                           >
                             <Phone className="w-5 h-5" />
                           </button>
+
+                          {!v.voto_confirmado && canConfirmarVoto(v) && (
+                            <button
+                              onClick={() => abrirConfirmVoto(v)}
+                              className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                              title="Confirmar voto"
+                            >
+                              <Check className="w-5 h-5" />
+                            </button>
+                          )}
+
+                          {v.voto_confirmado && canAnularConfirmacion(v) && (
+                            <button
+                              onClick={() => abrirAnularConfirmacion(v)}
+                              className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                              title="Anular confirmación"
+                            >
+                              <X className="w-5 h-5" />
+                            </button>
+                          )}
+
                           <button
                             onClick={() => quitarPersona(v.ci, "votante")}
                             className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -1287,7 +1477,14 @@ const descargarPDF = () => {
         key={v.ci}
         className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
       >
-        <DatosPersona persona={v} rol="Votante" />
+        <div className="flex-1">
+          <DatosPersona persona={v} rol="Votante" />
+          {v.voto_confirmado && (
+            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+              Voto Confirmado
+            </div>
+          )}
+        </div>
         <div className="flex gap-2">
           <button
             onClick={() => abrirTelefono("votante", v)}
@@ -1295,6 +1492,17 @@ const descargarPDF = () => {
           >
             <Phone className="w-5 h-5" />
           </button>
+
+          {!v.voto_confirmado && canConfirmarVoto(v) && (
+            <button
+              onClick={() => abrirConfirmVoto(v)}
+              className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              title="Confirmar voto"
+            >
+              <Check className="w-5 h-5" />
+            </button>
+          )}
+
           <button
             onClick={() => quitarPersona(v.ci, "votante")}
             className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -1338,6 +1546,20 @@ const descargarPDF = () => {
         tipo={modalType}
         onAdd={handleAgregarPersona}
         disponibles={disponibles}
+      />
+
+      {/* MODAL CONFIRMACIÓN DE VOTO */}
+      <ConfirmVotoModal
+        open={confirmVotoModalOpen}
+        votante={confirmVotoTarget}
+        isUndoing={isVotoUndoing}
+        onCancel={() => {
+          setConfirmVotoModalOpen(false);
+          setConfirmVotoTarget(null);
+          setIsVotoUndoing(false);
+        }}
+        onConfirm={handleConfirmVoto}
+        isLoading={isConfirmVotoLoading}
       />
     </div>
   );
