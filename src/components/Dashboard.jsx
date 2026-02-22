@@ -1391,12 +1391,6 @@ const descargarPDF = () => {
                             </div>
                           </div>
                         ))}
-                              >
-                                <Trash2 className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
 
                         {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
                           <p className="text-gray-500 text-sm mt-2">
