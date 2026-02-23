@@ -1,14 +1,12 @@
 // src/reports/reportStyles.js
 export const REPORT_CSS = `
   :root {
-    --red: #b91c1c;
-    --red-soft: #fee2e2;
     --text: #111827;
-    --muted: #6b7280;
-    --border: #e5e7eb;
+    --muted: #4b5563;
+    --border: #d1d5db;
+    --gray-light: #f3f4f6;
   }
 
-  /* ==================== PANTALLA NORMAL ==================== */
   * {
     box-sizing: border-box;
   }
@@ -16,131 +14,191 @@ export const REPORT_CSS = `
   body {
     font-family: Arial, sans-serif;
     color: var(--text);
-    background: #f3f4f6;
     margin: 0;
     padding: 20px;
+    background: #f5f5f5;
   }
 
+  /* ==================== ENCABEZADO ==================== */
   header.report-header {
     background: white;
-    border-bottom: 2px solid var(--red);
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 4px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border);
   }
 
   .brand {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .brand > div:first-child {
+    flex: 1;
   }
 
   .brand .title {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--red);
-    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text);
+    margin: 0 0 4px 0;
   }
 
   .brand .subtitle {
     font-size: 12px;
     color: var(--muted);
-    margin: 4px 0 0 0;
+    margin: 0;
   }
 
   .brand .meta {
     text-align: right;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
-    line-height: 1.5;
+    line-height: 1.8;
   }
 
   .brand .meta div {
-    margin: 2px 0;
+    margin: 0;
   }
 
+  /* ==================== CONTENIDO PRINCIPAL ==================== */
   main.report-body {
     background: white;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 30px;
   }
 
+  /* RESUMEN EJECUTIVO */
+  .summary-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-section h2 {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text);
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-light);
+    padding-bottom: 10px;
+  }
+
+  .summary-item .label {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: normal;
+  }
+
+  .summary-item .value {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text);
+  }
+
+  /* SECCIONES */
   h2 {
-    margin: 20px 0 10px 0;
-    color: var(--red);
-    font-size: 16px;
-    border-bottom: 1px solid var(--red-soft);
-    padding-bottom: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text);
+    margin: 25px 0 15px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    page-break-after: avoid;
   }
 
   h3 {
-    margin: 14px 0 8px 0;
-    font-size: 13px;
-    color: #1f2937;
-  }
-
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 10px 0;
-  }
-
-  .card {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 10px;
-    background: #f9fafb;
-  }
-
-  .card .label {
-    color: var(--muted);
-    font-size: 12px;
-  }
-
-  .card .value {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--red);
-    margin-top: 4px;
-  }
-
-  .pill {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 999px;
-    background: var(--red-soft);
-    color: var(--red);
     font-size: 11px;
-    font-weight: 700;
+    font-weight: bold;
+    color: var(--text);
+    margin: 15px 0 10px 0;
+    page-break-after: avoid;
   }
 
+  h4 {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--muted);
+    margin: 12px 0 8px 0;
+    page-break-after: avoid;
+  }
+
+  /* INFORMACIÓN BÁSICA */
+  .info-block {
+    font-size: 10px;
+    color: var(--muted);
+    margin: 8px 0;
+    line-height: 1.6;
+  }
+
+  .info-block b {
+    color: var(--text);
+  }
+
+  /* TABLAS */
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 8px 0;
+    margin: 12px 0;
+    font-size: 10px;
   }
 
-  th, td {
-    border: 1px solid var(--border);
-    padding: 8px;
-    font-size: 12px;
-    text-align: left;
-    vertical-align: top;
+  table thead {
+    background: var(--gray-light);
   }
 
   th {
-    background: var(--red-soft);
-    font-weight: 700;
-    color: var(--red);
+    padding: 8px;
+    text-align: left;
+    font-weight: bold;
+    color: var(--text);
+    border: 1px solid var(--border);
   }
 
+  td {
+    padding: 8px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  tr:nth-child(even) {
+    background: #fafafa;
+  }
+
+  /* ETIQUETAS */
+  .pill {
+    display: inline-block;
+    font-size: 9px;
+    color: var(--text);
+    margin-left: 8px;
+  }
+
+  /* SEPARADORES */
   hr {
-    margin: 16px 0;
+    margin: 20px 0;
     border: none;
     border-top: 1px solid var(--border);
+    page-break-after: avoid;
+  }
+
+  /* PÁRRAFOS */
+  p {
+    margin: 6px 0;
+    font-size: 10px;
+    line-height: 1.6;
+    color: var(--muted);
   }
 
   .muted {
@@ -148,23 +206,27 @@ export const REPORT_CSS = `
   }
 
   .small {
-    font-size: 11px;
+    font-size: 9px;
   }
 
-  p {
-    margin: 6px 0;
-    line-height: 1.5;
+  /* INDENTACIÓN */
+  .indent-1 {
+    margin-left: 15px;
   }
 
+  .indent-2 {
+    margin-left: 30px;
+  }
+
+  /* PIE DE PÁGINA */
   footer.report-footer {
     background: white;
     border-top: 1px solid var(--border);
-    padding: 15px 20px;
-    margin-top: 20px;
-    border-radius: 4px;
+    padding: 20px 30px;
+    margin-top: 30px;
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: 10px;
     color: var(--muted);
   }
 
@@ -181,103 +243,75 @@ export const REPORT_CSS = `
       margin: 0;
     }
 
-    /* Header fijo en cada página */
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    /* Header fijo */
     header.report-header {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       width: 100%;
+      padding: 20mm;
       margin: 0;
-      padding: 15mm 20mm;
       background: white;
-      border-bottom: 2px solid var(--red);
+      border-bottom: 1px solid var(--border);
       z-index: 1000;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .brand {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .brand .title {
-      font-size: 20px;
-    }
-
-    .brand .meta {
-      font-size: 10px;
-      line-height: 1.4;
-    }
-
-    /* Footer fijo en cada página */
+    /* Footer fijo */
     footer.report-footer {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       width: 100%;
+      padding: 15mm 20mm;
       margin: 0;
-      padding: 12mm 20mm;
       background: white;
       border-top: 1px solid var(--border);
-      font-size: 9px;
       display: flex;
       justify-content: space-between;
+      font-size: 9px;
       z-index: 1000;
     }
 
-    /* Contenido principal con márgenes para header y footer */
+    /* Contenido con márgenes */
     main.report-body {
       margin: 0;
-      padding: 25mm 20mm 20mm 20mm;
+      padding: 22mm 20mm 25mm 20mm;
       background: white;
-      box-shadow: none;
-      border-radius: 0;
     }
 
-    /* Configuración de página */
-    @page {
-      size: A4 landscape;
-      margin: 0;
-    }
-
-    /* Títulos sin duplicar */
+    /* Estilos de impresión */
     h1 {
       display: none;
     }
 
     h2 {
-      margin: 12px 0 8px 0;
-      font-size: 14px;
+      margin: 15px 0 10px 0;
+      font-size: 12px;
       page-break-after: avoid;
     }
 
     h3 {
-      margin: 10px 0 6px 0;
-      font-size: 11px;
+      margin: 12px 0 8px 0;
+      font-size: 10px;
       page-break-after: avoid;
     }
 
-    .grid-2 {
-      margin: 8px 0;
-      gap: 8px;
+    .summary-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
     }
 
-    .card {
-      padding: 8px;
-      font-size: 11px;
-    }
-
-    .card .value {
-      font-size: 18px;
-    }
-
-    /* Tablas con paginación natural */
     table {
       page-break-inside: auto;
-      margin: 6px 0;
+      margin: 10px 0;
+      font-size: 9px;
     }
 
     tr {
@@ -287,41 +321,27 @@ export const REPORT_CSS = `
 
     th, td {
       padding: 6px;
-      font-size: 10px;
       border: 1px solid var(--border);
     }
 
-    th {
-      background: var(--red-soft);
-      font-weight: 700;
-    }
-
     hr {
-      margin: 12px 0;
-      border: none;
-      border-top: 1px solid var(--border);
+      margin: 15px 0;
       page-break-after: avoid;
     }
 
     p {
+      font-size: 9px;
       margin: 4px 0;
-      font-size: 10px;
-      line-height: 1.4;
     }
 
     .pill {
-      font-size: 9px;
-      padding: 2px 6px;
+      font-size: 8px;
     }
 
-    .small {
-      font-size: 9px;
-    }
-
-    /* No imprimir elementos innecesarios */
     .no-print {
       display: none;
     }
   }
 `;
+
 

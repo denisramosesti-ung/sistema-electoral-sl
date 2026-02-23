@@ -1,7 +1,6 @@
 // src/reports/ReportCoordinador.jsx
 export default function ReportCoordinador({ estructura, currentUser }) {
   const { subcoordinadores = [], votantes = [] } = estructura;
-  const hoy = new Date().toLocaleString("es-PY");
 
   const misSubs = subcoordinadores.filter(
     (s) => String(s.coordinador_ci) === String(currentUser.ci)
@@ -25,36 +24,27 @@ export default function ReportCoordinador({ estructura, currentUser }) {
   const totalRed = votosDirectos.length + totalIndirectos;
 
   let html = `
-    <section class="brand">
-      <div>
-        <h1 class="title">Reporte de Coordinador</h1>
-        <div class="small muted">Mi red jerárquica</div>
-      </div>
-      <div class="meta">
-        <div><b>Coordinador:</b> ${currentUser.nombre} ${currentUser.apellido}</div>
-        <div><b>CI:</b> ${currentUser.ci}</div>
-        <div><b>Fecha:</b> ${hoy}</div>
+    <section class="summary-section">
+      <h2>Resumen de Mi Red</h2>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span class="label">Subcoordinadores</span>
+          <span class="value">${misSubs.length}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Votantes Directos</span>
+          <span class="value">${votosDirectos.length}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Votantes Indirectos</span>
+          <span class="value">${totalIndirectos}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Total en Mi Red</span>
+          <span class="value">${totalRed}</span>
+        </div>
       </div>
     </section>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="label">Subcoordinadores</div>
-        <div class="value">${misSubs.length}</div>
-      </div>
-      <div class="card">
-        <div class="label">Votantes directos</div>
-        <div class="value">${votosDirectos.length}</div>
-      </div>
-      <div class="card">
-        <div class="label">Votantes indirectos</div>
-        <div class="value">${totalIndirectos}</div>
-      </div>
-      <div class="card">
-        <div class="label">Total de votantes en mi red</div>
-        <div class="value">${totalRed}</div>
-      </div>
-    </div>
 
     <h2>Subcoordinadores</h2>
   `;
@@ -67,9 +57,9 @@ export default function ReportCoordinador({ estructura, currentUser }) {
         <thead>
           <tr>
             <th>Subcoordinador</th>
-            <th style="width:18%">CI</th>
-            <th style="width:18%">Teléfono</th>
-            <th style="width:18%">Votantes</th>
+            <th style="width:20%">CI</th>
+            <th style="width:20%">Teléfono</th>
+            <th style="width:15%">Votantes</th>
           </tr>
         </thead>
         <tbody>
@@ -82,50 +72,18 @@ export default function ReportCoordinador({ estructura, currentUser }) {
           <td>${s.nombre} ${s.apellido}</td>
           <td>${s.ci}</td>
           <td>${s.telefono || "—"}</td>
-          <td><b>${arr.length}</b></td>
+          <td>${arr.length}</td>
         </tr>
       `;
     });
 
     html += `</tbody></table>`;
-
-    misSubs.forEach((s, idx) => {
-      const arr = votosPorSub.get(String(s.ci)) || [];
-      html += `
-        <h3>Detalle: ${s.nombre} ${s.apellido} <span class="pill">${arr.length}</span></h3>
-      `;
-
-      if (arr.length === 0) {
-        html += `<p class="muted">Sin votantes.</p>`;
-      } else {
-        html += `
-          <table>
-            <thead>
-              <tr>
-                <th>Votante</th>
-                <th style="width:20%">CI</th>
-                <th style="width:25%">Teléfono</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
-        arr.forEach((v) => {
-          html += `
-            <tr>
-              <td>${v.nombre} ${v.apellido}</td>
-              <td>${v.ci}</td>
-              <td>${v.telefono || "—"}</td>
-            </tr>
-          `;
-        });
-        html += `</tbody></table>`;
-      }
-    });
   }
 
   html += `
-    <h2>Votantes directos <span class="pill">${votosDirectos.length}</span></h2>
+    <h2>Votantes Directos <span class="pill">${votosDirectos.length}</span></h2>
   `;
+  
   if (votosDirectos.length === 0) {
     html += `<p class="muted">No registra votantes directos.</p>`;
   } else {
