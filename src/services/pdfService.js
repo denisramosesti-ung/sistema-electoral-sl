@@ -182,7 +182,6 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
         }
       },
     });
-    }
   });
 
   return doc;
