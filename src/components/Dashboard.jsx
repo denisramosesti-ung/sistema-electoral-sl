@@ -834,15 +834,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* HERO SUPERIOR */}
-      <div className="bg-gradient-to-r from-red-900 via-red-800 to-red-900 text-white shadow-2xl relative overflow-hidden max-h-screen md:max-h-none">
+      <div className="bg-gradient-to-r from-red-900 via-red-800 to-red-900 text-white shadow-2xl relative overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-10"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 lg:py-12 relative z-10 max-h-[35vh] md:max-h-none overflow-y-auto md:overflow-visible">
-          <div className="flex justify-between items-start mb-4 md:mb-8 gap-2">
+        <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
+          <div className="flex justify-between items-start mb-8">
             <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-2 md:mb-3 tracking-tight text-center">
+              <h1 className="text-5xl font-extrabold mb-3 tracking-tight text-center">
                 Sistema Electoral - José "Chechito" Lopez 2026
               </h1>
-              <p className="text-red-100 text-xs sm:text-sm md:text-base text-center font-medium">
+              <p className="text-red-100 text-lg text-center font-medium">
                 {currentUser.nombre} {currentUser.apellido} •{" "}
                 {currentUser.role === "superadmin"
                   ? "Superadmin"
@@ -853,24 +853,24 @@ const Dashboard = ({ currentUser, onLogout }) => {
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all border border-white/20 text-xs sm:text-sm whitespace-nowrap flex-shrink-0"
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm px-5 py-2.5 rounded-lg transition-all border border-white/20"
             >
-              <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Salir</span>
+              <LogOut className="w-4 h-4" />
+              Salir
             </button>
           </div>
           
           {/* Porcentaje y Barra de Progreso */}
-          <div className="max-w-2xl mx-auto mt-4 md:mt-8">
-            <div className="text-center mb-3 md:mb-4">
-              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-1 md:mb-2">
+          <div className="max-w-2xl mx-auto mt-8">
+            <div className="text-center mb-4">
+              <div className="text-7xl font-black mb-2">
                 {stats?.porcentajeConfirmados ?? 0}%
               </div>
-              <p className="text-red-100 text-xs sm:text-sm uppercase tracking-wider font-semibold">
+              <p className="text-red-100 text-sm uppercase tracking-wider font-semibold">
                 Votos Confirmados
               </p>
             </div>
-            <div className="bg-white/20 rounded-full h-3 md:h-4 overflow-hidden backdrop-blur-sm">
+            <div className="bg-white/20 rounded-full h-4 overflow-hidden backdrop-blur-sm">
               <div 
                 className="bg-gradient-to-r from-green-400 to-green-500 h-full rounded-full transition-all duration-1000 ease-out shadow-lg"
                 style={{ width: `${stats?.porcentajeConfirmados ?? 0}%` }}
@@ -881,73 +881,73 @@ const Dashboard = ({ currentUser, onLogout }) => {
       </div>
 
       {/* KPI GRANDES */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 md:-mt-8 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+      <div className="max-w-7xl mx-auto px-6 -mt-8 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {currentUser.role === "superadmin" && (
             <>
-              <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow border border-gray-100">
-                <p className="text-gray-500 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black text-gray-900">{stats?.votantesTotales ?? 0}</p>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
+                <p className="text-6xl font-black text-gray-900">{stats?.votantesTotales ?? 0}</p>
               </div>
-              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow text-white">
-                <p className="text-green-100 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-green-100 text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
+                <p className="text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
               </div>
-              <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow border border-gray-100">
-                <p className="text-gray-500 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black text-gray-900">
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
+                <p className="text-6xl font-black text-gray-900">
                   {(stats?.votantesTotales ?? 0) - (stats?.votosConfirmadosTotales ?? 0)}
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow text-white">
-                <p className="text-red-100 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
+              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-red-100 text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
+                <p className="text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
               </div>
             </>
           )}
 
           {currentUser.role === "coordinador" && (
             <>
-              <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow border border-gray-100">
-                <p className="text-gray-500 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black text-gray-900">{stats?.total ?? 0}</p>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
+                <p className="text-6xl font-black text-gray-900">{stats?.total ?? 0}</p>
               </div>
-              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow text-white">
-                <p className="text-green-100 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-green-100 text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
+                <p className="text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
               </div>
-              <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow border border-gray-100">
-                <p className="text-gray-500 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black text-gray-900">
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
+                <p className="text-6xl font-black text-gray-900">
                   {(stats?.total ?? 0) - (stats?.votosConfirmadosTotales ?? 0)}
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow text-white">
-                <p className="text-red-100 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
+              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-red-100 text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
+                <p className="text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
               </div>
             </>
           )}
 
           {currentUser.role === "subcoordinador" && (
             <>
-              <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow border border-gray-100">
-                <p className="text-gray-500 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black text-gray-900">{stats?.votantesTotales ?? 0}</p>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
+                <p className="text-6xl font-black text-gray-900">{stats?.votantesTotales ?? 0}</p>
               </div>
-              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow text-white">
-                <p className="text-green-100 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-green-100 text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
+                <p className="text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
               </div>
-              <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow border border-gray-100">
-                <p className="text-gray-500 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black text-gray-900">
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
+                <p className="text-6xl font-black text-gray-900">
                   {(stats?.votantesTotales ?? 0) - (stats?.votosConfirmadosTotales ?? 0)}
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 hover:shadow-xl transition-shadow text-white">
-                <p className="text-red-100 text-xs md:text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
+              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-red-100 text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
+                <p className="text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
               </div>
             </>
           )}
@@ -955,13 +955,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
       </div>
 
       {/* ACCIONES */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-4 md:my-6 lg:my-8 flex flex-wrap gap-2 md:gap-3 items-center">
+      <div className="max-w-7xl mx-auto px-6 my-8 flex flex-wrap gap-3 items-center">
         {currentUser.role === "superadmin" && (
           <button
             onClick={() => { setModalType("coordinador"); setShowAddModal(true); }}
-            className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all font-semibold text-sm md:text-base"
+            className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all font-semibold"
           >
-            <UserPlus className="w-4 md:w-5 h-4 md:h-5" />
+            <UserPlus className="w-5 h-5" />
             Agregar Coordinador
           </button>
         )}
@@ -969,9 +969,9 @@ const Dashboard = ({ currentUser, onLogout }) => {
         {currentUser.role === "coordinador" && (
           <button
             onClick={() => { setModalType("subcoordinador"); setShowAddModal(true); }}
-            className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all font-semibold text-sm md:text-base"
+            className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all font-semibold"
           >
-            <UserPlus className="w-4 md:w-5 h-4 md:h-5" />
+            <UserPlus className="w-5 h-5" />
             Agregar Subcoordinador
           </button>
         )}
@@ -979,124 +979,123 @@ const Dashboard = ({ currentUser, onLogout }) => {
         {(currentUser.role === "coordinador" || currentUser.role === "subcoordinador") && (
           <button
             onClick={() => { setModalType("votante"); setShowAddModal(true); }}
-            className="flex items-center gap-2 bg-white border-2 border-red-600 text-red-600 px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl hover:bg-red-50 shadow-md hover:shadow-lg transition-all font-semibold text-sm md:text-base"
+            className="flex items-center gap-2 bg-white border-2 border-red-600 text-red-600 px-6 py-3 rounded-xl hover:bg-red-50 shadow-md hover:shadow-lg transition-all font-semibold"
           >
-            <UserPlus className="w-4 md:w-5 h-4 md:h-5" />
+            <UserPlus className="w-5 h-5" />
             Agregar Votante
           </button>
         )}
 
         <button
           onClick={descargarPDF}
-          className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl hover:bg-gray-50 shadow-md hover:shadow-lg transition-all font-semibold text-sm md:text-base"
+          className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-50 shadow-md hover:shadow-lg transition-all font-semibold"
         >
-          <BarChart3 className="w-4 md:w-5 h-4 md:h-5" />
+          <BarChart3 className="w-5 h-5" />
           Descargar PDF
         </button>
       </div>
 
       {/* BUSCADOR */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 md:mb-6">
-        <div className="bg-white rounded-lg md:rounded-2xl shadow-lg p-4 md:p-6 border border-gray-100">
-          <label className="block text-xs md:text-sm font-bold text-gray-700 mb-2 md:mb-3 uppercase tracking-wide">
+      <div className="max-w-7xl mx-auto px-6 mb-6">
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
             Buscar dentro de mi estructura
           </label>
           <input
             value={searchCI}
             onChange={(e) => setSearchCI(e.target.value)}
             placeholder="Buscar por CI, nombre, apellido o combinación"
-            className="w-full border-2 border-gray-200 rounded-lg md:rounded-xl px-4 py-2 md:py-3 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+            className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
           />
           {normalizeText(searchCI) && (
-            <p className="text-xs md:text-sm text-gray-600 mt-2 md:mt-3 font-medium">
+            <p className="text-sm text-gray-600 mt-3 font-medium">
               Resultados: <span className="text-red-600 font-bold">{resultadosBusqueda.length}</span>
             </p>
           )}
         </div>
       </div>
-      </div>
 
       {/* RESULTADOS */}
       {normalizeText(searchCI) && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-          <div className="bg-white rounded-lg md:rounded-2xl shadow-lg border border-gray-100">
-            <div className="p-4 md:p-6 border-b border-gray-100">
-              <h3 className="font-bold text-lg md:text-xl text-gray-800">Resultados de búsqueda</h3>
-              <p className="text-xs md:text-sm text-gray-500 mt-1">Solo dentro de la estructura permitida para tu rol.</p>
+        <div className="max-w-7xl mx-auto px-6 mb-6">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
+            <div className="p-6 border-b border-gray-100">
+              <h3 className="font-bold text-xl text-gray-800">Resultados de búsqueda</h3>
+              <p className="text-sm text-gray-500 mt-1">Solo dentro de la estructura permitida para tu rol.</p>
             </div>
-            <div className="p-4 md:p-6 space-y-2 md:space-y-3">
+            <div className="p-6 space-y-3">
               {resultadosBusqueda.length === 0 ? (
-                <div className="text-center py-6 md:py-8 text-gray-500 text-sm md:text-base">No se encontraron coincidencias en tu estructura.</div>
+                <div className="text-center py-8 text-gray-500">No se encontraron coincidencias en tu estructura.</div>
               ) : (
                 <div>
                   {resultadosBusqueda.slice(0, 50).map(({ tipo, persona }) => (
-                    <div key={`${tipo}-${persona.ci}`} className="border-2 border-gray-100 rounded-lg md:rounded-xl p-3 md:p-4 hover:border-red-200 hover:bg-red-50/30 transition-all mb-2 md:mb-3">
-                      <div className="flex items-start justify-between gap-2 md:gap-3">
-                        <div className="min-w-0 flex-1">
-                          <div className="font-bold text-sm md:text-base flex items-center gap-2 mb-1 md:mb-2 flex-wrap">
-                            <span className="truncate">{persona.nombre || "-"} {persona.apellido || ""}</span>
+                    <div key={`${tipo}-${persona.ci}`} className="border-2 border-gray-100 rounded-xl p-4 hover:border-red-200 hover:bg-red-50/30 transition-all mb-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="font-bold text-base flex items-center gap-3 mb-2">
+                            {persona.nombre || "-"} {persona.apellido || ""}
                             {tipo === "votante" && persona.voto_confirmado && (
-                              <span className="inline-flex items-center px-2 py-0.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                              <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold shadow-sm">
                                 ✓ Confirmado
                               </span>
                             )}
                             {tipo === "votante" && !persona.voto_confirmado && (
-                              <span className="inline-flex items-center px-2 py-0.5 bg-gray-200 text-gray-600 text-xs rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                              <span className="inline-flex items-center px-3 py-1 bg-gray-200 text-gray-600 text-xs rounded-full font-semibold">
                                 Pendiente
                               </span>
                             )}
                           </div>
-                          <div className="text-xs md:text-sm text-gray-600 space-y-0.5">
-                            <div><span className="font-semibold">CI:</span> {persona.ci}</div>
-                            <div>
+                          <div className="text-sm text-gray-600">
+                            <span className="font-semibold">CI:</span> {persona.ci}
+                            <span className="ml-4">
                               <span className="font-semibold">Tipo:</span>{" "}
                               {tipo === "coordinador"
                                 ? "Coordinador"
                                 : tipo === "subcoordinador"
                                 ? "Subcoordinador"
                                 : "Votante"}
-                            </div>
+                            </span>
                           </div>
                         </div>
-                        <div className="flex gap-1 md:gap-2 flex-wrap flex-shrink-0">
+                        <div className="flex gap-2 flex-wrap">
                           <button
                             onClick={() => abrirTelefono(tipo, persona)}
-                            className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 border-2 border-green-500 text-green-600 rounded-lg md:rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
+                            className="inline-flex items-center justify-center w-11 h-11 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
                             title="Editar teléfono"
                           >
-                            <Phone className="w-4 md:w-5 h-4 md:h-5" />
+                            <Phone className="w-5 h-5" />
                           </button>
                           <button
                             onClick={() => abrirDireccion(tipo, persona)}
-                            className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 border-2 border-blue-500 text-blue-600 rounded-lg md:rounded-xl hover:bg-blue-50 hover:border-blue-600 transition-all shadow-sm hover:shadow-md"
+                            className="inline-flex items-center justify-center w-11 h-11 border-2 border-blue-500 text-blue-600 rounded-xl hover:bg-blue-50 hover:border-blue-600 transition-all shadow-sm hover:shadow-md"
                             title="Editar dirección"
                           >
-                            <Pencil className="w-4 md:w-5 h-4 md:h-5" />
+                            <Pencil className="w-5 h-5" />
                           </button>
                           {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona, tipo) && (
                             <button
                               onClick={() => abrirConfirmVoto(persona, tipo)}
-                              className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg md:rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
+                              className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
                               title="Confirmar voto"
                             >
-                              <Check className="w-4 md:w-5 h-4 md:h-5" />
+                              <Check className="w-5 h-5" />
                             </button>
                           )}
                           {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona, tipo) && (
                             <button
                               onClick={() => abrirAnularConfirmacion(persona, tipo)}
-                              className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 border-2 border-red-500 text-red-600 rounded-lg md:rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
+                              className="inline-flex items-center justify-center w-11 h-11 border-2 border-red-500 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
                               title="Anular confirmación"
                             >
-                              <X className="w-4 md:w-5 h-4 md:h-5" />
+                              <X className="w-5 h-5" />
                             </button>
                           )}
                           <button
                             onClick={() => quitarPersona(tipo, persona)}
-                            className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 border-2 border-red-400 text-red-600 rounded-lg md:rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
+                            className="inline-flex items-center justify-center w-11 h-11 border-2 border-red-400 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
                             title="Eliminar"
                           >
-                            <Trash2 className="w-4 md:w-5 h-4 md:h-5" />
+                            <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
                       </div>
@@ -1115,13 +1114,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
       )}
 
       {/* MI ESTRUCTURA */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 md:mb-10">
-        <div className="bg-white rounded-lg md:rounded-2xl shadow-lg border border-gray-100">
-          <div className="p-4 md:p-6 border-b border-gray-100 bg-gradient-to-r from-red-50 to-white">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Mi Estructura Electoral</h2>
-            <p className="text-xs md:text-sm text-gray-600 mt-1">Organización y seguimiento de la red de votantes</p>
+      <div className="max-w-7xl mx-auto px-6 mb-10">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
+          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-red-50 to-white">
+            <h2 className="text-2xl font-bold text-gray-900">Mi Estructura Electoral</h2>
+            <p className="text-sm text-gray-600 mt-1">Organización y seguimiento de la red de votantes</p>
           </div>
-          <div className="p-4 md:p-6">
+          <div className="p-6">
 
             {/* SUPERADMIN */}
             {currentUser.role === "superadmin" && (
@@ -1149,32 +1148,32 @@ const Dashboard = ({ currentUser, onLogout }) => {
                       const porcentajeCoord = totalEnRed > 0 ? Math.round((confirmadosCoord / totalEnRed) * 100) : 0;
                       
                       return (
-                      <div key={coord.ci} className="border-2 border-red-100 rounded-lg md:rounded-xl mb-3 md:mb-4 bg-gradient-to-r from-red-50/50 to-white overflow-hidden hover:border-red-200 transition-all">
+                      <div key={coord.ci} className="border-2 border-red-100 rounded-xl mb-4 bg-gradient-to-r from-red-50/50 to-white overflow-hidden hover:border-red-200 transition-all">
                         <div
-                          className="flex items-start justify-between p-3 md:p-5 cursor-pointer gap-2 md:gap-4"
+                          className="flex items-start justify-between p-5 cursor-pointer gap-4"
                           onClick={() => toggleCoord(coord.ci)}
                         >
-                          <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0">
+                          <div className="flex items-start gap-3 flex-1">
                             {expandedCoords[normalizeCI(coord.ci)] ? (
-                              <ChevronDown className="w-5 md:w-6 h-5 md:h-6 text-red-600 flex-shrink-0 mt-1" />
+                              <ChevronDown className="w-6 h-6 text-red-600" />
                             ) : (
-                              <ChevronRight className="w-5 md:w-6 h-5 md:h-6 text-red-600 flex-shrink-0 mt-1" />
+                              <ChevronRight className="w-6 h-6 text-red-600" />
                             )}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2 flex-wrap">
-                                <p className="font-bold text-base md:text-lg text-gray-900 truncate">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <p className="font-bold text-lg text-gray-900">
                                   {coord.nombre || "-"} {coord.apellido || ""}
                                 </p>
-                                <span className="inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 bg-red-600 text-white text-xs rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                                <span className="inline-flex items-center px-3 py-1 bg-red-600 text-white text-xs rounded-full font-semibold">
                                   {totalEnRed} personas
                                 </span>
                               </div>
-                              <div className="mb-2 md:mb-3">
-                                <div className="flex items-center justify-between text-xs md:text-sm mb-0.5 md:mb-1">
+                              <div className="mb-3">
+                                <div className="flex items-center justify-between text-sm mb-1">
                                   <span className="text-gray-600 font-medium">Progreso de confirmación</span>
                                   <span className="text-red-600 font-bold">{porcentajeCoord}%</span>
                                 </div>
-                                <div className="bg-gray-200 rounded-full h-2 md:h-2.5 overflow-hidden">
+                                <div className="bg-gray-200 rounded-full h-2.5 overflow-hidden">
                                   <div 
                                     className="bg-gradient-to-r from-green-500 to-green-600 h-full rounded-full transition-all duration-500"
                                     style={{ width: `${porcentajeCoord}%` }}
@@ -1190,24 +1189,24 @@ const Dashboard = ({ currentUser, onLogout }) => {
                               />
                             </div>
                           </div>
-                          <div className="flex flex-col md:flex-row gap-1 md:gap-2 flex-shrink-0">
+                          <div className="flex flex-col md:flex-row gap-2">
                             <button
                               onClick={(e) => { e.stopPropagation(); abrirTelefono("coordinador", coord); }}
-                              className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 border-2 border-green-500 text-green-600 rounded-lg md:rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
+                              className="inline-flex items-center justify-center w-11 h-11 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
                             >
-                              <Phone className="w-4 md:w-5 h-4 md:h-5" />
+                              <Phone className="w-5 h-5" />
                             </button>
                             <button
                               onClick={(e) => { e.stopPropagation(); quitarPersona(coord.ci, "coordinador"); }}
-                              className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg md:rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
+                              className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
                             >
-                              <Trash2 className="w-4 md:w-5 h-4 md:h-5" />
+                              <Trash2 className="w-5 h-5" />
                             </button>
                           </div>
                         </div>
 
                         {expandedCoords[normalizeCI(coord.ci)] && (
-                          <div className="bg-gradient-to-b from-gray-50 to-white px-4 md:px-6 pb-3 md:pb-4 border-t border-gray-100">
+                          <div className="bg-gradient-to-b from-gray-50 to-white px-6 pb-4 border-t border-gray-100">
                             {(estructura.subcoordinadores || [])
                               .filter((s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci))
                               .map((sub) => {
@@ -1219,39 +1218,39 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                 const porcentajeSub = totalSub > 0 ? Math.round((confirmadosSub / totalSub) * 100) : 0;
                                 
                                 return (
-                                <div key={sub.ci} className="border-l-4 border-red-400 bg-white rounded-r-lg md:rounded-r-xl shadow-sm p-3 md:p-4 mb-2 md:mb-3 ml-4 md:ml-8 hover:shadow-md transition-all">
-                                  <div className="flex items-start justify-between gap-2 md:gap-3">
-                                    <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0">
+                                <div key={sub.ci} className="border-l-4 border-red-400 bg-white rounded-r-xl shadow-sm p-4 mb-3 ml-8 hover:shadow-md transition-all">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="flex items-start gap-3 flex-1">
                                       <button
                                         onClick={(e) => { e.stopPropagation(); toggleSub(sub.ci); }}
-                                        className="mt-0.5 md:mt-1 flex-shrink-0"
+                                        className="mt-1"
                                       >
                                         {expandedSubs[normalizeCI(sub.ci)] ? (
-                                          <ChevronDown className="w-4 md:w-5 h-4 md:h-5 text-red-600 transition-transform" />
+                                          <ChevronDown className="w-5 h-5 text-red-600 transition-transform" />
                                         ) : (
-                                          <ChevronRight className="w-4 md:w-5 h-4 md:h-5 text-red-600 transition-transform" />
+                                          <ChevronRight className="w-5 h-5 text-red-600 transition-transform" />
                                         )}
                                       </button>
-                                      <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 mb-1 md:mb-2 flex-wrap">
-                                          <p className="font-bold text-sm md:text-base text-gray-900 truncate">
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <p className="font-bold text-base text-gray-900">
                                             {sub.nombre || "-"} {sub.apellido || ""}
                                           </p>
-                                          <span className="inline-flex items-center px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                                          <span className="inline-flex items-center px-2.5 py-0.5 bg-red-100 text-red-700 text-xs rounded-full font-semibold">
                                             {totalSub} personas
                                           </span>
                                           {sub.voto_confirmado && (
-                                            <span className="inline-flex items-center px-2 py-0.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                                            <span className="inline-flex items-center px-2.5 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold">
                                               ✓ Confirmado
                                             </span>
                                           )}
                                         </div>
-                                        <div className="mb-1.5 md:mb-2">
-                                          <div className="flex items-center justify-between text-xs mb-0.5">
+                                        <div className="mb-2">
+                                          <div className="flex items-center justify-between text-xs mb-1">
                                             <span className="text-gray-600">Progreso</span>
                                             <span className="text-red-600 font-bold">{porcentajeSub}%</span>
                                           </div>
-                                          <div className="bg-gray-200 rounded-full h-1.5 md:h-2 overflow-hidden">
+                                          <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
                                             <div 
                                               className="bg-gradient-to-r from-green-500 to-green-600 h-full rounded-full transition-all duration-500"
                                               style={{ width: `${porcentajeSub}%` }}
@@ -1267,29 +1266,29 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                         />
                                       </div>
                                     </div>
-                                    <div className="flex gap-1 flex-shrink-0">
+                                    <div className="flex gap-2">
                                       <button
                                         onClick={(e) => { e.stopPropagation(); abrirTelefono("subcoordinador", sub); }}
-                                        className="inline-flex items-center justify-center w-8 md:w-10 h-8 md:h-10 border-2 border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition-all shadow-sm text-xs md:text-sm"
+                                        className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 transition-all shadow-sm"
                                       >
-                                        <Phone className="w-4 md:w-5 h-4 md:h-5" />
+                                        <Phone className="w-5 h-5" />
                                       </button>
                                       <button
                                         onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
-                                        className="inline-flex items-center justify-center w-8 md:w-10 h-8 md:h-10 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-md text-xs md:text-sm"
+                                        className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md"
                                       >
-                                        <Trash2 className="w-4 md:w-5 h-4 md:h-5" />
+                                        <Trash2 className="w-5 h-5" />
                                       </button>
                                     </div>
                                   </div>
 
                                   {expandedSubs[normalizeCI(sub.ci)] && (
-                                    <div className="ml-4 md:ml-6 mt-2 md:mt-4 border-l-2 border-green-200 pl-3 md:pl-4 space-y-1 md:space-y-2">
+                                    <div className="ml-6 mt-4 border-l-2 border-green-200 pl-4 space-y-2">
                                       {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
                                         <VotanteCard key={v.ci} v={v} showAnular={true} />
                                       ))}
                                       {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                                        <p className="text-gray-500 text-xs md:text-sm py-3 md:py-4 text-center">Sin votantes asignados.</p>
+                                        <p className="text-gray-500 text-sm py-4 text-center">Sin votantes asignados.</p>
                                       )}
                                     </div>
                                   )}
@@ -1318,37 +1317,37 @@ const Dashboard = ({ currentUser, onLogout }) => {
                   const porcentajeSub = totalSub > 0 ? Math.round((confirmadosSub / totalSub) * 100) : 0;
                   
                   return (
-                  <div key={sub.ci} className="border-2 border-red-100 rounded-lg md:rounded-xl mb-3 md:mb-4 bg-gradient-to-r from-red-50/50 to-white overflow-hidden hover:border-red-200 transition-all">
+                  <div key={sub.ci} className="border-2 border-red-100 rounded-xl mb-4 bg-gradient-to-r from-red-50/50 to-white overflow-hidden hover:border-red-200 transition-all">
                     <div
-                      className="flex items-start justify-between p-3 md:p-5 cursor-pointer gap-2 md:gap-4"
+                      className="flex items-start justify-between p-5 cursor-pointer gap-4"
                       onClick={() => toggleExpand(sub.ci)}
                     >
-                      <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0">
+                      <div className="flex items-start gap-3 flex-1">
                         {expandedCoords[normalizeCI(sub.ci)] ? (
-                          <ChevronDown className="w-5 md:w-6 h-5 md:h-6 text-red-600 flex-shrink-0 mt-1" />
+                          <ChevronDown className="w-6 h-6 text-red-600" />
                         ) : (
-                          <ChevronRight className="w-5 md:w-6 h-5 md:h-6 text-red-600 flex-shrink-0 mt-1" />
+                          <ChevronRight className="w-6 h-6 text-red-600" />
                         )}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2 flex-wrap">
-                            <p className="font-bold text-base md:text-lg text-gray-900 truncate">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <p className="font-bold text-lg text-gray-900">
                               {sub.nombre || "-"} {sub.apellido || ""}
                             </p>
-                            <span className="inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 bg-red-600 text-white text-xs rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                            <span className="inline-flex items-center px-3 py-1 bg-red-600 text-white text-xs rounded-full font-semibold">
                               {totalSub} personas
                             </span>
                             {sub.voto_confirmado && (
-                              <span className="inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                              <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold">
                                 ✓ Confirmado
                               </span>
                             )}
                           </div>
-                          <div className="mb-2 md:mb-3">
-                            <div className="flex items-center justify-between text-xs md:text-sm mb-0.5 md:mb-1">
+                          <div className="mb-3">
+                            <div className="flex items-center justify-between text-sm mb-1">
                               <span className="text-gray-600 font-medium">Progreso de confirmación</span>
                               <span className="text-red-600 font-bold">{porcentajeSub}%</span>
                             </div>
-                            <div className="bg-gray-200 rounded-full h-2 md:h-2.5 overflow-hidden">
+                            <div className="bg-gray-200 rounded-full h-2.5 overflow-hidden">
                               <div 
                                 className="bg-gradient-to-r from-green-500 to-green-600 h-full rounded-full transition-all duration-500"
                                 style={{ width: `${porcentajeSub}%` }}
@@ -1364,67 +1363,50 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           />
                         </div>
                       </div>
-                      <div className="flex flex-col md:flex-row gap-1 md:gap-2 flex-shrink-0">
+                      <div className="flex flex-col md:flex-row gap-2">
                         <button
                           onClick={(e) => { e.stopPropagation(); abrirTelefono("subcoordinador", sub); }}
-                          className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 border-2 border-green-500 text-green-600 rounded-lg md:rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
+                          className="inline-flex items-center justify-center w-11 h-11 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
                         >
-                          <Phone className="w-4 md:w-5 h-4 md:h-5" />
+                          <Phone className="w-5 h-5" />
                         </button>
                         {!sub.voto_confirmado && canConfirmarVoto(sub, "subcoordinador") && (
                           <button
                             onClick={(e) => { e.stopPropagation(); abrirConfirmVoto(sub, "subcoordinador"); }}
-                            className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg md:rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
+                            className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
                             title="Confirmar voto"
                           >
-                            <Check className="w-4 md:w-5 h-4 md:h-5" />
+                            <Check className="w-5 h-5" />
                           </button>
                         )}
                         {sub.voto_confirmado && canAnularConfirmacion(sub, "subcoordinador") && (
                           <button
                             onClick={(e) => { e.stopPropagation(); abrirAnularConfirmacion(sub, "subcoordinador"); }}
-                            className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 border-2 border-red-500 text-red-600 rounded-lg md:rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
+                            className="inline-flex items-center justify-center w-11 h-11 border-2 border-red-500 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
                             title="Anular confirmación"
                           >
-                            <X className="w-4 md:w-5 h-4 md:h-5" />
+                            <X className="w-5 h-5" />
                           </button>
                         )}
                         <button
                           onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
-                          className="inline-flex items-center justify-center w-9 md:w-11 h-9 md:h-11 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg md:rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
+                          className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
                         >
-                          <Trash2 className="w-4 md:w-5 h-4 md:h-5" />
+                          <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
                     </div>
 
                     {expandedCoords[normalizeCI(sub.ci)] && (
-                      <div className="bg-gradient-to-b from-gray-50 to-white px-4 md:px-6 pb-3 md:pb-4 border-t border-gray-100">
-                        <p className="text-xs md:text-sm font-bold text-gray-700 mt-2 md:mt-4 mb-2 md:mb-3 uppercase tracking-wide">Votantes Asignados</p>
-                        <div className="ml-4 md:ml-4 border-l-2 border-green-200 pl-3 md:pl-4 space-y-1 md:space-y-2">
+                      <div className="bg-gradient-to-b from-gray-50 to-white px-6 pb-4 border-t border-gray-100">
+                        <p className="text-sm font-bold text-gray-700 mt-4 mb-3 uppercase tracking-wide">Votantes Asignados</p>
+                        <div className="ml-4 border-l-2 border-green-200 pl-4 space-y-2">
                           {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
                             <VotanteCard key={v.ci} v={v} showAnular={true} />
                           ))}
                           {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                            <p className="text-gray-500 text-xs md:text-sm py-2 md:py-4 text-center">Sin votantes asignados.</p>
+                            <p className="text-gray-500 text-sm py-4 text-center">Sin votantes asignados.</p>
                           )}
-                        </div>
-                      </div>
-                    )}
-
-                {getMisVotantes(estructura, currentUser).length > 0 && (
-                  <div className="border-2 border-green-100 rounded-lg md:rounded-xl mb-4 md:mb-6 p-4 md:p-6 bg-gradient-to-r from-green-50/30 to-white">
-                    <p className="font-bold text-lg md:text-xl text-gray-900 mb-3 md:mb-4 flex items-center gap-2">
-                      <span className="inline-block w-1 h-5 md:h-6 bg-green-500 rounded"></span>
-                      Mis Votantes Directos
-                    </p>
-                    <div className="space-y-1 md:space-y-2">
-                      {getMisVotantes(estructura, currentUser).map((v) => (
-                        <VotanteCard key={v.ci} v={v} showAnular={true} />
-                      ))}
-                    </div>
-                  </div>
-                )}
                         </div>
                       </div>
                     )}
@@ -1448,12 +1430,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
 
                 {getMisSubcoordinadores(estructura, currentUser).length === 0 &&
                   getMisVotantes(estructura, currentUser).length === 0 && (
-                    <div className="text-center py-8 md:py-16">
-                      <div className="inline-block p-4 md:p-6 bg-gray-50 rounded-lg md:rounded-2xl">
-                        <p className="text-gray-600 text-base md:text-lg">
+                    <div className="text-center py-16">
+                      <div className="inline-block p-6 bg-gray-50 rounded-2xl">
+                        <p className="text-gray-600 text-lg">
                           Aún no tiene subcoordinadores ni votantes asignados.
                         </p>
-                        <p className="text-gray-500 text-xs md:text-sm mt-2">
+                        <p className="text-gray-500 text-sm mt-2">
                           Comience agregando personas a su red electoral.
                         </p>
                       </div>
@@ -1466,12 +1448,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
             {currentUser.role === "subcoordinador" && (
               <div>
                 {getMisVotantes(estructura, currentUser).length > 0 && (
-                  <div className="border-2 border-green-100 rounded-lg md:rounded-xl p-4 md:p-6 bg-gradient-to-r from-green-50/30 to-white">
-                    <p className="font-bold text-lg md:text-xl text-gray-900 mb-3 md:mb-4 flex items-center gap-2">
-                      <span className="inline-block w-1 h-5 md:h-6 bg-green-500 rounded"></span>
+                  <div className="border-2 border-green-100 rounded-xl p-6 bg-gradient-to-r from-green-50/30 to-white">
+                    <p className="font-bold text-xl text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="inline-block w-1 h-6 bg-green-500 rounded"></span>
                       Mis Votantes Asignados
                     </p>
-                    <div className="space-y-1 md:space-y-2">
+                    <div className="space-y-2">
                       {getMisVotantes(estructura, currentUser).map((v) => (
                         <VotanteCard key={v.ci} v={v} showAnular={false} />
                       ))}
@@ -1479,10 +1461,10 @@ const Dashboard = ({ currentUser, onLogout }) => {
                   </div>
                 )}
                 {getMisVotantes(estructura, currentUser).length === 0 && (
-                  <div className="text-center py-8 md:py-16">
-                    <div className="inline-block p-4 md:p-6 bg-gray-50 rounded-lg md:rounded-2xl">
-                      <p className="text-gray-600 text-base md:text-lg">No tiene votantes asignados.</p>
-                      <p className="text-gray-500 text-xs md:text-sm mt-2">
+                  <div className="text-center py-16">
+                    <div className="inline-block p-6 bg-gray-50 rounded-2xl">
+                      <p className="text-gray-600 text-lg">No tiene votantes asignados.</p>
+                      <p className="text-gray-500 text-sm mt-2">
                         Su coordinador le asignará votantes pronto.
                       </p>
                     </div>
