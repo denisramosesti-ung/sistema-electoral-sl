@@ -94,11 +94,19 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
       addHeader(doc, "Reporte General – Superadmin", usuario, currentUser.ci, fechaGeneracion);
     }
 
+    // Línea divisoria roja antes del coordinador
+    let currentY = idx === 0 ? 95 : 45;
+    if (idx > 0) {
+      doc.setDrawColor(139, 0, 0); // Rojo oscuro
+      doc.setLineWidth(0.5);
+      doc.line(MARGINS.left, currentY - 5, pageWidth - MARGINS.right, currentY - 5);
+      currentY += 5;
+    }
+
     // Título coordinador
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
     const coordTitle = `Coordinador: ${coord.nombre} ${coord.apellido}`;
-    let currentY = idx === 0 ? 95 : 45;
     doc.text(coordTitle, MARGINS.left, currentY);
 
     // Info coordinador
@@ -127,8 +135,9 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
         0: { cellWidth: 70 },
         1: { cellWidth: 30, halign: "right" },
       },
-      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
+      headStyles: { fillColor: [139, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
       bodyStyles: { textColor: [0, 0, 0] },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
       didDrawPage: () => {
         addFooter(doc, pageWidth, pageHeight);
       },
@@ -167,8 +176,9 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
           2: { cellWidth: 40 },
           3: { cellWidth: 30, halign: "center" },
         },
-        headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
+        headStyles: { fillColor: [139, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
         bodyStyles: { textColor: [0, 0, 0] },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
         cellStyles: {
           3: { halign: "center" }, // Estado centrado
         },
@@ -177,12 +187,14 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
         },
         willDrawCell: (data) => {
           // Colorear columna Estado (índice 3)
-          if (data.column.index === 3) {
+          if (data.column.index === 3 && data.section === 'body') {
             if (data.cell.text[0] === "Confirmado") {
-              data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
+              data.cell.styles.fillColor = [200, 255, 200]; // Verde claro
+              data.cell.styles.textColor = [0, 100, 0]; // Verde oscuro
               data.cell.styles.fontStyle = "bold";
             } else if (data.cell.text[0] === "Pendiente") {
-              data.cell.styles.textColor = [128, 128, 128]; // Gris
+              data.cell.styles.fillColor = [240, 240, 240]; // Gris claro
+              data.cell.styles.textColor = [100, 100, 100]; // Gris oscuro
             }
           }
         },
@@ -260,8 +272,9 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
       0: { cellWidth: 80, fontStyle: "normal" },
       1: { cellWidth: 30, fontStyle: "bold", halign: "right" },
     },
-    headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
+    headStyles: { fillColor: [139, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
     bodyStyles: { textColor: [0, 0, 0] },
+    alternateRowStyles: { fillColor: [245, 245, 245] },
     didDrawPage: () => {
       addFooter(doc, pageWidth, pageHeight);
     },
@@ -303,8 +316,9 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
         2: { cellWidth: 40 },
         3: { cellWidth: 30, halign: "center" },
       },
-      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
+      headStyles: { fillColor: [139, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
       bodyStyles: { textColor: [0, 0, 0] },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
       cellStyles: {
         3: { halign: "center" }, // Estado centrado
       },
@@ -313,12 +327,14 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
       },
       willDrawCell: (data) => {
         // Colorear columna Estado (índice 3)
-        if (data.column.index === 3) {
+        if (data.column.index === 3 && data.section === 'body') {
           if (data.cell.text[0] === "Confirmado") {
-            data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
+            data.cell.styles.fillColor = [200, 255, 200]; // Verde claro
+            data.cell.styles.textColor = [0, 100, 0]; // Verde oscuro
             data.cell.styles.fontStyle = "bold";
           } else if (data.cell.text[0] === "Pendiente") {
-            data.cell.styles.textColor = [128, 128, 128]; // Gris
+            data.cell.styles.fillColor = [240, 240, 240]; // Gris claro
+            data.cell.styles.textColor = [100, 100, 100]; // Gris oscuro
           }
         }
       },
@@ -380,8 +396,9 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
       0: { cellWidth: 80, fontStyle: "normal" },
       1: { cellWidth: 30, fontStyle: "bold", halign: "right" },
     },
-    headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
+    headStyles: { fillColor: [139, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
     bodyStyles: { textColor: [0, 0, 0] },
+    alternateRowStyles: { fillColor: [245, 245, 245] },
     didDrawPage: () => {
       addFooter(doc, pageWidth, pageHeight);
     },
@@ -417,8 +434,9 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
         2: { cellWidth: 40 },
         3: { cellWidth: 30, halign: "center" },
       },
-      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
+      headStyles: { fillColor: [139, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
       bodyStyles: { textColor: [0, 0, 0] },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
       cellStyles: {
         3: { halign: "center" }, // Estado centrado
       },
@@ -427,12 +445,14 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
       },
       willDrawCell: (data) => {
         // Colorear columna Estado (índice 3)
-        if (data.column.index === 3) {
+        if (data.column.index === 3 && data.section === 'body') {
           if (data.cell.text[0] === "Confirmado") {
-            data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
+            data.cell.styles.fillColor = [200, 255, 200]; // Verde claro
+            data.cell.styles.textColor = [0, 100, 0]; // Verde oscuro
             data.cell.styles.fontStyle = "bold";
           } else if (data.cell.text[0] === "Pendiente") {
-            data.cell.styles.textColor = [128, 128, 128]; // Gris
+            data.cell.styles.fillColor = [240, 240, 240]; // Gris claro
+            data.cell.styles.textColor = [100, 100, 100]; // Gris oscuro
           }
         }
       },
@@ -448,25 +468,30 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
 function addHeader(doc, title, usuario, ci, fecha) {
   const pageWidth = doc.internal.pageSize.getWidth();
 
+  // Banda superior roja
+  doc.setFillColor(139, 0, 0); // Rojo oscuro
+  doc.rect(0, 0, pageWidth, 25, 'F');
+
+  // Texto blanco en banda roja
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
-  doc.text("Sistema Electoral SL", MARGINS.left, MARGINS.top + 5);
+  doc.text("Sistema Electoral SL", MARGINS.left, MARGINS.top - 5);
 
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
-  doc.text(title, MARGINS.left, MARGINS.top + 12);
+  doc.text(title, MARGINS.left, MARGINS.top + 2);
 
-  // Información del lado derecho
+  // Información del lado derecho (texto blanco)
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   const rightX = pageWidth - MARGINS.right - 60;
-  doc.text(`Usuario: ${usuario}`, rightX, MARGINS.top + 5);
-  doc.text(`CI: ${ci}`, rightX, MARGINS.top + 11);
-  doc.text(`Generado: ${fecha}`, rightX, MARGINS.top + 17);
+  doc.text(`Usuario: ${usuario}`, rightX, MARGINS.top - 5);
+  doc.text(`CI: ${ci}`, rightX, MARGINS.top + 1);
+  doc.text(`Generado: ${fecha}`, rightX, MARGINS.top + 7);
 
-  // Línea divisoria
-  doc.setDrawColor(180, 180, 180);
-  doc.line(MARGINS.left, MARGINS.top + 22, pageWidth - MARGINS.right, MARGINS.top + 22);
+  // Restaurar color de texto a negro para el resto del documento
+  doc.setTextColor(0, 0, 0);
 }
 
 /**
