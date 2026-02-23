@@ -963,7 +963,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
 
                         {expandedCoords[normalizeCI(coord.ci)] && (() => {
                           const allSubs = estructura.subcoordinadores || [];
-                          const filteredSubs = allSubs.filter((s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci));
+                          const filteredSubs = allSubs.filter((s) => s.coordinador_ci && s.coordinador_ci === normalizeCI(coord.ci));
                           console.log("[v0] Coord CI:", coord.ci, "normalized:", normalizeCI(coord.ci));
                           console.log("[v0] All subs count:", allSubs.length, "subs coordinador_ci values:", allSubs.map(s => s.coordinador_ci));
                           console.log("[v0] Filtered subs for this coord:", filteredSubs.length, filteredSubs.map(s => ({ ci: s.ci, coordinador_ci: s.coordinador_ci })));
