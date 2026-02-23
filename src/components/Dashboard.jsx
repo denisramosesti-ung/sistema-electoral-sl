@@ -812,7 +812,7 @@ const descargarPDF = async () => {
       {/* TARJETAS ESTADÍSTICAS */}
       <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {currentUser.role === "superadmin" && (
-  <>
+  <div>
     {/* COORDINADORES */}
     <div className="bg-white rounded-lg shadow p-6">
       <p className="text-gray-600 text-sm">Coordinadores</p>
@@ -846,12 +846,12 @@ const descargarPDF = async () => {
         {stats?.votantesTotales ?? 0}
       </p>
     </div>
-  </>
+  </div>
 )}
 
 
         {currentUser.role === "coordinador" && (
-  <>
+  <div>
     {/* SUBCOORDINADORES */}
     <div className="bg-white rounded-lg shadow p-6">
       <p className="text-gray-600 text-sm">Subcoordinadores</p>
@@ -1095,7 +1095,7 @@ const descargarPDF = async () => {
           <div className="p-6">
             {/* SUPERADMIN */}
             {currentUser.role === "superadmin" && (
-              <>
+              <div>
                 {(estructura.coordinadores || []).map((coord) => (
                   <div
                     key={coord.ci}
@@ -1266,7 +1266,7 @@ const descargarPDF = async () => {
 
             {/* COORDINADOR */}
             {currentUser.role === "coordinador" && (
-              <>
+            </div>
                 {getMisSubcoordinadores(estructura, currentUser).map((sub) => (
                   <div
                     key={sub.ci}
@@ -1444,7 +1444,7 @@ const descargarPDF = async () => {
             )} 
 {/* SUBCOORDINADOR */}
 {currentUser.role === "subcoordinador" && (
-  <>
+  <div>
     {getMisVotantes(estructura, currentUser).map((v) => (
       <div
         key={v.ci}
@@ -1491,7 +1491,7 @@ const descargarPDF = async () => {
         No tiene votantes asignados.
       </p>
     )}
-  </>
+  </div>
 )}
 
           </div>
