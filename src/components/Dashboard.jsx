@@ -2,12 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { generarAccessCode } from "../utils/accessCode";
 
-import ReportSuperadmin from "../reports/ReportSuperadmin";
-import ReportCoordinador from "../reports/ReportCoordinador";
-import ReportSubcoordinador from "../reports/ReportSubcoordinador";
-import { REPORT_CSS } from "../reports/reportStyles";
-
-
 import {
   UserPlus,
   LogOut,
@@ -19,11 +13,17 @@ import {
   Trash2,
   Check,
   X,
+  Download,
 } from "lucide-react";
 
 import AddPersonModal from "../AddPersonModal";
 import ModalTelefono from "./ModalTelefono";
 import ConfirmVotoModal from "./ConfirmVotoModal";
+import {
+  generateSuperadminPDF,
+  generateCoordinadorPDF,
+  generateSubcoordinadorPDF,
+} from "../services/pdfService";
 
 import { getEstadisticas } from "../services/estadisticasService";
 
@@ -739,88 +739,44 @@ const resultadosBusqueda = useMemo(() => {
 }, [searchCI, personasVisibles]);
 
 
-  // ======================= DESCARGAR REPORTE (HTML → PDF) =======================
-const descargarPDF = () => {
+  // ======================= DESCARGAR REPORTE (jsPDF + autoTable) =======================
+const descargarPDF = async () => {
   if (!currentUser) {
     alert("Usuario no válido");
     return;
   }
 
-  let html = "";
-  let title = "Reporte";
+  try {
+    let doc;
+    let filename = "reporte";
 
-  if (currentUser.role === "superadmin") {
-    html = ReportSuperadmin({ estructura, currentUser });
-    title = "Reporte General – Superadmin";
-  } else if (currentUser.role === "coordinador") {
-    html = ReportCoordinador({ estructura, currentUser });
-    title = "Reporte de Coordinador";
-  } else if (currentUser.role === "subcoordinador") {
-    html = ReportSubcoordinador({ estructura, currentUser });
-    title = "Reporte de Subcoordinador";
-  } else {
-    alert("Rol no soportado para reportes");
-    return;
+    if (currentUser.role === "superadmin") {
+      doc = generateSuperadminPDF({ estructura, currentUser });
+      filename = "reporte-superadmin";
+    } else if (currentUser.role === "coordinador") {
+      doc = generateCoordinadorPDF({ estructura, currentUser });
+      filename = "reporte-coordinador";
+    } else if (currentUser.role === "subcoordinador") {
+      doc = generateSubcoordinadorPDF({ estructura, currentUser });
+      filename = "reporte-subcoordinador";
+    } else {
+      alert("Rol no soportado para reportes");
+      return;
+    }
+
+    // Generar nombre de archivo con timestamp
+    const fecha = new Date();
+    const timestamp = fecha.toISOString().slice(0, 10);
+    const nombreArchivo = `${filename}-${timestamp}.pdf`;
+
+    // Descargar PDF
+    doc.save(nombreArchivo);
+  } catch (error) {
+    console.error("Error generando PDF:", error);
+    alert("Error al generar el reporte PDF");
   }
-
-  const win = window.open("", "_blank");
-  if (!win) {
-    alert("El navegador bloqueó la ventana emergente (pop-up).");
-    return;
-  }
-
-  const fechaGeneracion = new Date().toLocaleString("es-PY");
-  const usuario = `${currentUser.nombre} ${currentUser.apellido}`;
-  const ci = currentUser.ci;
-
-  win.document.open();
-  win.document.write(`
-    <!DOCTYPE html>
-    <html lang="es">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${title}</title>
-        <style>${REPORT_CSS}</style>
-      </head>
-      <body>
-        <!-- ENCABEZADO ÚNICO (FIJO EN IMPRESIÓN) -->
-        <header class="report-header">
-          <div class="brand">
-            <div>
-              <h1 class="title">${title}</h1>
-              <p class="subtitle">Sistema Electoral SL</p>
-            </div>
-            <div class="meta">
-              <div><strong>Usuario:</strong> ${usuario}</div>
-              <div><strong>CI:</strong> ${ci}</div>
-              <div><strong>Generado:</strong> ${fechaGeneracion}</div>
-            </div>
-          </div>
-        </header>
-
-        <!-- CONTENIDO PRINCIPAL -->
-        <main class="report-body">
-          ${html}
-        </main>
-
-        <!-- PIE DE PÁGINA ÚNICO (FIJO EN IMPRESIÓN) -->
-        <footer class="report-footer">
-          <div>Documento confidencial - Sistema Electoral SL</div>
-          <div>Consulte la barra de estado del navegador para ver la página actual</div>
-        </footer>
-
-        <script>
-          window.onload = function() {
-            window.focus();
-            window.print();
-          };
-        </script>
-      </body>
-    </html>
-  `);
-  win.document.close();
 };
+
 
 
 
