@@ -1163,7 +1163,10 @@ const descargarPDF = async () => {
                                   )}
                                   <div
                                     className="cursor-pointer flex-1"
-                                    onClick={() => toggleExpand(sub.ci)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleExpand(sub.ci);
+                                    }}
                                   >
                                     <DatosPersona
                                       persona={sub}
@@ -1174,13 +1177,19 @@ const descargarPDF = async () => {
                                 </div>
                                 <div className="flex gap-2">
                                   <button
-                                    onClick={() => abrirTelefono("subcoordinador", sub)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      abrirTelefono("subcoordinador", sub);
+                                    }}
                                     className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                                   >
                                     <Phone className="w-5 h-5" />
                                   </button>
                                   <button
-                                    onClick={() => quitarPersona(sub.ci, "subcoordinador")}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      quitarPersona(sub.ci, "subcoordinador");
+                                    }}
                                     className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                                   >
                                     <Trash2 className="w-5 h-5" />
