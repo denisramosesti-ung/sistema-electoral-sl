@@ -1442,10 +1442,8 @@ const descargarPDF = async () => {
                             <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
-                      </div>
-                    ))}
                   </div>
-                )}
+                ))}
 
                 {getMisSubcoordinadores(estructura, currentUser).length === 0 &&
                   getMisVotantes(estructura, currentUser).length === 0 && (
