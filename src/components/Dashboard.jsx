@@ -1459,8 +1459,9 @@ const descargarPDF = async () => {
                   )}
               </>
             )}
-{/* SUBCOORDINADOR */}
-{currentUser.role === "subcoordinador" && (
+
+            {/* SUBCOORDINADOR */}
+            {currentUser.role === "subcoordinador" && (
   <>
     {getMisVotantes(estructura, currentUser).map((v) => (
       <div
@@ -1511,11 +1512,7 @@ const descargarPDF = async () => {
   </>
 )}
 
-          </div>
-        </div>
-      </div>
-
-      {/* MODAL TELÉFONO (tu componente) */}
+          {/* MODAL TELÉFONO (tu componente) */}
       <ModalTelefono
         open={phoneModalOpen}
         persona={phoneTarget}
