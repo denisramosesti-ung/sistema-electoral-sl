@@ -607,12 +607,14 @@ const Dashboard = ({ currentUser, onLogout }) => {
   };
 
   // ======================= COMPONENTE DATOS PERSONA =======================
-  const DatosPersona = ({ persona, rol, loginCode, onEditDireccion }) => {
+  const DatosPersona = ({ persona, rol, loginCode, onEditDireccion, hideName }) => {
     return (
       <div className="space-y-1 text-xs md:text-sm">
-        <p className="font-semibold">
-          {persona.nombre || "-"} {persona.apellido || ""}
-        </p>
+        {!hideName && (
+          <p className="font-semibold">
+            {persona.nombre || "-"} {persona.apellido || ""}
+          </p>
+        )}
         <p>
           <b>CI:</b> {persona.ci}
         </p>
@@ -1084,12 +1086,30 @@ const Dashboard = ({ currentUser, onLogout }) => {
                             ) : (
                               <ChevronRight className="w-5 h-5 text-red-600" />
                             )}
-                            <DatosPersona 
-                              persona={coord} 
-                              rol="Coordinador" 
-                              loginCode={coord.login_code}
-                              onEditDireccion={() => abrirDireccion("coordinador", coord)}
-                            />
+                            <div className="flex-1">
+                              <p className="font-semibold text-base">
+                                {coord.nombre || "-"} {coord.apellido || ""} ({(() => {
+                                  const subs = (estructura.subcoordinadores || []).filter(
+                                    s => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci)
+                                  );
+                                  const subsSet = new Set(subs.map(s => normalizeCI(s.ci)));
+                                  const votantesDirectos = (estructura.votantes || []).filter(
+                                    v => normalizeCI(v.asignado_por) === normalizeCI(coord.ci)
+                                  );
+                                  const votantesIndirectos = (estructura.votantes || []).filter(
+                                    v => subsSet.has(normalizeCI(v.asignado_por))
+                                  );
+                                  return 1 + subs.length + votantesDirectos.length + votantesIndirectos.length;
+                                })()})
+                              </p>
+                              <DatosPersona 
+                                persona={coord} 
+                                rol="Coordinador" 
+                                loginCode={coord.login_code}
+                                onEditDireccion={() => abrirDireccion("coordinador", coord)}
+                                hideName={true}
+                              />
+                            </div>
                           </div>
                           <div className="flex flex-col md:flex-row gap-2">
                             <button
@@ -1124,11 +1144,20 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                         className="cursor-pointer flex-1"
                                         onClick={(e) => { e.stopPropagation(); toggleSub(sub.ci); }}
                                       >
+                                        <p className="font-semibold text-sm">
+                                          {sub.nombre || "-"} {sub.apellido || ""} ({(() => {
+                                            const votantesDirectos = (estructura.votantes || []).filter(
+                                              v => normalizeCI(v.asignado_por) === normalizeCI(sub.ci)
+                                            );
+                                            return 1 + votantesDirectos.length;
+                                          })()})
+                                        </p>
                                         <DatosPersona 
                                           persona={sub} 
                                           rol="Sub-coordinador" 
                                           loginCode={sub.login_code}
                                           onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
+                                          hideName={true}
                                         />
                                         {sub.voto_confirmado && (
                                           <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
@@ -1190,11 +1219,20 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           <ChevronRight className="w-5 h-5 text-red-600" />
                         )}
                         <div className="flex-1">
+                          <p className="font-semibold text-base">
+                            {sub.nombre || "-"} {sub.apellido || ""} ({(() => {
+                              const votantesDirectos = (estructura.votantes || []).filter(
+                                v => normalizeCI(v.asignado_por) === normalizeCI(sub.ci)
+                              );
+                              return 1 + votantesDirectos.length;
+                            })()})
+                          </p>
                           <DatosPersona 
                             persona={sub} 
                             rol="Sub-coordinador" 
                             loginCode={sub.login_code}
                             onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
+                            hideName={true}
                           />
                           {sub.voto_confirmado && (
                             <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
