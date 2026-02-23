@@ -312,6 +312,10 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
         }
       },
     });
+  }
+
+  return doc;
+};
 
 /**
  * Genera un PDF profesional para Subcoordinador
