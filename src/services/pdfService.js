@@ -50,11 +50,16 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
   doc.setFont("helvetica", "bold");
   doc.text("Resumen Ejecutivo", MARGINS.left, 45);
 
+  const votosConfirmadosTotales =
+    coordinadores.length +
+    subcoordinadores.filter((s) => s.voto_confirmado).length +
+    votantes.filter((v) => v.voto_confirmado).length;
+
   const summaryData = [
     ["Total Coordinadores", coordinadores.length.toString()],
     ["Total Subcoordinadores", subcoordinadores.length.toString()],
     ["Total Votantes", votantes.length.toString()],
-    ["Votos Confirmados", votantes.filter((v) => v.voto_confirmado).length.toString()],
+    ["Votos Confirmados (Total)", votosConfirmadosTotales.toString()],
   ];
 
   autoTable(doc, {
@@ -221,9 +226,15 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
   for (const arr of votosPorSub.values()) totalIndirectos += arr.length;
 
   const totalVotantes = votosDirectos.length + totalIndirectos;
-  const confirmados = votantes.filter((v) => String(v.coordinador_ci) === String(currentUser.ci) && v.voto_confirmado === true).length;
-  const pendientes = totalVotantes - confirmados;
-  const porcentajeConfirmado = totalVotantes > 0 ? Math.round((confirmados / totalVotantes) * 100) : 0;
+  
+  // Confirmados totales: 1 coordinador (automático) + subs confirmados + votantes confirmados
+  const votantesConfirmados = votantes.filter((v) => String(v.coordinador_ci) === String(currentUser.ci) && v.voto_confirmado === true).length;
+  const subsConfirmados = misSubs.filter((s) => s.voto_confirmado === true).length;
+  const confirmadosTotales = 1 + subsConfirmados + votantesConfirmados;
+  
+  const totalConCoord = totalVotantes + misSubs.length + 1;
+  const pendientes = totalConCoord - confirmadosTotales;
+  const porcentajeConfirmado = totalConCoord > 0 ? Math.round((confirmadosTotales / totalConCoord) * 100) : 0;
 
   // ==================== ENCABEZADO ====================
   addHeader(doc, "Reporte de Mi Red", usuario, currentUser.ci, fechaGeneracion);
@@ -234,8 +245,8 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
   doc.text("Resumen Ejecutivo", MARGINS.left, 45);
 
   const summaryData = [
-    ["Total Votantes", totalVotantes.toString()],
-    ["Confirmados", confirmados.toString()],
+    ["Total en Red (incluye Coord + Subs)", totalConCoord.toString()],
+    ["Votos Confirmados (Total)", confirmadosTotales.toString()],
     ["Pendientes", pendientes.toString()],
     [`Porcentaje Confirmado`, `${porcentajeConfirmado}%`],
   ];
@@ -334,9 +345,16 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
     (v) => String(v.asignado_por) === String(currentUser.ci)
   );
 
-  const confirmados = misVotantes.filter((v) => v.voto_confirmado === true).length;
-  const pendientes = misVotantes.length - confirmados;
-  const porcentajeConfirmado = misVotantes.length > 0 ? Math.round((confirmados / misVotantes.length) * 100) : 0;
+  const votantesConfirmados = misVotantes.filter((v) => v.voto_confirmado === true).length;
+  
+  // Confirmados totales: si el sub tiene voto_confirmado + votantes confirmados
+  const subData = subcoordinadores.find((s) => String(s.ci) === String(currentUser.ci));
+  const subConfirmado = subData?.voto_confirmado === true ? 1 : 0;
+  const confirmadosTotales = subConfirmado + votantesConfirmados;
+  
+  const totalConSub = misVotantes.length + 1; // incluye al subcoordinador
+  const pendientes = totalConSub - confirmadosTotales;
+  const porcentajeConfirmado = totalConSub > 0 ? Math.round((confirmadosTotales / totalConSub) * 100) : 0;
 
   // ==================== ENCABEZADO ====================
   addHeader(doc, "Reporte de Mis Votantes", usuario, currentUser.ci, fechaGeneracion);
@@ -347,8 +365,8 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
   doc.text("Resumen Ejecutivo", MARGINS.left, 45);
 
   const summaryData = [
-    ["Total Votantes", misVotantes.length.toString()],
-    ["Confirmados", confirmados.toString()],
+    ["Total en Red (incluye Sub)", totalConSub.toString()],
+    ["Votos Confirmados (Total)", confirmadosTotales.toString()],
     ["Pendientes", pendientes.toString()],
     [`Porcentaje Confirmado`, `${porcentajeConfirmado}%`],
   ];

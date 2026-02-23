@@ -853,6 +853,10 @@ const Dashboard = ({ currentUser, onLogout }) => {
               <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">Votantes totales</p>
               <p className="text-4xl font-extrabold text-red-700 mt-1">{stats?.votantesTotales ?? 0}</p>
             </div>
+            <div className="bg-green-50 border-2 border-green-500 rounded-lg shadow p-6">
+              <p className="text-green-700 text-sm font-semibold uppercase tracking-wide">Votos Confirmados</p>
+              <p className="text-4xl font-extrabold text-green-700 mt-1">{stats?.votosConfirmadosTotales ?? 0}</p>
+            </div>
           </div>
         )}
 
@@ -871,8 +875,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
               <p className="text-4xl font-bold text-red-600">{stats?.votantesIndirectos ?? 0}</p>
             </div>
             <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">Votantes totales</p>
+              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">Total en Red</p>
               <p className="text-4xl font-extrabold text-red-700 mt-1">{stats?.total ?? 0}</p>
+            </div>
+            <div className="bg-green-50 border-2 border-green-500 rounded-lg shadow p-6">
+              <p className="text-green-700 text-sm font-semibold uppercase tracking-wide">Votos Confirmados</p>
+              <p className="text-4xl font-extrabold text-green-700 mt-1">{stats?.votosConfirmadosTotales ?? 0}</p>
             </div>
           </div>
         )}
@@ -884,8 +892,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
               <p className="text-4xl font-bold text-red-600">{stats?.votantes ?? 0}</p>
             </div>
             <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">Votantes totales</p>
-              <p className="text-4xl font-extrabold text-red-700 mt-1">{stats?.votantes ?? 0}</p>
+              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">Total en Red</p>
+              <p className="text-4xl font-extrabold text-red-700 mt-1">{stats?.votantesTotales ?? 0}</p>
+            </div>
+            <div className="bg-green-50 border-2 border-green-500 rounded-lg shadow p-6">
+              <p className="text-green-700 text-sm font-semibold uppercase tracking-wide">Votos Confirmados</p>
+              <p className="text-4xl font-extrabold text-green-700 mt-1">{stats?.votosConfirmadosTotales ?? 0}</p>
             </div>
           </div>
         )}
