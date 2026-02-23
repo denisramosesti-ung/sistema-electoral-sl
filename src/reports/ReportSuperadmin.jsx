@@ -2,11 +2,10 @@
 export default function ReportSuperadmin({ estructura, currentUser }) {
   const { coordinadores = [], subcoordinadores = [], votantes = [] } = estructura;
 
-  const hoy = new Date().toLocaleString("es-PY");
-
   const totalCoordinadores = coordinadores.length;
   const totalSubs = subcoordinadores.length;
   const totalVotantes = votantes.length;
+  const totalConfirmados = votantes.filter((v) => v.voto_confirmado === true).length;
 
   // Mapa subcoordinadores por coordinador
   const subsPorCoord = new Map();
@@ -36,40 +35,29 @@ export default function ReportSuperadmin({ estructura, currentUser }) {
   };
 
   let html = `
-    <section class="brand">
-      <div>
-        <h1 class="title">Reporte General – Superadmin</h1>
-        <div class="small muted">Sistema Electoral</div>
-      </div>
-      <div class="meta">
-        <div><b>Administrador:</b> ${currentUser.nombre} ${currentUser.apellido}</div>
-        <div><b>Fecha:</b> ${hoy}</div>
+    <section class="summary-section">
+      <h2>Resumen Ejecutivo</h2>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span class="label">Total Coordinadores</span>
+          <span class="value">${totalCoordinadores}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Total Subcoordinadores</span>
+          <span class="value">${totalSubs}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Total Votantes</span>
+          <span class="value">${totalVotantes}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Votos Confirmados</span>
+          <span class="value">${totalConfirmados}</span>
+        </div>
       </div>
     </section>
 
-    <div class="grid-2">
-      <div class="card">
-        <div class="label">Coordinadores</div>
-        <div class="value">${totalCoordinadores}</div>
-      </div>
-      <div class="card">
-        <div class="label">Subcoordinadores</div>
-        <div class="value">${totalSubs}</div>
-      </div>
-      <div class="card">
-        <div class="label">Votantes</div>
-        <div class="value">${totalVotantes}</div>
-      </div>
-      <div class="card">
-        <div class="label">Estructura (personas registradas)</div>
-        <div class="value">${totalCoordinadores + totalSubs + totalVotantes}</div>
-      </div>
-    </div>
-
-    <h2>Listado Jerárquico</h2>
-    <p class="muted small">
-      Estructura: Coordinador → Subcoordinador → Votantes. Incluye votantes directos del coordinador.
-    </p>
+    <h2>Estructura Jerárquica</h2>
   `;
 
   coordinadores.forEach((coord, idx) => {
@@ -87,36 +75,13 @@ export default function ReportSuperadmin({ estructura, currentUser }) {
     const totalEnRed = votosDirectos.length + votosIndirectosCount;
 
     html += `
-      <hr />
-      <h2>
-        Coordinador: ${coord.nombre} ${coord.apellido}
-        <span class="pill">Red: ${totalEnRed}</span>
-      </h2>
-      <div class="small muted">
+      <h3>Coordinador: ${coord.nombre} ${coord.apellido} <span class="pill">${totalEnRed}</span></h3>
+      <div class="info-block">
         <b>CI:</b> ${coord.ci}
-        ${coord.telefono ? ` • <b>Tel:</b> ${coord.telefono}` : ""}
+        ${coord.telefono ? ` • <b>Teléfono:</b> ${coord.telefono}` : ""}
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th style="width:55%">Nodo</th>
-            <th style="width:15%">CI</th>
-            <th style="width:15%">Teléfono</th>
-            <th style="width:15%">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><b>Coordinador</b></td>
-            <td>${coord.ci}</td>
-            <td>${coord.telefono || "—"}</td>
-            <td><b>${totalEnRed}</b></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Subcoordinadores</h3>
+      <h4>Subcoordinadores</h4>
     `;
 
     if (subs.length === 0) {
@@ -127,9 +92,9 @@ export default function ReportSuperadmin({ estructura, currentUser }) {
           <thead>
             <tr>
               <th>Subcoordinador</th>
-              <th style="width:18%">CI</th>
-              <th style="width:18%">Teléfono</th>
-              <th style="width:18%">Votantes</th>
+              <th style="width:20%">CI</th>
+              <th style="width:20%">Teléfono</th>
+              <th style="width:15%">Votantes</th>
             </tr>
           </thead>
           <tbody>
@@ -142,51 +107,19 @@ export default function ReportSuperadmin({ estructura, currentUser }) {
             <td>${sub.nombre} ${sub.apellido}</td>
             <td>${sub.ci}</td>
             <td>${sub.telefono || "—"}</td>
-            <td><b>${vs.length}</b></td>
+            <td>${vs.length}</td>
           </tr>
         `;
       });
 
       html += `</tbody></table>`;
-
-      // Detalle por sub
-      subs.forEach((sub) => {
-        const vs = votosPorAsignador.get(String(sub.ci)) || [];
-        html += `
-          <h3 class="indent-1">Detalle Subcoordinador: ${sub.nombre} ${sub.apellido} <span class="pill">${vs.length}</span></h3>
-          <div class="indent-1 small muted"><b>CI:</b> ${sub.ci}</div>
-        `;
-
-        if (vs.length === 0) {
-          html += `<p class="indent-2 muted">Sin votantes.</p>`;
-        } else {
-          html += `
-            <table class="indent-2">
-              <thead>
-                <tr>
-                  <th>Votante</th>
-                  <th style="width:20%">CI</th>
-                  <th style="width:25%">Teléfono</th>
-                </tr>
-              </thead>
-              <tbody>
-          `;
-          vs.forEach((v) => {
-            html += `
-              <tr>
-                <td>${v.nombre} ${v.apellido}</td>
-                <td>${v.ci}</td>
-                <td>${v.telefono || "—"}</td>
-              </tr>
-            `;
-          });
-          html += `</tbody></table>`;
-        }
-      });
     }
 
     // Votantes directos del coordinador
-    html += `<h3>Votantes directos del Coordinador <span class="pill">${votosDirectos.length}</span></h3>`;
+    html += `
+      <h4 style="margin-top: 12px;">Votantes Directos <span class="pill">${votosDirectos.length}</span></h4>
+    `;
+    
     if (votosDirectos.length === 0) {
       html += `<p class="muted">No registra votantes directos.</p>`;
     } else {
@@ -213,8 +146,7 @@ export default function ReportSuperadmin({ estructura, currentUser }) {
       html += `</tbody></table>`;
     }
 
-    // Salto de página entre coordinadores
-    if (idx < coordinadores.length - 1) html += `<div class="page-break"></div>`;
+    html += `<hr />`;
   });
 
   return html;

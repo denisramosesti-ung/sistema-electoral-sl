@@ -2,12 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { generarAccessCode } from "../utils/accessCode";
 
-import ReportSuperadmin from "../reports/ReportSuperadmin";
-import ReportCoordinador from "../reports/ReportCoordinador";
-import ReportSubcoordinador from "../reports/ReportSubcoordinador";
-import { REPORT_CSS } from "../reports/reportStyles";
-
-
 import {
   UserPlus,
   LogOut,
@@ -19,11 +13,17 @@ import {
   Trash2,
   Check,
   X,
+  Download,
 } from "lucide-react";
 
 import AddPersonModal from "../AddPersonModal";
 import ModalTelefono from "./ModalTelefono";
 import ConfirmVotoModal from "./ConfirmVotoModal";
+import {
+  generateSuperadminPDF,
+  generateCoordinadorPDF,
+  generateSubcoordinadorPDF,
+} from "../services/pdfService";
 
 import { getEstadisticas } from "../services/estadisticasService";
 
@@ -739,78 +739,46 @@ const resultadosBusqueda = useMemo(() => {
 }, [searchCI, personasVisibles]);
 
 
-  // ======================= DESCARGAR REPORTE (HTML → PDF) =======================
-const descargarPDF = () => {
+  // ======================= DESCARGAR REPORTE (jsPDF + autoTable) =======================
+const descargarPDF = async () => {
   if (!currentUser) {
     alert("Usuario no válido");
     return;
   }
 
-  let html = "";
-  let title = "Reporte";
+  try {
+    let doc;
+    let filename = "reporte";
 
-  if (currentUser.role === "superadmin") {
-    html = ReportSuperadmin({ estructura, currentUser });
-    title = "Reporte General – Superadmin";
-  } else if (currentUser.role === "coordinador") {
-    html = ReportCoordinador({ estructura, currentUser });
-    title = "Reporte de Coordinador";
-  } else if (currentUser.role === "subcoordinador") {
-    html = ReportSubcoordinador({ estructura, currentUser });
-    title = "Reporte de Subcoordinador";
-  } else {
-    alert("Rol no soportado para reportes");
-    return;
+    if (currentUser.role === "superadmin") {
+      doc = generateSuperadminPDF({ estructura, currentUser });
+      filename = "reporte-superadmin";
+    } else if (currentUser.role === "coordinador") {
+      doc = generateCoordinadorPDF({ estructura, currentUser });
+      filename = "reporte-coordinador";
+    } else if (currentUser.role === "subcoordinador") {
+      doc = generateSubcoordinadorPDF({ estructura, currentUser });
+      filename = "reporte-subcoordinador";
+    } else {
+      alert("Rol no soportado para reportes");
+      return;
+    }
+
+    // Generar nombre de archivo con timestamp
+    const fecha = new Date();
+    const timestamp = fecha.toISOString().slice(0, 10);
+    const nombreArchivo = `${filename}-${timestamp}.pdf`;
+
+    // Descargar PDF
+    doc.save(nombreArchivo);
+  } catch (error) {
+    console.error("Error generando PDF:", error);
+    alert("Error al generar el reporte PDF");
   }
-
-  const win = window.open("", "_blank");
-  if (!win) {
-    alert("El navegador bloqueó la ventana emergente (pop-up).");
-    return;
-  }
-
-  win.document.open();
-  win.document.write(`
-    <html>
-      <head>
-        <title>${title}</title>
-        <style>${REPORT_CSS}</style>
-      </head>
-      <body>
-        <header class="report-header">
-          <div class="brand">
-            <div>
-              <h1 class="title">${title}</h1>
-              <div class="small muted">Sistema Electoral</div>
-            </div>
-            <div class="meta">
-              <div><b>Usuario:</b> ${currentUser.nombre} ${currentUser.apellido}</div>
-              <div><b>CI:</b> ${currentUser.ci}</div>
-              <div><b>Generado:</b> ${new Date().toLocaleString("es-PY")}</div>
-            </div>
-          </div>
-        </header>
-
-        <footer class="report-footer">
-          <div>Documento interno</div>
-          <div class="muted">Imprimir / Guardar como PDF</div>
-        </footer>
-
-        <main class="report-body">
-          ${html}
-        </main>
-
-        <script>
-          window.onload = function () {
-            window.focus();
-            window.print();
-          };
-        </script>
-      </body>
-    </html>
-  `);
-  win.document.close();
 };
+
+
+
 
 
   // ======================= UI =======================
@@ -1174,7 +1142,7 @@ const descargarPDF = () => {
                     </div>
 
                     {expandedCoords[normalizeCI(coord.ci)] && (
-                      <div className="bg-white px-4 pb-4">
+                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
                         {/* SUBS DEL COORD */}
                         {(estructura.subcoordinadores || [])
                           .filter(
@@ -1184,14 +1152,26 @@ const descargarPDF = () => {
                           .map((sub) => (
                             <div
                               key={sub.ci}
-                              className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3"
+                              className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4"
                             >
                               <div className="flex items-start justify-between gap-3">
-                                <DatosPersona
-                                  persona={sub}
-                                  rol="Sub-coordinador"
-                                  loginCode={sub.login_code}
-                                />
+                                <div className="flex items-start gap-3 flex-1">
+                                  {expandedCoords[normalizeCI(sub.ci)] ? (
+                                    <ChevronDown className="w-4 h-4 text-red-600 mt-1 transition-transform" />
+                                  ) : (
+                                    <ChevronRight className="w-4 h-4 text-red-600 mt-1 transition-transform" />
+                                  )}
+                                  <div
+                                    className="cursor-pointer flex-1"
+                                    onClick={() => toggleExpand(sub.ci)}
+                                  >
+                                    <DatosPersona
+                                      persona={sub}
+                                      rol="Sub-coordinador"
+                                      loginCode={sub.login_code}
+                                    />
+                                  </div>
+                                </div>
                                 <div className="flex gap-2">
                                   <button
                                     onClick={() => abrirTelefono("subcoordinador", sub)}
@@ -1208,77 +1188,72 @@ const descargarPDF = () => {
                                 </div>
                               </div>
 
-                              {/* Votantes del sub */}
-                              {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                                <div
-                                  key={v.ci}
-                                  className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-                                >
-                                  <div className="flex-1">
-                                    <DatosPersona persona={v} rol="Votante" />
-                                    {v.voto_confirmado && (
-                                      <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                        Voto Confirmado
+                              {/* Votantes del sub - expandable */}
+                              {expandedCoords[normalizeCI(sub.ci)] && (
+                                <div className="ml-4 border-l-2 border-gray-200 pl-3 animate-in fade-in duration-200">
+                                  {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
+                                    <div
+                                      key={v.ci}
+                                      className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3"
+                                    >
+                                      <div className="flex-1">
+                                        <DatosPersona persona={v} rol="Votante" />
+                                        {v.voto_confirmado && (
+                                          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                                            Voto Confirmado
+                                          </div>
+                                        )}
                                       </div>
-                                    )}
-                                  </div>
-                                  <div className="flex gap-2">
-                                    <button
-                                      onClick={() => abrirTelefono("votante", v)}
-                                      className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                    >
-                                      <Phone className="w-5 h-5" />
-                                    </button>
-                                    <button
-                                      onClick={() => quitarPersona(v.ci, "votante")}
-                                      className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                    >
-                                      <Trash2 className="w-5 h-5" />
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
+                                      <div className="flex gap-2">
+                                        <button
+                                          onClick={() => abrirTelefono("votante", v)}
+                                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                                        >
+                                          <Phone className="w-5 h-5" />
+                                        </button>
 
-                              {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                                <p className="text-gray-500 text-sm">
-                                  Sin votantes asignados.
-                                </p>
+                                        {!v.voto_confirmado && canConfirmarVoto(v) && (
+                                          <button
+                                            onClick={() => abrirConfirmVoto(v)}
+                                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                            title="Confirmar voto"
+                                          >
+                                            <Check className="w-5 h-5" />
+                                          </button>
+                                        )}
+
+                                        {v.voto_confirmado && canAnularConfirmacion(v) && (
+                                          <button
+                                            onClick={() => abrirAnularConfirmacion(v)}
+                                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                                            title="Anular confirmación"
+                                          >
+                                            <X className="w-5 h-5" />
+                                          </button>
+                                        )}
+
+                                        <button
+                                          onClick={() => quitarPersona(v.ci, "votante")}
+                                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                                        >
+                                          <Trash2 className="w-5 h-5" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
+                                    <p className="text-gray-500 text-sm">
+                                      Sin votantes asignados.
+                                    </p>
+                                  )}
+                                </div>
                               )}
                             </div>
                           ))}
-
-                        {/* VOTANTES DIRECTOS DEL COORD */}
-                        {getVotantesDirectosCoord(estructura, coord.ci).map((v) => (
-                          <div
-                            key={v.ci}
-                            className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-                          >
-                            <div className="flex-1">
-                              <DatosPersona persona={v} rol="Votante" />
-                              {v.voto_confirmado && (
-                                <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                  Voto Confirmado
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => abrirTelefono("votante", v)}
-                                className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                              >
-                                <Phone className="w-5 h-5" />
-                              </button>
-                              <button
-                                onClick={() => quitarPersona(v.ci, "votante")}
-                                className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                              >
-                                <Trash2 className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
                       </div>
                     )}
+
                   </div>
                 ))}
 
@@ -1338,13 +1313,13 @@ const descargarPDF = () => {
                     </div>
 
                     {expandedCoords[normalizeCI(sub.ci)] && (
-                      <div className="bg-white px-4 pb-4">
-                        <p className="text-sm font-semibold mt-2">Votantes</p>
+                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
+                        <p className="text-sm font-semibold mt-3 mb-2">Votantes</p>
 
                         {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
                           <div
                             key={v.ci}
-                            className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
+                            className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3 ml-2"
                           >
                             <div className="flex-1">
                               <DatosPersona persona={v} rol="Votante" />
@@ -1391,6 +1366,14 @@ const descargarPDF = () => {
                             </div>
                           </div>
                         ))}
+
+                        {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
+                          <p className="text-gray-500 text-sm ml-2">
+                            Sin votantes asignados.
+                          </p>
+                        )}
+                      </div>
+                    )}
 
                         {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
                           <p className="text-gray-500 text-sm mt-2">
