@@ -670,6 +670,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
     );
   };
 
+  // ======================= ESTADÍSTICAS =======================
+  const stats = useMemo(
+    () => getEstadisticas(estructura, currentUser),
+    [estructura, currentUser]
+  );
+
   // ======================= UI =======================
   return (
     <div className="min-h-screen bg-gray-100">
