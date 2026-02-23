@@ -49,6 +49,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [modalType, setModalType] = useState("");
   const [expandedCoords, setExpandedCoords] = useState({});
+  const [expandedSubs, setExpandedSubs] = useState({});
   const [searchCI, setSearchCI] = useState("");
 
   // Teléfono
@@ -80,6 +81,22 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
   const toggleExpand = (ci) => {
     const key = normalizeCI(ci);
     setExpandedCoords((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const toggleCoord = (ci) => {
+    const key = normalizeCI(ci);
+    setExpandedCoords((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const toggleSub = (ci) => {
+    const key = normalizeCI(ci);
+    setExpandedSubs((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
@@ -1108,7 +1125,7 @@ const descargarPDF = async () => {
                   >
                     <div
                       className="flex items-start justify-between p-4 cursor-pointer gap-4"
-                      onClick={() => toggleExpand(coord.ci)}
+                      onClick={() => toggleCoord(coord.ci)}
                     >
                       <div className="flex items-start gap-3 flex-1">
                         {expandedCoords[normalizeCI(coord.ci)] ? (
@@ -1116,6 +1133,164 @@ const descargarPDF = async () => {
                         ) : (
                           <ChevronRight className="w-5 h-5 text-red-600" />
                         )}
+                        <DatosPersona
+                          persona={coord}
+                          rol="Coordinador"
+                          loginCode={coord.login_code}
+                        />
+                      </div>
+
+                      <div className="flex flex-col md:flex-row gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            abrirTelefono("coordinador", coord);
+                          }}
+                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                        >
+                          <Phone className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            quitarPersona(coord.ci, "coordinador");
+                          }}
+                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {expandedCoords[normalizeCI(coord.ci)] && (
+                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
+                        {(estructura.subcoordinadores || [])
+                          .filter(
+                            (s) =>
+                              normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci)
+                          )
+                          .map((sub) => (
+                            <div
+                              key={sub.ci}
+                              className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4"
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-start gap-3 flex-1">
+                                  {expandedSubs[normalizeCI(sub.ci)] ? (
+                                    <ChevronDown className="w-4 h-4 text-red-600 mt-1 transition-transform" />
+                                  ) : (
+                                    <ChevronRight className="w-4 h-4 text-red-600 mt-1 transition-transform" />
+                                  )}
+                                  <div
+                                    className="cursor-pointer flex-1"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleSub(sub.ci);
+                                    }}
+                                  >
+                                    <DatosPersona
+                                      persona={sub}
+                                      rol="Sub-coordinador"
+                                      loginCode={sub.login_code}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      abrirTelefono("subcoordinador", sub);
+                                    }}
+                                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                                  >
+                                    <Phone className="w-5 h-5" />
+                                  </button>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      quitarPersona(sub.ci, "subcoordinador");
+                                    }}
+                                    className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                                  >
+                                    <Trash2 className="w-5 h-5" />
+                                  </button>
+                                </div>
+                              </div>
+
+                              {expandedSubs[normalizeCI(sub.ci)] && (
+                                <div className="ml-4 border-l-2 border-gray-200 pl-3 animate-in fade-in duration-200">
+                                  {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
+                                    <div
+                                      key={v.ci}
+                                      className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3"
+                                    >
+                                      <div className="flex-1">
+                                        <DatosPersona persona={v} rol="Votante" />
+                                        {v.voto_confirmado && (
+                                          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                                            Voto Confirmado
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="flex gap-2">
+                                        <button
+                                          onClick={() => abrirTelefono("votante", v)}
+                                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                                        >
+                                          <Phone className="w-5 h-5" />
+                                        </button>
+
+                                        {!v.voto_confirmado && canConfirmarVoto(v) && (
+                                          <button
+                                            onClick={() => abrirConfirmVoto(v)}
+                                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                            title="Confirmar voto"
+                                          >
+                                            <Check className="w-5 h-5" />
+                                          </button>
+                                        )}
+
+                                        {v.voto_confirmado && canAnularConfirmacion(v) && (
+                                          <button
+                                            onClick={() => abrirAnularConfirmacion(v)}
+                                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                                            title="Anular confirmación"
+                                          >
+                                            <X className="w-5 h-5" />
+                                          </button>
+                                        )}
+
+                                        <button
+                                          onClick={() => quitarPersona(v.ci, "votante")}
+                                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                                        >
+                                          <Trash2 className="w-5 h-5" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
+                                    <p className="text-gray-500 text-sm">
+                                      Sin votantes asignados.
+                                    </p>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {(estructura.coordinadores || []).length === 0 && (
+                  <p className="text-center text-gray-500 py-8">
+                    No hay coordinadores aún.
+                  </p>
+                )}
+              </>
+            )}
                         <DatosPersona
                           persona={coord}
                           rol="Coordinador"
