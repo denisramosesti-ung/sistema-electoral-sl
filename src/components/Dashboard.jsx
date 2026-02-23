@@ -1457,7 +1457,6 @@ const descargarPDF = async () => {
     </div>
   );
 };
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">Sistema Electoral</h1>
             <p className="text-red-200 text-sm mt-1">
