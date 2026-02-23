@@ -173,6 +173,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
             ci,
             coordinador_ci: x.coordinador_ci ? normalizeCI(x.coordinador_ci) : null,
             asignado_por: x.asignado_por ? normalizeCI(x.asignado_por) : null,
+            direccion: x.direccion_override || p?.direccion || null,
           };
         });
 
