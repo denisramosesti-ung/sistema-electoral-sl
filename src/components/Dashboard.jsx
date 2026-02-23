@@ -886,7 +886,6 @@ const descargarPDF = async () => {
         {stats?.total ?? 0}
       </p>
     </div>
-  </>
         )}
 
         {currentUser.role === "subcoordinador" && (
