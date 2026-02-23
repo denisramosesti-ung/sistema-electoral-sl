@@ -73,6 +73,9 @@ const Dashboard = ({ currentUser, onLogout }) => {
   // PDF MENU
   const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
 
+  // Loading
+  const [isLoading, setIsLoading] = useState(true);
+
   // ======================= HELPERS UI =======================
   const copyToClipboard = async (text) => {
     if (!text) return;
@@ -143,6 +146,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
 
   // ======================= RECARGAR ESTRUCTURA =======================
   const recargarEstructura = async () => {
+    setIsLoading(true);
     try {
       let padronData = padron;
       if (!padronData || padronData.length === 0) {
@@ -191,6 +195,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
       });
     } catch (e) {
       console.error("Error recargando estructura:", e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -809,6 +815,17 @@ const Dashboard = ({ currentUser, onLogout }) => {
   };
 
   // ======================= UI =======================
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin h-12 w-12 border-4 border-red-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Cargando estructura...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* HEADER */}
