@@ -77,6 +77,11 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
   coordinadores.forEach((coord, idx) => {
     const subs = subsPorCoord.get(String(coord.ci)) || [];
     const votosDirectos = getVotantesDirectosDelCoord(coord.ci);
+    const votosIndirectos = subs.flatMap((s) => votosPorAsignador.get(String(s.ci)) || []);
+    const totalVotantesCoord = votosDirectos.length + votosIndirectos.length;
+    const confirmadosCoord = [...votosDirectos, ...votosIndirectos].filter((v) => v.voto_confirmado === true).length;
+    const pendientesCoord = totalVotantesCoord - confirmadosCoord;
+    const porcentajeCoord = totalVotantesCoord > 0 ? Math.round((confirmadosCoord / totalVotantesCoord) * 100) : 0;
 
     // Nueva página si necesario
     if (idx > 0) {
@@ -96,69 +101,72 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
     doc.setFont("helvetica", "normal");
     doc.text(`CI: ${coord.ci}${coord.telefono ? ` • Teléfono: ${coord.telefono}` : ""}`, MARGINS.left, currentY + 5);
 
-    // Tabla subcoordinadores
+    // Resumen de votantes del coordinador
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.text("Subcoordinadores", MARGINS.left, currentY + 12);
+    doc.text("Resumen de Votantes", MARGINS.left, currentY + 12);
 
-    const subsTableData = subs.map((s) => {
-      const votesCount = (votosPorAsignador.get(String(s.ci)) || []).length;
-      return [s.nombre + " " + s.apellido, s.ci, votesCount.toString()];
+    const coordSummaryData = [
+      ["Total", totalVotantesCoord.toString()],
+      ["Confirmados", confirmadosCoord.toString()],
+      ["Pendientes", pendientesCoord.toString()],
+      [`% Confirmado`, `${porcentajeCoord}%`],
+    ];
+
+    autoTable(doc, {
+      startY: currentY + 15,
+      head: [["Métrica", "Valor"]],
+      body: coordSummaryData,
+      margin: { ...MARGINS },
+      columnStyles: {
+        0: { cellWidth: 70 },
+        1: { cellWidth: 30, halign: "right" },
+      },
+      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
+      bodyStyles: { textColor: [0, 0, 0] },
+      didDrawPage: () => {
+        addFooter(doc, pageWidth, pageHeight);
+      },
     });
 
-    if (subsTableData.length === 0) {
-      doc.setFont("helvetica", "italic");
-      doc.setFontSize(9);
-      doc.text("No registra subcoordinadores", MARGINS.left, currentY + 18);
-      currentY += 8;
-    } else {
-      autoTable(doc, {
-        startY: currentY + 15,
-        head: [["Subcoordinador", "CI", "Votantes"]],
-        body: subsTableData,
-        margin: { ...MARGINS },
-        columnStyles: {
-          0: { cellWidth: 70 },
-          1: { cellWidth: 40 },
-          2: { cellWidth: 30, halign: "right" },
-        },
-        headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
-        bodyStyles: { textColor: [0, 0, 0] },
-        didDrawPage: () => {
-          addFooter(doc, pageWidth, pageHeight);
-        },
-      });
-      currentY = doc.lastAutoTable.finalY + 5;
-    }
+    // Tabla única de votantes
+    currentY = doc.lastAutoTable.finalY + 8;
 
-    // Tabla votantes directos
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.text("Votantes Directos", MARGINS.left, currentY + 8);
+    doc.text("Listado de Votantes", MARGINS.left, currentY);
 
-    const votantesTableData = votosDirectos.map((v) => [
-      v.nombre + " " + v.apellido,
-      v.ci,
-      v.telefono || "—",
-    ]);
+    const allVotantes = [...votosDirectos];
+    votosIndirectos.forEach((v) => allVotantes.push(v));
 
-    if (votantesTableData.length === 0) {
+    if (allVotantes.length === 0) {
       doc.setFont("helvetica", "italic");
       doc.setFontSize(9);
-      doc.text("No registra votantes directos", MARGINS.left, currentY + 14);
+      doc.text("No registra votantes", MARGINS.left, currentY + 6);
     } else {
+      const votantesTableData = allVotantes.map((v) => [
+        v.nombre + " " + v.apellido,
+        v.ci,
+        v.telefono || "—",
+        v.voto_confirmado ? "Confirmado" : "Pendiente",
+      ]);
+
       autoTable(doc, {
-        startY: currentY + 11,
-        head: [["Votante", "CI", "Teléfono"]],
+        startY: currentY + 5,
+        head: [["Votante", "CI", "Teléfono", "Estado"]],
         body: votantesTableData,
         margin: { ...MARGINS },
         columnStyles: {
-          0: { cellWidth: 70 },
+          0: { cellWidth: 60 },
           1: { cellWidth: 40 },
-          2: { cellWidth: 30 },
+          2: { cellWidth: 40 },
+          3: { cellWidth: 30, halign: "center" },
         },
-        headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
+        headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
         bodyStyles: { textColor: [0, 0, 0] },
+        cellStyles: {
+          3: { halign: "center" }, // Estado centrado
+        },
         didDrawPage: () => {
           addFooter(doc, pageWidth, pageHeight);
         },
@@ -181,7 +189,7 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
   const fechaGeneracion = new Date().toLocaleString("es-PY");
   const usuario = `${currentUser.nombre} ${currentUser.apellido}`;
 
-  // Mapas para relaciones
+  // Filtrar votantes pertenecientes a esta red coordinador
   const misSubs = subcoordinadores.filter(
     (s) => String(s.coordinador_ci) === String(currentUser.ci)
   );
@@ -201,18 +209,24 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
   let totalIndirectos = 0;
   for (const arr of votosPorSub.values()) totalIndirectos += arr.length;
 
-  // ==================== ENCABEZADO + RESUMEN ====================
-  addHeader(doc, "Reporte de Coordinador", usuario, currentUser.ci, fechaGeneracion);
+  const totalVotantes = votosDirectos.length + totalIndirectos;
+  const confirmados = votantes.filter((v) => String(v.coordinador_ci) === String(currentUser.ci) && v.voto_confirmado === true).length;
+  const pendientes = totalVotantes - confirmados;
+  const porcentajeConfirmado = totalVotantes > 0 ? Math.round((confirmados / totalVotantes) * 100) : 0;
 
+  // ==================== ENCABEZADO ====================
+  addHeader(doc, "Reporte de Mi Red", usuario, currentUser.ci, fechaGeneracion);
+
+  // ==================== RESUMEN EJECUTIVO ====================
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text("Resumen de Mi Red", MARGINS.left, 45);
+  doc.text("Resumen Ejecutivo", MARGINS.left, 45);
 
   const summaryData = [
-    ["Subcoordinadores", misSubs.length.toString()],
-    ["Votantes Directos", votosDirectos.length.toString()],
-    ["Votantes Indirectos", totalIndirectos.toString()],
-    ["Total en Mi Red", (votosDirectos.length + totalIndirectos).toString()],
+    ["Total Votantes", totalVotantes.toString()],
+    ["Confirmados", confirmados.toString()],
+    ["Pendientes", pendientes.toString()],
+    [`Porcentaje Confirmado`, `${porcentajeConfirmado}%`],
   ];
 
   autoTable(doc, {
@@ -221,82 +235,65 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
     body: summaryData,
     margin: { ...MARGINS },
     columnStyles: {
-      0: { cellWidth: 80 },
-      1: { cellWidth: 30, halign: "right" },
+      0: { cellWidth: 80, fontStyle: "normal" },
+      1: { cellWidth: 30, fontStyle: "bold", halign: "right" },
     },
-    headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
+    headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
     bodyStyles: { textColor: [0, 0, 0] },
     didDrawPage: () => {
       addFooter(doc, pageWidth, pageHeight);
     },
   });
 
-  // ==================== SUBCOORDINADORES ====================
+  // ==================== TABLA ÚNICA DE VOTANTES ====================
+  let currentY = doc.lastAutoTable.finalY + 8;
+
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text("Subcoordinadores", MARGINS.left, 95);
+  doc.text("Listado de Votantes de Mi Red", MARGINS.left, currentY);
 
-  const subsTableData = misSubs.map((s) => {
-    const arr = votosPorSub.get(String(s.ci)) || [];
-    return [s.nombre + " " + s.apellido, s.ci, s.telefono || "—", arr.length.toString()];
-  });
-
-  if (subsTableData.length === 0) {
+  if (totalVotantes === 0) {
     doc.setFont("helvetica", "italic");
     doc.setFontSize(9);
-    doc.text("No registra subcoordinadores", MARGINS.left, 101);
+    doc.text("No registra votantes en su red", MARGINS.left, currentY + 6);
   } else {
+    // Combinar votantes directos e indirectos en una tabla única
+    const allVotantes = [...votosDirectos];
+    for (const arr of votosPorSub.values()) {
+      allVotantes.push(...arr);
+    }
+
+    const votantesTableData = allVotantes.map((v) => [
+      v.nombre + " " + v.apellido,
+      v.ci,
+      v.telefono || "—",
+      v.voto_confirmado ? "Confirmado" : "Pendiente",
+    ]);
+
     autoTable(doc, {
-      startY: 100,
-      head: [["Subcoordinador", "CI", "Teléfono", "Votantes"]],
-      body: subsTableData,
+      startY: currentY + 5,
+      head: [["Votante", "CI", "Teléfono", "Estado"]],
+      body: votantesTableData,
       margin: { ...MARGINS },
       columnStyles: {
         0: { cellWidth: 60 },
-        1: { cellWidth: 35 },
-        2: { cellWidth: 35 },
-        3: { cellWidth: 25, halign: "right" },
+        1: { cellWidth: 40 },
+        2: { cellWidth: 40 },
+        3: { cellWidth: 30, halign: "center" },
       },
-      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
+      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
       bodyStyles: { textColor: [0, 0, 0] },
+      cellStyles: {
+        3: { halign: "center" }, // Estado centrado
+      },
       didDrawPage: () => {
         addFooter(doc, pageWidth, pageHeight);
       },
     });
   }
 
-  // ==================== VOTANTES DIRECTOS ====================
-  let currentY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 8 : 110;
-
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("Votantes Directos", MARGINS.left, currentY);
-
-  const votantesTableData = votosDirectos.map((v) => [
-    v.nombre + " " + v.apellido,
-    v.ci,
-    v.telefono || "—",
-  ]);
-
-  if (votantesTableData.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.text("No registra votantes directos", MARGINS.left, currentY + 6);
-  } else {
-    autoTable(doc, {
-      startY: currentY + 5,
-      head: [["Votante", "CI", "Teléfono"]],
-      body: votantesTableData,
-      margin: { ...MARGINS },
-      columnStyles: {
-        0: { cellWidth: 70 },
-        1: { cellWidth: 40 },
-        2: { cellWidth: 40 },
-      },
-      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
-      bodyStyles: { textColor: [0, 0, 0] },
-      didDrawPage: () => {
-        addFooter(doc, pageWidth, pageHeight);
+  return doc;
+};
       },
     });
   }
@@ -316,26 +313,28 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
   const fechaGeneracion = new Date().toLocaleString("es-PY");
   const usuario = `${currentUser.nombre} ${currentUser.apellido}`;
 
+  // Filtrar votantes asignados a este subcoordinador
   const misVotantes = votantes.filter(
     (v) => String(v.asignado_por) === String(currentUser.ci)
   );
 
-  const votosConfirmados = misVotantes.filter((v) => v.voto_confirmado === true).length;
-  const conTelefono = misVotantes.filter((v) => !!v.telefono).length;
-  const sinTelefono = misVotantes.length - conTelefono;
+  const confirmados = misVotantes.filter((v) => v.voto_confirmado === true).length;
+  const pendientes = misVotantes.length - confirmados;
+  const porcentajeConfirmado = misVotantes.length > 0 ? Math.round((confirmados / misVotantes.length) * 100) : 0;
 
-  // ==================== ENCABEZADO + RESUMEN ====================
-  addHeader(doc, "Reporte de Subcoordinador", usuario, currentUser.ci, fechaGeneracion);
+  // ==================== ENCABEZADO ====================
+  addHeader(doc, "Reporte de Mis Votantes", usuario, currentUser.ci, fechaGeneracion);
 
+  // ==================== RESUMEN EJECUTIVO ====================
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text("Resumen de Mis Votantes", MARGINS.left, 45);
+  doc.text("Resumen Ejecutivo", MARGINS.left, 45);
 
   const summaryData = [
     ["Total Votantes", misVotantes.length.toString()],
-    ["Con Teléfono", conTelefono.toString()],
-    ["Sin Teléfono", sinTelefono.toString()],
-    ["Votos Confirmados", votosConfirmados.toString()],
+    ["Confirmados", confirmados.toString()],
+    ["Pendientes", pendientes.toString()],
+    [`Porcentaje Confirmado`, `${porcentajeConfirmado}%`],
   ];
 
   autoTable(doc, {
@@ -344,46 +343,51 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
     body: summaryData,
     margin: { ...MARGINS },
     columnStyles: {
-      0: { cellWidth: 80 },
-      1: { cellWidth: 30, halign: "right" },
+      0: { cellWidth: 80, fontStyle: "normal" },
+      1: { cellWidth: 30, fontStyle: "bold", halign: "right" },
     },
-    headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
+    headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
     bodyStyles: { textColor: [0, 0, 0] },
     didDrawPage: () => {
       addFooter(doc, pageWidth, pageHeight);
     },
   });
 
-  // ==================== LISTADO DE VOTANTES ====================
+  // ==================== TABLA DE VOTANTES ====================
+  let currentY = doc.lastAutoTable.finalY + 8;
+
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text("Listado de Votantes", MARGINS.left, 95);
+  doc.text("Listado de Votantes", MARGINS.left, currentY);
 
-  const votantesTableData = misVotantes.map((v) => [
-    v.nombre + " " + v.apellido,
-    v.ci,
-    v.telefono || "—",
-    v.voto_confirmado ? "Sí" : "No",
-  ]);
-
-  if (votantesTableData.length === 0) {
+  if (misVotantes.length === 0) {
     doc.setFont("helvetica", "italic");
     doc.setFontSize(9);
-    doc.text("No tiene votantes asignados", MARGINS.left, 101);
+    doc.text("No tiene votantes asignados", MARGINS.left, currentY + 6);
   } else {
+    const votantesTableData = misVotantes.map((v) => [
+      v.nombre + " " + v.apellido,
+      v.ci,
+      v.telefono || "—",
+      v.voto_confirmado ? "Confirmado" : "Pendiente",
+    ]);
+
     autoTable(doc, {
-      startY: 100,
-      head: [["Votante", "CI", "Teléfono", "Confirmado"]],
+      startY: currentY + 5,
+      head: [["Votante", "CI", "Teléfono", "Estado"]],
       body: votantesTableData,
       margin: { ...MARGINS },
       columnStyles: {
-        0: { cellWidth: 65 },
+        0: { cellWidth: 60 },
         1: { cellWidth: 40 },
-        2: { cellWidth: 35 },
-        3: { cellWidth: 25, halign: "center" },
+        2: { cellWidth: 40 },
+        3: { cellWidth: 30, halign: "center" },
       },
-      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
+      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
       bodyStyles: { textColor: [0, 0, 0] },
+      cellStyles: {
+        3: { halign: "center" }, // Estado centrado
+      },
       didDrawPage: () => {
         addFooter(doc, pageWidth, pageHeight);
       },
