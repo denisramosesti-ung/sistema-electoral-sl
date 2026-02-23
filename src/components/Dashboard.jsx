@@ -670,6 +670,16 @@ const Dashboard = ({ currentUser, onLogout }) => {
     );
   };
 
+  // ======================= NORMALIZAR TEXTO =======================
+  const normalizeText = (v) =>
+    (v ?? "")
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
   // ======================= ESTADÍSTICAS =======================
   const stats = useMemo(
     () => getEstadisticas(estructura, currentUser),
