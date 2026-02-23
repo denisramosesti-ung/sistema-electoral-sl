@@ -168,8 +168,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
           const ci = normalizeCI(x.ci);
           const p = padronMap.get(ci);
           return {
-            ...x,
             ...(p || {}),
+            ...x,
             ci,
             coordinador_ci: x.coordinador_ci ? normalizeCI(x.coordinador_ci) : null,
             asignado_por: x.asignado_por ? normalizeCI(x.asignado_por) : null,
