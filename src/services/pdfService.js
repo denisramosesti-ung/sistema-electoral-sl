@@ -186,6 +186,12 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
 
   return doc;
 };
+
+/**
+ * Genera un PDF profesional para Coordinador
+ */
+export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
+  const doc = new jsPDF(PAGE_ORIENTATION, "mm", PAGE_FORMAT);
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
