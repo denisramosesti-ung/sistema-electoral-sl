@@ -63,9 +63,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [isVotoUndoing, setIsVotoUndoing] = useState(false);
   const [isConfirmVotoLoading, setIsConfirmVotoLoading] = useState(false);
 
-  // PDF MENU (ESTO FALTABA)
-const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
-
+  // PDF MENU
+  const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
 
   // ======================= HELPERS UI =======================
   const copyToClipboard = async (text) => {
@@ -138,7 +137,6 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
   // ======================= RECARGAR ESTRUCTURA =======================
   const recargarEstructura = async () => {
     try {
-      // Asegurar padrón cargado para merge
       let padronData = padron;
       if (!padronData || padronData.length === 0) {
         const { data: p } = await supabase.from("padron").select("*");
@@ -200,398 +198,286 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
-// ======================= PERMISOS (RBAC) =======================
-const getMiCoordinadorCI = () => {
-  // Si soy coordinador, mi coordinador_ci soy yo
-  if (currentUser?.role === "coordinador") return normalizeCI(currentUser.ci);
-
-  // Si soy subcoordinador, tengo que mirar mi fila en subcoordinadores
-  if (currentUser?.role === "subcoordinador") {
-    const sub = (estructura.subcoordinadores || []).find(
-      (s) => normalizeCI(s.ci) === normalizeCI(currentUser.ci)
-    );
-    return normalizeCI(sub?.coordinador_ci);
-  }
-
-  return null;
-};
-
-// Puede editar teléfono?
-const canEditarTelefono = (tipo, persona) => {
-  const role = currentUser?.role;
-  if (!role || !persona) return false;
-
-  if (role === "superadmin") return true;
-
-  // Coordinador: puede editar teléfono de su red (subs + votantes de su coordinador_ci)
-  if (role === "coordinador") {
-    const miCoordCI = normalizeCI(currentUser.ci);
-
-    if (tipo === "subcoordinador") {
-      return normalizeCI(persona.coordinador_ci) === miCoordCI;
-    }
-    if (tipo === "votante") {
-      return normalizeCI(persona.coordinador_ci) === miCoordCI;
-    }
-    // coordinador editando otro coordinador: NO
-    return false;
-  }
-
-  // Subcoordinador: solo sus votantes directos
-  if (role === "subcoordinador") {
-    if (tipo !== "votante") return false;
-    return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
-  }
-
-  return false;
-};
-
-// Puede eliminar?
-const canEliminar = (tipo, persona) => {
-  const role = currentUser?.role;
-  if (!role || !persona) return false;
-
-  if (role === "superadmin") return true;
-
-  if (role === "coordinador") {
-    const miCoordCI = normalizeCI(currentUser.ci);
-
-    // puede eliminar sus subcoordinadores
-    if (tipo === "subcoordinador") {
-      return normalizeCI(persona.coordinador_ci) === miCoordCI;
-    }
-
-    // puede eliminar votantes de su red
-    if (tipo === "votante") {
-      return normalizeCI(persona.coordinador_ci) === miCoordCI;
-    }
-
-    // no puede eliminar coordinadores
-    return false;
-  }
-
-  if (role === "subcoordinador") {
-    // solo puede eliminar sus votantes directos
-    if (tipo !== "votante") return false;
-    return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
-  }
-
-  return false;
-};
-
-// ======================= CONFIRMACIÓN DE VOTO =======================
-
-// Verificar permisos para confirmar voto
-const canConfirmarVoto = (votante) => {
-  const role = currentUser?.role;
-  if (!role || !votante) return false;
-
-  // Superadmin no puede confirmar (no tiene rol de coordinador/subcoordinador)
-  if (role === "superadmin") return false;
-
-  // Coordinador puede confirmar votantes de su red
-  if (role === "coordinador") {
-    const miCoordCI = normalizeCI(currentUser.ci);
-    // Si el votante tiene coordinador_ci igual al del coordinador actual
-    return normalizeCI(votante.coordinador_ci) === miCoordCI;
-  }
-
-  // Subcoordinador solo puede confirmar sus votantes directos
-  if (role === "subcoordinador") {
-    return normalizeCI(votante.asignado_por) === normalizeCI(currentUser.ci);
-  }
-
-  return false;
-};
-
-// Verificar permisos para anular confirmación (solo Coordinador)
-const canAnularConfirmacion = (votante) => {
-  const role = currentUser?.role;
-  if (!role || !votante) return false;
-
-  // Solo Coordinador puede anular
-  if (role === "coordinador") {
-    const miCoordCI = normalizeCI(currentUser.ci);
-    return normalizeCI(votante.coordinador_ci) === miCoordCI;
-  }
-
-  return false;
-};
-
-// Abrir modal de confirmación
-const abrirConfirmVoto = (votante) => {
-  if (!canConfirmarVoto(votante)) return;
-  setConfirmVotoTarget(votante);
-  setIsVotoUndoing(false);
-  setConfirmVotoModalOpen(true);
-};
-
-// Abrir modal de anulación
-const abrirAnularConfirmacion = (votante) => {
-  if (!canAnularConfirmacion(votante)) return;
-  setConfirmVotoTarget(votante);
-  setIsVotoUndoing(true);
-  setConfirmVotoModalOpen(true);
-};
-
-// Confirmar/Anular voto
-const handleConfirmVoto = async () => {
-  if (!confirmVotoTarget) return;
-
-  setIsConfirmVotoLoading(true);
-  try {
-    const newStatus = !isVotoUndoing;
-    const { error } = await supabase
-      .from("votantes")
-      .update({ voto_confirmado: newStatus })
-      .eq("ci", confirmVotoTarget.ci);
-
-    if (error) {
-      console.error("Error confirmando voto:", error);
-      alert(error.message || "Error procesando confirmación");
-      setIsConfirmVotoLoading(false);
-      return;
-    }
-
-    // Recargar estructura y cerrar modal
-    setConfirmVotoModalOpen(false);
-    setConfirmVotoTarget(null);
-    await recargarEstructura();
-  } catch (e) {
-    console.error("Error confirmando voto:", e);
-    alert("Error procesando confirmación");
-  } finally {
-    setIsConfirmVotoLoading(false);
-  }
-};
-
- // ======================= BUSCADOR INTERNO POR CI (SEGÚN ROL) =======================
-// - Superadmin: busca en toda la estructura (coords + subs + votantes). Si no está, muestra "padron" como fallback.
-// - Coordinador: busca SOLO dentro de su red (sus subcoordinadores + votantes directos + votantes de sus subcoordinadores).
-// - Subcoordinador: busca SOLO sus votantes directos.
-
-  // ======================= LOGOUT =======================
-  const handleLogout = () => {
-  setExpandedCoords({});
-  setSearchCI("");
-  onLogout?.();
-};
-
-
-  // ======================= TELÉFONO =======================
-
-// Abre el modal de teléfono
-// OJO: acá NO validamos permisos, solo abrimos.
-// La validación REAL se hace al guardar (backend lógico).
-const abrirTelefono = (tipo, p) => {
-  setPhoneTarget({ tipo, ...p });
-  setPhoneValue(p.telefono || "+595");
-  setPhoneModalOpen(true);
-};
-
-// Guarda el teléfono con VALIDACIÓN DE PERMISOS
-const guardarTelefono = async () => {
-  if (!phoneTarget) return;
-
-  // ======================= VALIDACIÓN DE PERMISOS =======================
-  // Superadmin: siempre permitido
-  if (currentUser.role !== "superadmin") {
-    // COORDINADOR
-    if (currentUser.role === "coordinador") {
-      const miCI = normalizeCI(currentUser.ci);
-
-      // Puede editar:
-      // - subcoordinadores de su red
-      // - votantes de su red
-      const perteneceAMiRed =
-        normalizeCI(phoneTarget.coordinador_ci) === miCI;
-
-      if (!perteneceAMiRed) {
-        alert("No tiene permiso para editar el teléfono de esta persona.");
-        return;
-      }
-
-      // Un coordinador NO puede editar otro coordinador
-      if (phoneTarget.tipo === "coordinador") {
-        alert("No tiene permiso para editar el teléfono de otro coordinador.");
-        return;
-      }
-    }
-
-    // SUBCOORDINADOR
-    if (currentUser.role === "subcoordinador") {
-      // Solo puede editar votantes
-      if (phoneTarget.tipo !== "votante") {
-        alert("No tiene permiso para editar esta persona.");
-        return;
-      }
-
-      // Solo sus votantes directos
-      const esMiVotante =
-        normalizeCI(phoneTarget.asignado_por) ===
-        normalizeCI(currentUser.ci);
-
-      if (!esMiVotante) {
-        alert("No tiene permiso para editar el teléfono de este votante.");
-        return;
-      }
-    }
-  }
-
-  // ======================= VALIDACIÓN DE TELÉFONO =======================
-  const telefono = String(phoneValue || "").trim();
-  if (!telefono) {
-    alert("Ingrese número de teléfono.");
-    return;
-  }
-
-  // ======================= RESOLVER TABLA =======================
-  let tabla = "votantes";
-  if (phoneTarget.tipo === "coordinador") tabla = "coordinadores";
-  if (phoneTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
-
-  // ======================= UPDATE EN SUPABASE =======================
-  const { error } = await supabase
-    .from(tabla)
-    .update({ telefono })
-    .eq("ci", phoneTarget.ci);
-
-  if (error) {
-    console.error("Error guardando teléfono:", error);
-    alert(error.message || "Error guardando teléfono");
-    return;
-  }
-
-  // ======================= LIMPIEZA Y RECARGA =======================
-  setPhoneModalOpen(false);
-  setPhoneTarget(null);
-  setPhoneValue("+595");
-  recargarEstructura();
-};
-
-
-  // ======================= AGREGAR PERSONA =======================
-const handleAgregarPersona = async (persona) => {
-  if (!modalType) return alert("Seleccione tipo.");
-
-  const ci = normalizeCI(persona.ci);
-  let tabla = "";
-  let data = {};
-
-  // ======================= COORDINADOR =======================
-  if (modalType === "coordinador") {
-    if (currentUser.role !== "superadmin") {
-      alert("Solo el superadmin puede agregar coordinadores.");
-      return;
-    }
-
-    const accessCode = generarAccessCode(8);
-
-    tabla = "coordinadores";
-    data = {
-      ci,
-      login_code: accessCode,
-      asignado_por_nombre: "Superadmin",
-    };
-
-    const { error } = await supabase.from(tabla).insert([data]);
-    if (error) {
-      console.error("Error creando coordinador:", error);
-      alert(error.message || "Error creando coordinador");
-      return;
-    }
-
-    alert(`Código de acceso del coordinador:\n\n${accessCode}`);
-    setShowAddModal(false);
-    recargarEstructura();
-    return;
-  }
-
-  // ======================= SUBCOORDINADOR =======================
-  if (modalType === "subcoordinador") {
-    if (currentUser.role !== "coordinador") {
-      alert("Solo un coordinador puede agregar subcoordinadores.");
-      return;
-    }
-
-    const accessCode = generarAccessCode(8);
-
-    tabla = "subcoordinadores";
-    data = {
-      ci,
-      coordinador_ci: normalizeCI(currentUser.ci),
-      login_code: accessCode,
-      asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
-    };
-
-    const { error } = await supabase.from(tabla).insert([data]);
-    if (error) {
-      console.error("Error creando subcoordinador:", error);
-      alert(error.message || "Error creando subcoordinador");
-      return;
-    }
-
-    alert(`Código de acceso del subcoordinador:\n\n${accessCode}`);
-    setShowAddModal(false);
-    recargarEstructura();
-    return;
-  }
-
-  // ======================= VOTANTE =======================
-  if (modalType === "votante") {
-    if (
-      currentUser.role !== "coordinador" &&
-      currentUser.role !== "subcoordinador"
-    ) {
-      alert("No permitido.");
-      return;
-    }
-
-    tabla = "votantes";
-
-    let coordinador_ci = null;
-
-    if (currentUser.role === "coordinador") {
-      coordinador_ci = normalizeCI(currentUser.ci);
-    } else {
+  // ======================= PERMISOS (RBAC) =======================
+  const getMiCoordinadorCI = () => {
+    if (currentUser?.role === "coordinador") return normalizeCI(currentUser.ci);
+    if (currentUser?.role === "subcoordinador") {
       const sub = (estructura.subcoordinadores || []).find(
         (s) => normalizeCI(s.ci) === normalizeCI(currentUser.ci)
       );
-      coordinador_ci = normalizeCI(sub?.coordinador_ci);
+      return normalizeCI(sub?.coordinador_ci);
+    }
+    return null;
+  };
+
+  const canEditarTelefono = (tipo, persona) => {
+    const role = currentUser?.role;
+    if (!role || !persona) return false;
+    if (role === "superadmin") return true;
+    if (role === "coordinador") {
+      const miCI = normalizeCI(currentUser.ci);
+      if (tipo === "subcoordinador") return normalizeCI(persona.coordinador_ci) === miCI;
+      if (tipo === "votante") return normalizeCI(persona.coordinador_ci) === miCI;
+      return false;
+    }
+    if (role === "subcoordinador") {
+      if (tipo !== "votante") return false;
+      return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
+    }
+    return false;
+  };
+
+  const canEliminar = (tipo, persona) => {
+    const role = currentUser?.role;
+    if (!role || !persona) return false;
+    if (role === "superadmin") return true;
+    if (role === "coordinador") {
+      const miCI = normalizeCI(currentUser.ci);
+      if (tipo === "subcoordinador") return normalizeCI(persona.coordinador_ci) === miCI;
+      if (tipo === "votante") return normalizeCI(persona.coordinador_ci) === miCI;
+      return false;
+    }
+    if (role === "subcoordinador") {
+      if (tipo !== "votante") return false;
+      return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
+    }
+    return false;
+  };
+
+  // ======================= CONFIRMACIÓN DE VOTO =======================
+  const canConfirmarVoto = (votante) => {
+    const role = currentUser?.role;
+    if (!role || !votante) return false;
+    if (role === "superadmin") return false;
+    if (role === "coordinador") {
+      const miCoordCI = normalizeCI(currentUser.ci);
+      return normalizeCI(votante.coordinador_ci) === miCoordCI;
+    }
+    if (role === "subcoordinador") {
+      return normalizeCI(votante.asignado_por) === normalizeCI(currentUser.ci);
+    }
+    return false;
+  };
+
+  const canAnularConfirmacion = (votante) => {
+    const role = currentUser?.role;
+    if (!role || !votante) return false;
+    if (role === "coordinador") {
+      const miCoordCI = normalizeCI(currentUser.ci);
+      return normalizeCI(votante.coordinador_ci) === miCoordCI;
+    }
+    return false;
+  };
+
+  const abrirConfirmVoto = (votante) => {
+    if (!canConfirmarVoto(votante)) return;
+    setConfirmVotoTarget(votante);
+    setIsVotoUndoing(false);
+    setConfirmVotoModalOpen(true);
+  };
+
+  const abrirAnularConfirmacion = (votante) => {
+    if (!canAnularConfirmacion(votante)) return;
+    setConfirmVotoTarget(votante);
+    setIsVotoUndoing(true);
+    setConfirmVotoModalOpen(true);
+  };
+
+  const handleConfirmVoto = async () => {
+    if (!confirmVotoTarget) return;
+    setIsConfirmVotoLoading(true);
+    try {
+      const newStatus = !isVotoUndoing;
+      const { error } = await supabase
+        .from("votantes")
+        .update({ voto_confirmado: newStatus })
+        .eq("ci", confirmVotoTarget.ci);
+      if (error) {
+        console.error("Error confirmando voto:", error);
+        alert(error.message || "Error procesando confirmación");
+        setIsConfirmVotoLoading(false);
+        return;
+      }
+      setConfirmVotoModalOpen(false);
+      setConfirmVotoTarget(null);
+      await recargarEstructura();
+    } catch (e) {
+      console.error("Error confirmando voto:", e);
+      alert("Error procesando confirmación");
+    } finally {
+      setIsConfirmVotoLoading(false);
+    }
+  };
+
+  // ======================= LOGOUT =======================
+  const handleLogout = () => {
+    setExpandedCoords({});
+    setSearchCI("");
+    onLogout?.();
+  };
+
+  // ======================= TELÉFONO =======================
+  const abrirTelefono = (tipo, p) => {
+    setPhoneTarget({ tipo, ...p });
+    setPhoneValue(p.telefono || "+595");
+    setPhoneModalOpen(true);
+  };
+
+  const guardarTelefono = async () => {
+    if (!phoneTarget) return;
+
+    if (currentUser.role !== "superadmin") {
+      if (currentUser.role === "coordinador") {
+        const miCI = normalizeCI(currentUser.ci);
+        const perteneceAMiRed = normalizeCI(phoneTarget.coordinador_ci) === miCI;
+        if (!perteneceAMiRed) {
+          alert("No tiene permiso para editar el teléfono de esta persona.");
+          return;
+        }
+        if (phoneTarget.tipo === "coordinador") {
+          alert("No tiene permiso para editar el teléfono de otro coordinador.");
+          return;
+        }
+      }
+      if (currentUser.role === "subcoordinador") {
+        if (phoneTarget.tipo !== "votante") {
+          alert("No tiene permiso para editar esta persona.");
+          return;
+        }
+        const esMiVotante = normalizeCI(phoneTarget.asignado_por) === normalizeCI(currentUser.ci);
+        if (!esMiVotante) {
+          alert("No tiene permiso para editar el teléfono de este votante.");
+          return;
+        }
+      }
     }
 
-    if (!coordinador_ci) {
-      alert("Error interno: no se pudo resolver coordinador_ci");
+    const telefono = String(phoneValue || "").trim();
+    if (!telefono) {
+      alert("Ingrese número de teléfono.");
       return;
     }
 
-    data = {
-      ci,
-      asignado_por: normalizeCI(currentUser.ci),
-      asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
-      coordinador_ci,
-    };
+    let tabla = "votantes";
+    if (phoneTarget.tipo === "coordinador") tabla = "coordinadores";
+    if (phoneTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
 
-    const { error } = await supabase.from(tabla).insert([data]);
+    const { error } = await supabase
+      .from(tabla)
+      .update({ telefono })
+      .eq("ci", phoneTarget.ci);
+
     if (error) {
-      console.error("Error creando votante:", error);
-      alert(error.message || "Error creando votante");
+      console.error("Error guardando teléfono:", error);
+      alert(error.message || "Error guardando teléfono");
       return;
     }
 
-    setShowAddModal(false);
+    setPhoneModalOpen(false);
+    setPhoneTarget(null);
+    setPhoneValue("+595");
     recargarEstructura();
-    return;
-  }
-};
+  };
+
+  // ======================= AGREGAR PERSONA =======================
+  const handleAgregarPersona = async (persona) => {
+    if (!modalType) return alert("Seleccione tipo.");
+
+    const ci = normalizeCI(persona.ci);
+    let tabla = "";
+    let data = {};
+
+    if (modalType === "coordinador") {
+      if (currentUser.role !== "superadmin") {
+        alert("Solo el superadmin puede agregar coordinadores.");
+        return;
+      }
+      const accessCode = generarAccessCode(8);
+      tabla = "coordinadores";
+      data = {
+        ci,
+        login_code: accessCode,
+        asignado_por_nombre: "Superadmin",
+      };
+      const { error } = await supabase.from(tabla).insert([data]);
+      if (error) {
+        console.error("Error creando coordinador:", error);
+        alert(error.message || "Error creando coordinador");
+        return;
+      }
+      alert(`Código de acceso del coordinador:\n\n${accessCode}`);
+      setShowAddModal(false);
+      recargarEstructura();
+      return;
+    }
+
+    if (modalType === "subcoordinador") {
+      if (currentUser.role !== "coordinador") {
+        alert("Solo un coordinador puede agregar subcoordinadores.");
+        return;
+      }
+      const accessCode = generarAccessCode(8);
+      tabla = "subcoordinadores";
+      data = {
+        ci,
+        coordinador_ci: normalizeCI(currentUser.ci),
+        login_code: accessCode,
+        asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
+      };
+      const { error } = await supabase.from(tabla).insert([data]);
+      if (error) {
+        console.error("Error creando subcoordinador:", error);
+        alert(error.message || "Error creando subcoordinador");
+        return;
+      }
+      alert(`Código de acceso del subcoordinador:\n\n${accessCode}`);
+      setShowAddModal(false);
+      recargarEstructura();
+      return;
+    }
+
+    if (modalType === "votante") {
+      if (currentUser.role !== "coordinador" && currentUser.role !== "subcoordinador") {
+        alert("No permitido.");
+        return;
+      }
+      tabla = "votantes";
+      let coordinador_ci = null;
+      if (currentUser.role === "coordinador") {
+        coordinador_ci = normalizeCI(currentUser.ci);
+      } else {
+        const sub = (estructura.subcoordinadores || []).find(
+          (s) => normalizeCI(s.ci) === normalizeCI(currentUser.ci)
+        );
+        coordinador_ci = normalizeCI(sub?.coordinador_ci);
+      }
+      if (!coordinador_ci) {
+        alert("Error interno: no se pudo resolver coordinador_ci");
+        return;
+      }
+      data = {
+        ci,
+        asignado_por: normalizeCI(currentUser.ci),
+        asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
+        coordinador_ci,
+      };
+      const { error } = await supabase.from(tabla).insert([data]);
+      if (error) {
+        console.error("Error creando votante:", error);
+        alert(error.message || "Error creando votante");
+        return;
+      }
+      setShowAddModal(false);
+      recargarEstructura();
+      return;
+    }
+  };
 
   // ======================= QUITAR PERSONA =======================
   const quitarPersona = async (ci, tipo) => {
     if (!window.confirm("¿Quitar persona?")) return;
-
     const isSuper = currentUser.role === "superadmin";
     ci = normalizeCI(ci);
-
     try {
       if (tipo === "coordinador") {
         if (!isSuper) return alert("Solo superadmin.");
@@ -600,16 +486,13 @@ const handleAgregarPersona = async (persona) => {
         await supabase.from("votantes").delete().eq("asignado_por", ci);
         await supabase.from("coordinadores").delete().eq("ci", ci);
       }
-
       if (tipo === "subcoordinador") {
         await supabase.from("votantes").delete().eq("asignado_por", ci);
         await supabase.from("subcoordinadores").delete().eq("ci", ci);
       }
-
       if (tipo === "votante") {
         await supabase.from("votantes").delete().eq("ci", ci);
       }
-
       recargarEstructura();
     } catch (e) {
       console.error("Error quitando persona:", e);
@@ -663,149 +546,143 @@ const handleAgregarPersona = async (persona) => {
   );
 
   // ======================= BUSCADOR INTERNO (SEGÚN ROL) =======================
-// Busca SOLO dentro de lo que el rol puede ver (estructura).
-// Soporta CI, nombre, apellido, nombre+apellido (en cualquier orden), y acentos.
+  const normalizeText = (v) =>
+    (v ?? "")
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
 
-const normalizeText = (v) =>
-  (v ?? "")
-    .toString()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // quita acentos
-    .replace(/\s+/g, " ")
-    .trim();
+  const personasVisibles = useMemo(() => {
+    const role = currentUser?.role;
+    const miCI = normalizeCI(currentUser?.ci);
+    const coords = estructura.coordinadores || [];
+    const subs = estructura.subcoordinadores || [];
+    const vots = estructura.votantes || [];
+    const out = [];
+    const pushUnique = (tipo, persona) => {
+      const key = `${tipo}:${normalizeCI(persona?.ci)}`;
+      if (!pushUnique._set) pushUnique._set = new Set();
+      if (pushUnique._set.has(key)) return;
+      pushUnique._set.add(key);
+      out.push({ tipo, persona });
+    };
+    if (role === "superadmin") {
+      coords.forEach((p) => pushUnique("coordinador", p));
+      subs.forEach((p) => pushUnique("subcoordinador", p));
+      vots.forEach((p) => pushUnique("votante", p));
+      return out;
+    }
+    if (role === "coordinador") {
+      const misSubs = subs.filter((s) => normalizeCI(s.coordinador_ci) === miCI);
+      const misSubsSet = new Set(misSubs.map((s) => normalizeCI(s.ci)));
+      misSubs.forEach((p) => pushUnique("subcoordinador", p));
+      vots.filter((v) => normalizeCI(v.asignado_por) === miCI).forEach((p) => pushUnique("votante", p));
+      vots.filter((v) => misSubsSet.has(normalizeCI(v.asignado_por))).forEach((p) => pushUnique("votante", p));
+      return out;
+    }
+    if (role === "subcoordinador") {
+      vots.filter((v) => normalizeCI(v.asignado_por) === miCI).forEach((p) => pushUnique("votante", p));
+      return out;
+    }
+    return [];
+  }, [estructura, currentUser]);
 
-const personasVisibles = useMemo(() => {
-  const role = currentUser?.role;
-  const miCI = normalizeCI(currentUser?.ci);
-
-  const coords = estructura.coordinadores || [];
-  const subs = estructura.subcoordinadores || [];
-  const vots = estructura.votantes || [];
-
-  // Vamos a devolver una lista plana con objetos { tipo, persona }
-  // tipo: "coordinador" | "subcoordinador" | "votante"
-  const out = [];
-  const pushUnique = (tipo, persona) => {
-    const key = `${tipo}:${normalizeCI(persona?.ci)}`;
-    if (!pushUnique._set) pushUnique._set = new Set();
-    if (pushUnique._set.has(key)) return;
-    pushUnique._set.add(key);
-    out.push({ tipo, persona });
-  };
-
-  // SUPERADMIN: ve todo
-  if (role === "superadmin") {
-    coords.forEach((p) => pushUnique("coordinador", p));
-    subs.forEach((p) => pushUnique("subcoordinador", p));
-    vots.forEach((p) => pushUnique("votante", p));
-    return out;
-  }
-
-  // COORDINADOR: ve sus subcoordinadores + sus votantes directos + votantes de sus subcoordinadores
-  if (role === "coordinador") {
-    const misSubs = subs.filter((s) => normalizeCI(s.coordinador_ci) === miCI);
-    const misSubsSet = new Set(misSubs.map((s) => normalizeCI(s.ci)));
-
-    misSubs.forEach((p) => pushUnique("subcoordinador", p));
-
-    // votantes directos del coordinador
-    vots
-      .filter((v) => normalizeCI(v.asignado_por) === miCI)
-      .forEach((p) => pushUnique("votante", p));
-
-    // votantes de mis subcoordinadores
-    vots
-      .filter((v) => misSubsSet.has(normalizeCI(v.asignado_por)))
-      .forEach((p) => pushUnique("votante", p));
-
-    return out;
-  }
-
-  // SUBCOORDINADOR: ve solo sus votantes directos
-  if (role === "subcoordinador") {
-    vots
-      .filter((v) => normalizeCI(v.asignado_por) === miCI)
-      .forEach((p) => pushUnique("votante", p));
-
-    return out;
-  }
-
-  // Otros roles: por defecto nada
-  return [];
-}, [estructura, currentUser]);
-
-const resultadosBusqueda = useMemo(() => {
-  const qRaw = normalizeText(searchCI);
-
-  if (!qRaw) return personasVisibles;
-
-  // tokens permite buscar "juan perez" y que encuentre aunque esté como "Perez Juan"
-  const tokens = qRaw.split(" ").filter(Boolean);
-
-  return personasVisibles.filter(({ persona }) => {
-    const ci = normalizeText(persona?.ci);
-    const nombre = normalizeText(persona?.nombre);
-    const apellido = normalizeText(persona?.apellido);
-
-    const full1 = `${nombre} ${apellido}`.trim();
-    const full2 = `${apellido} ${nombre}`.trim();
-
-    // Si el usuario puso varios tokens, exigimos que TODOS estén contenidos
-    return tokens.every((t) => {
-      return (
-        ci.includes(t) ||
-        nombre.includes(t) ||
-        apellido.includes(t) ||
-        full1.includes(t) ||
-        full2.includes(t)
-      );
+  const resultadosBusqueda = useMemo(() => {
+    const qRaw = normalizeText(searchCI);
+    if (!qRaw) return personasVisibles;
+    const tokens = qRaw.split(" ").filter(Boolean);
+    return personasVisibles.filter(({ persona }) => {
+      const ci = normalizeText(persona?.ci);
+      const nombre = normalizeText(persona?.nombre);
+      const apellido = normalizeText(persona?.apellido);
+      const full1 = `${nombre} ${apellido}`.trim();
+      const full2 = `${apellido} ${nombre}`.trim();
+      return tokens.every((t) => {
+        return ci.includes(t) || nombre.includes(t) || apellido.includes(t) || full1.includes(t) || full2.includes(t);
+      });
     });
-  });
-}, [searchCI, personasVisibles]);
+  }, [searchCI, personasVisibles]);
 
-
-  // ======================= DESCARGAR REPORTE (jsPDF + autoTable) =======================
-const descargarPDF = async () => {
-  if (!currentUser) {
-    alert("Usuario no válido");
-    return;
-  }
-
-  try {
-    let doc;
-    let filename = "reporte";
-
-    if (currentUser.role === "superadmin") {
-      doc = generateSuperadminPDF({ estructura, currentUser });
-      filename = "reporte-superadmin";
-    } else if (currentUser.role === "coordinador") {
-      doc = generateCoordinadorPDF({ estructura, currentUser });
-      filename = "reporte-coordinador";
-    } else if (currentUser.role === "subcoordinador") {
-      doc = generateSubcoordinadorPDF({ estructura, currentUser });
-      filename = "reporte-subcoordinador";
-    } else {
-      alert("Rol no soportado para reportes");
+  // ======================= DESCARGAR REPORTE =======================
+  const descargarPDF = async () => {
+    if (!currentUser) {
+      alert("Usuario no válido");
       return;
     }
+    try {
+      let doc;
+      let filename = "reporte";
+      if (currentUser.role === "superadmin") {
+        doc = generateSuperadminPDF({ estructura, currentUser });
+        filename = "reporte-superadmin";
+      } else if (currentUser.role === "coordinador") {
+        doc = generateCoordinadorPDF({ estructura, currentUser });
+        filename = "reporte-coordinador";
+      } else if (currentUser.role === "subcoordinador") {
+        doc = generateSubcoordinadorPDF({ estructura, currentUser });
+        filename = "reporte-subcoordinador";
+      } else {
+        alert("Rol no soportado para reportes");
+        return;
+      }
+      const fecha = new Date();
+      const timestamp = fecha.toISOString().slice(0, 10);
+      const nombreArchivo = `${filename}-${timestamp}.pdf`;
+      doc.save(nombreArchivo);
+    } catch (error) {
+      console.error("Error generando PDF:", error);
+      alert("Error al generar el reporte PDF");
+    }
+  };
 
-    // Generar nombre de archivo con timestamp
-    const fecha = new Date();
-    const timestamp = fecha.toISOString().slice(0, 10);
-    const nombreArchivo = `${filename}-${timestamp}.pdf`;
-
-    // Descargar PDF
-    doc.save(nombreArchivo);
-  } catch (error) {
-    console.error("Error generando PDF:", error);
-    alert("Error al generar el reporte PDF");
-  }
-};
-
-
-
-
+  // ======================= RENDER VOTANTE CARD =======================
+  const VotanteCard = ({ v, showAnular }) => (
+    <div className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3">
+      <div className="flex-1">
+        <DatosPersona persona={v} rol="Votante" />
+        {v.voto_confirmado && (
+          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+            Voto Confirmado
+          </div>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={() => abrirTelefono("votante", v)}
+          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+        >
+          <Phone className="w-5 h-5" />
+        </button>
+        {!v.voto_confirmado && canConfirmarVoto(v) && (
+          <button
+            onClick={() => abrirConfirmVoto(v)}
+            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            title="Confirmar voto"
+          >
+            <Check className="w-5 h-5" />
+          </button>
+        )}
+        {showAnular !== false && v.voto_confirmado && canAnularConfirmacion(v) && (
+          <button
+            onClick={() => abrirAnularConfirmacion(v)}
+            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+            title="Anular confirmación"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
+        <button
+          onClick={() => quitarPersona(v.ci, "votante")}
+          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+        >
+          <Trash2 className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  );
 
   // ======================= UI =======================
   return (
@@ -818,7 +695,7 @@ const descargarPDF = async () => {
             <p className="text-red-200 text-sm mt-1">
               {currentUser.nombre} {currentUser.apellido} —{" "}
               {currentUser.role === "superadmin"
-                ? "⭐ Superadmin"
+                ? "Superadmin"
                 : currentUser.role === "coordinador"
                 ? "Coordinador"
                 : "Sub-coordinador"}
@@ -837,20 +714,20 @@ const descargarPDF = async () => {
       {/* TARJETAS ESTADÍSTICAS */}
       <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {currentUser.role === "superadmin" && (
-          <div>
+          <div className="contents">
             <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600 text-sm">Coordinadores</p>
               <p className="text-4xl font-bold text-red-600">{stats?.coordinadores ?? 0}</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-6 mt-4">
+            <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600 text-sm">Subcoordinadores</p>
               <p className="text-4xl font-bold text-red-600">{stats?.subcoordinadores ?? 0}</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-6 mt-4">
+            <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600 text-sm">Votantes</p>
               <p className="text-4xl font-bold text-red-600">{stats?.votantes ?? 0}</p>
             </div>
-            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6 mt-4">
+            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
               <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">Votantes totales</p>
               <p className="text-4xl font-extrabold text-red-700 mt-1">{stats?.votantesTotales ?? 0}</p>
             </div>
@@ -858,20 +735,20 @@ const descargarPDF = async () => {
         )}
 
         {currentUser.role === "coordinador" && (
-          <div>
+          <div className="contents">
             <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600 text-sm">Subcoordinadores</p>
               <p className="text-4xl font-bold text-red-600">{stats?.subcoordinadores ?? 0}</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-6 mt-4">
+            <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600 text-sm">Votantes directos</p>
               <p className="text-4xl font-bold text-red-600">{stats?.votantesDirectos ?? 0}</p>
             </div>
-            <div className="bg-white rounded-lg shadow p-6 mt-4">
+            <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600 text-sm">Votantes indirectos</p>
               <p className="text-4xl font-bold text-red-600">{stats?.votantesIndirectos ?? 0}</p>
             </div>
-            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6 mt-4">
+            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
               <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">Votantes totales</p>
               <p className="text-4xl font-extrabold text-red-700 mt-1">{stats?.total ?? 0}</p>
             </div>
@@ -879,7 +756,7 @@ const descargarPDF = async () => {
         )}
 
         {currentUser.role === "subcoordinador" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="contents">
             <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600 text-sm">Votantes directos</p>
               <p className="text-4xl font-bold text-red-600">{stats?.votantes ?? 0}</p>
@@ -1046,6 +923,8 @@ const descargarPDF = async () => {
             <h2 className="text-xl font-bold text-gray-800">Mi Estructura</h2>
           </div>
           <div className="p-6">
+
+            {/* SUPERADMIN */}
             {currentUser.role === "superadmin" && (
               <div>
                 {(estructura.coordinadores || []).length === 0 ? (
@@ -1064,27 +943,17 @@ const descargarPDF = async () => {
                             ) : (
                               <ChevronRight className="w-5 h-5 text-red-600" />
                             )}
-                            <DatosPersona
-                              persona={coord}
-                              rol="Coordinador"
-                              loginCode={coord.login_code}
-                            />
+                            <DatosPersona persona={coord} rol="Coordinador" loginCode={coord.login_code} />
                           </div>
                           <div className="flex flex-col md:flex-row gap-2">
                             <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                abrirTelefono("coordinador", coord);
-                              }}
+                              onClick={(e) => { e.stopPropagation(); abrirTelefono("coordinador", coord); }}
                               className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                             >
                               <Phone className="w-5 h-5" />
                             </button>
                             <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                quitarPersona(coord.ci, "coordinador");
-                              }}
+                              onClick={(e) => { e.stopPropagation(); quitarPersona(coord.ci, "coordinador"); }}
                               className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                             >
                               <Trash2 className="w-5 h-5" />
@@ -1097,10 +966,7 @@ const descargarPDF = async () => {
                             {(estructura.subcoordinadores || [])
                               .filter((s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci))
                               .map((sub) => (
-                                <div
-                                  key={sub.ci}
-                                  className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4"
-                                >
+                                <div key={sub.ci} className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4">
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="flex items-start gap-3 flex-1">
                                       {expandedSubs[normalizeCI(sub.ci)] ? (
@@ -1110,33 +976,20 @@ const descargarPDF = async () => {
                                       )}
                                       <div
                                         className="cursor-pointer flex-1"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          toggleSub(sub.ci);
-                                        }}
+                                        onClick={(e) => { e.stopPropagation(); toggleSub(sub.ci); }}
                                       >
-                                        <DatosPersona
-                                          persona={sub}
-                                          rol="Sub-coordinador"
-                                          loginCode={sub.login_code}
-                                        />
+                                        <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} />
                                       </div>
                                     </div>
                                     <div className="flex gap-2">
                                       <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          abrirTelefono("subcoordinador", sub);
-                                        }}
+                                        onClick={(e) => { e.stopPropagation(); abrirTelefono("subcoordinador", sub); }}
                                         className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                                       >
                                         <Phone className="w-5 h-5" />
                                       </button>
                                       <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          quitarPersona(sub.ci, "subcoordinador");
-                                        }}
+                                        onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
                                         className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                                       >
                                         <Trash2 className="w-5 h-5" />
@@ -1147,51 +1000,7 @@ const descargarPDF = async () => {
                                   {expandedSubs[normalizeCI(sub.ci)] && (
                                     <div className="ml-4 border-l-2 border-gray-200 pl-3 animate-in fade-in duration-200">
                                       {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                                        <div
-                                          key={v.ci}
-                                          className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3"
-                                        >
-                                          <div className="flex-1">
-                                            <DatosPersona persona={v} rol="Votante" />
-                                            {v.voto_confirmado && (
-                                              <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                                Voto Confirmado
-                                              </div>
-                                            )}
-                                          </div>
-                                          <div className="flex gap-2">
-                                            <button
-                                              onClick={() => abrirTelefono("votante", v)}
-                                              className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                            >
-                                              <Phone className="w-5 h-5" />
-                                            </button>
-                                            {!v.voto_confirmado && canConfirmarVoto(v) && (
-                                              <button
-                                                onClick={() => abrirConfirmVoto(v)}
-                                                className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                                title="Confirmar voto"
-                                              >
-                                                <Check className="w-5 h-5" />
-                                              </button>
-                                            )}
-                                            {v.voto_confirmado && canAnularConfirmacion(v) && (
-                                              <button
-                                                onClick={() => abrirAnularConfirmacion(v)}
-                                                className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                                                title="Anular confirmación"
-                                              >
-                                                <X className="w-5 h-5" />
-                                              </button>
-                                            )}
-                                            <button
-                                              onClick={() => quitarPersona(v.ci, "votante")}
-                                              className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                            >
-                                              <Trash2 className="w-5 h-5" />
-                                            </button>
-                                          </div>
-                                        </div>
+                                        <VotanteCard key={v.ci} v={v} showAnular={true} />
                                       ))}
                                       {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
                                         <p className="text-gray-500 text-sm">Sin votantes asignados.</p>
@@ -1209,6 +1018,7 @@ const descargarPDF = async () => {
               </div>
             )}
 
+            {/* COORDINADOR */}
             {currentUser.role === "coordinador" && (
               <div>
                 {getMisSubcoordinadores(estructura, currentUser).map((sub) => (
@@ -1223,27 +1033,17 @@ const descargarPDF = async () => {
                         ) : (
                           <ChevronRight className="w-5 h-5 text-red-600" />
                         )}
-                        <DatosPersona
-                          persona={sub}
-                          rol="Sub-coordinador"
-                          loginCode={sub.login_code}
-                        />
+                        <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} />
                       </div>
                       <div className="flex flex-col md:flex-row gap-2">
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            abrirTelefono("subcoordinador", sub);
-                          }}
+                          onClick={(e) => { e.stopPropagation(); abrirTelefono("subcoordinador", sub); }}
                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                         >
                           <Phone className="w-5 h-5" />
                         </button>
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            quitarPersona(sub.ci, "subcoordinador");
-                          }}
+                          onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
                           className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                         >
                           <Trash2 className="w-5 h-5" />
@@ -1255,50 +1055,8 @@ const descargarPDF = async () => {
                       <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
                         <p className="text-sm font-semibold mt-3 mb-2">Votantes</p>
                         {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                          <div
-                            key={v.ci}
-                            className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3 ml-2"
-                          >
-                            <div className="flex-1">
-                              <DatosPersona persona={v} rol="Votante" />
-                              {v.voto_confirmado && (
-                                <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                  Voto Confirmado
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => abrirTelefono("votante", v)}
-                                className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                              >
-                                <Phone className="w-5 h-5" />
-                              </button>
-                              {!v.voto_confirmado && canConfirmarVoto(v) && (
-                                <button
-                                  onClick={() => abrirConfirmVoto(v)}
-                                  className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                  title="Confirmar voto"
-                                >
-                                  <Check className="w-5 h-5" />
-                                </button>
-                              )}
-                              {v.voto_confirmado && canAnularConfirmacion(v) && (
-                                <button
-                                  onClick={() => abrirAnularConfirmacion(v)}
-                                  className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                                  title="Anular confirmación"
-                                >
-                                  <X className="w-5 h-5" />
-                                </button>
-                              )}
-                              <button
-                                onClick={() => quitarPersona(v.ci, "votante")}
-                                className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                              >
-                                <Trash2 className="w-5 h-5" />
-                              </button>
-                            </div>
+                          <div key={v.ci} className="ml-2">
+                            <VotanteCard v={v} showAnular={true} />
                           </div>
                         ))}
                         {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
@@ -1313,51 +1071,7 @@ const descargarPDF = async () => {
                   <div className="border rounded-lg mb-3 p-4">
                     <p className="font-semibold text-gray-700 mb-3">Mis votantes directos</p>
                     {getMisVotantes(estructura, currentUser).map((v) => (
-                      <div
-                        key={v.ci}
-                        className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-                      >
-                        <div className="flex-1">
-                          <DatosPersona persona={v} rol="Votante" />
-                          {v.voto_confirmado && (
-                            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                              Voto Confirmado
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => abrirTelefono("votante", v)}
-                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                          >
-                            <Phone className="w-5 h-5" />
-                          </button>
-                          {!v.voto_confirmado && canConfirmarVoto(v) && (
-                            <button
-                              onClick={() => abrirConfirmVoto(v)}
-                              className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                              title="Confirmar voto"
-                            >
-                              <Check className="w-5 h-5" />
-                            </button>
-                          )}
-                          {v.voto_confirmado && canAnularConfirmacion(v) && (
-                            <button
-                              onClick={() => abrirAnularConfirmacion(v)}
-                              className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                              title="Anular confirmación"
-                            >
-                              <X className="w-5 h-5" />
-                            </button>
-                          )}
-                          <button
-                            onClick={() => quitarPersona(v.ci, "votante")}
-                            className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
+                      <VotanteCard key={v.ci} v={v} showAnular={true} />
                     ))}
                   </div>
                 )}
@@ -1371,51 +1085,18 @@ const descargarPDF = async () => {
               </div>
             )}
 
+            {/* SUBCOORDINADOR */}
             {currentUser.role === "subcoordinador" && (
               <div>
                 {getMisVotantes(estructura, currentUser).map((v) => (
-                  <div
-                    key={v.ci}
-                    className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-                  >
-                    <div className="flex-1">
-                      <DatosPersona persona={v} rol="Votante" />
-                      {v.voto_confirmado && (
-                        <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                          Voto Confirmado
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => abrirTelefono("votante", v)}
-                        className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                      >
-                        <Phone className="w-5 h-5" />
-                      </button>
-                      {!v.voto_confirmado && canConfirmarVoto(v) && (
-                        <button
-                          onClick={() => abrirConfirmVoto(v)}
-                          className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                          title="Confirmar voto"
-                        >
-                          <Check className="w-5 h-5" />
-                        </button>
-                      )}
-                      <button
-                        onClick={() => quitarPersona(v.ci, "votante")}
-                        className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
+                  <VotanteCard key={v.ci} v={v} showAnular={false} />
                 ))}
                 {getMisVotantes(estructura, currentUser).length === 0 && (
                   <p className="text-gray-500 py-6">No tiene votantes asignados.</p>
                 )}
               </div>
             )}
+
           </div>
         </div>
       </div>
@@ -1442,918 +1123,6 @@ const descargarPDF = async () => {
         disponibles={disponibles}
       />
 
-      <ConfirmVotoModal
-        open={confirmVotoModalOpen}
-        votante={confirmVotoTarget}
-        isUndoing={isVotoUndoing}
-        onCancel={() => {
-          setConfirmVotoModalOpen(false);
-          setConfirmVotoTarget(null);
-          setIsVotoUndoing(false);
-        }}
-        onConfirm={handleConfirmVoto}
-        isLoading={isConfirmVotoLoading}
-      />
-    </div>
-  );
-};
-            <h1 className="text-2xl font-bold">Sistema Electoral</h1>
-            <p className="text-red-200 text-sm mt-1">
-              {currentUser.nombre} {currentUser.apellido} —{" "}
-              {currentUser.role === "superadmin"
-                ? "⭐ Superadmin"
-                : currentUser.role === "coordinador"
-                ? "Coordinador"
-                : "Sub-coordinador"}
-            </p>
-          </div>
-
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 bg-red-700 hover:bg-red-800 px-4 py-2 rounded-lg transition"
-          >
-            <LogOut className="w-4 h-4" />
-            Salir
-          </button>
-        </div>
-      </div>
-
-      {/* TARJETAS ESTADÍSTICAS */}
-      <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {currentUser.role === "superadmin" && (
-          <>
-            {/* COORDINADORES */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600 text-sm">Coordinadores</p>
-              <p className="text-4xl font-bold text-red-600">
-                {stats?.coordinadores ?? 0}
-              </p>
-            </div>
-
-            {/* SUBCOORDINADORES */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600 text-sm">Subcoordinadores</p>
-              <p className="text-4xl font-bold text-red-600">
-                {stats?.subcoordinadores ?? 0}
-              </p>
-            </div>
-
-            {/* VOTANTES */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600 text-sm">Votantes</p>
-              <p className="text-4xl font-bold text-red-600">
-                {stats?.votantes ?? 0}
-              </p>
-            </div>
-
-            {/* VOTANTES TOTALES (DESTACADO) */}
-            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
-                Votantes totales
-              </p>
-              <p className="text-4xl font-extrabold text-red-700 mt-1">
-                {stats?.votantesTotales ?? 0}
-              </p>
-            </div>
-          </>
-        )}
-
-        {currentUser.role === "coordinador" && (
-          <>
-            {/* SUBCOORDINADORES */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600 text-sm">Subcoordinadores</p>
-              <p className="text-4xl font-bold text-red-600">
-                {stats?.subcoordinadores ?? 0}
-              </p>
-            </div>
-
-            {/* VOTANTES DIRECTOS */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600 text-sm">Votantes directos</p>
-              <p className="text-4xl font-bold text-red-600">
-                {stats?.votantesDirectos ?? 0}
-              </p>
-            </div>
-
-            {/* VOTANTES INDIRECTOS */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600 text-sm">Votantes indirectos</p>
-              <p className="text-4xl font-bold text-red-600">
-                {stats?.votantesIndirectos ?? 0}
-              </p>
-            </div>
-
-            {/* VOTANTES TOTALES (DESTACADO) */}
-            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
-                Votantes totales
-              </p>
-              <p className="text-4xl font-extrabold text-red-700 mt-1">
-                {stats?.total ?? 0}
-              </p>
-            </div>
-          </>
-        )}
-
-        {currentUser.role === "subcoordinador" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* VOTANTES DIRECTOS */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600 text-sm">Votantes directos</p>
-              <p className="text-4xl font-bold text-red-600">
-                {stats?.votantes ?? 0}
-              </p>
-            </div>
-
-            {/* VOTANTES TOTALES (DESTACADO) */}
-            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
-                Votantes totales
-              </p>
-              <p className="text-4xl font-extrabold text-red-700 mt-1">
-                {stats?.votantes ?? 0}
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* ACCIONES */}
-      <div className="max-w-7xl mx-auto px-4 mb-6 flex flex-wrap gap-3 items-center">
-        {currentUser.role === "superadmin" && (
-          <button
-            onClick={() => {
-              setModalType("coordinador");
-              setShowAddModal(true);
-            }}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-          >
-            <UserPlus className="w-4 h-4" />
-            Agregar Coordinador
-          </button>
-        )}
-
-        {currentUser.role === "coordinador" && (
-          <button
-            onClick={() => {
-              setModalType("subcoordinador");
-              setShowAddModal(true);
-            }}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-          >
-            <UserPlus className="w-4 h-4" />
-            Agregar Subcoordinador
-          </button>
-        )}
-
-        {(currentUser.role === "coordinador" ||
-          currentUser.role === "subcoordinador") && (
-          <button
-            onClick={() => {
-              setModalType("votante");
-              setShowAddModal(true);
-            }}
-            className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
-          >
-            <UserPlus className="w-4 h-4" />
-            Agregar Votante
-          </button>
-        )}
-
-        {/* PDF */}
-        <button
-          onClick={descargarPDF}
-          className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
-        >
-          <BarChart3 className="w-4 h-4" />
-          Descargar PDF
-        </button>
-      </div>
-
-      {/* BUSCADOR INTERNO (solo dentro de la estructura visible por rol) */}
-      <div className="max-w-7xl mx-auto px-4 mb-4">
-        <div className="bg-white rounded-lg shadow p-4">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Buscar dentro de mi estructura
-          </label>
-
-          <input
-            value={searchCI}
-            onChange={(e) => setSearchCI(e.target.value)}
-            placeholder="Buscar por CI, nombre, apellido o combinación"
-            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-300"
-          />
-
-          {normalizeText(searchCI) && (
-            <p className="text-xs text-gray-500 mt-2">
-              Resultados: <b>{resultadosBusqueda.length}</b>
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* RESULTADOS (solo si hay búsqueda escrita) */}
-      {normalizeText(searchCI) && (
-        <div className="max-w-7xl mx-auto px-4 mb-6">
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-4 border-b">
-              <h3 className="font-bold text-gray-800">Resultados de búsqueda</h3>
-              <p className="text-xs text-gray-500">
-                Solo dentro de la estructura permitida para tu rol.
-              </p>
-            </div>
-
-            <div className="p-4 space-y-3">
-              {resultadosBusqueda.length === 0 ? (
-                <div className="text-sm text-gray-600">
-                  No se encontraron coincidencias en tu estructura.
-                </div>
-              ) : (
-                resultadosBusqueda.slice(0, 50).map(({ tipo, persona }) => (
-                  <div
-                    key={`${tipo}-${persona.ci}`}
-                    className="border rounded-lg p-3 hover:bg-gray-50"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="font-semibold text-sm flex items-center gap-2">
-                          {persona.nombre || "-"} {persona.apellido || ""}
-                          {tipo === "votante" && persona.voto_confirmado && (
-                            <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                              Voto Confirmado
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          <b>CI:</b> {persona.ci}{" "}
-                          <span className="ml-2">
-                            <b>Tipo:</b>{" "}
-                            {tipo === "coordinador"
-                              ? "Coordinador"
-                              : tipo === "subcoordinador"
-                              ? "Subcoordinador"
-                              : "Votante"}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => abrirTelefono(tipo, persona)}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                          title="Editar teléfono"
-                        >
-                          <Phone className="w-4 h-4" />
-                        </button>
-
-                        {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona) && (
-                          <button
-                            onClick={() => abrirConfirmVoto(persona)}
-                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                            title="Confirmar voto"
-                          >
-                            <Check className="w-4 h-4" />
-                          </button>
-                        )}
-
-                        {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona) && (
-                          <button
-                            onClick={() => abrirAnularConfirmacion(persona)}
-                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                            title="Anular confirmación"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-
-                        <button
-                          onClick={() => quitarPersona(tipo, persona)}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                          title="Eliminar"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-
-              {resultadosBusqueda.length > 50 && (
-                <div className="text-xs text-gray-500">
-                  Mostrando 50 resultados. Refiná la búsqueda para acotar.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* MI ESTRUCTURA (UI REAL) */}
-      <div className="max-w-7xl mx-auto px-4 mb-10">
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-bold text-gray-800">Mi Estructura</h2>
-          </div>
-
-          <div className="p-6">
-            {/* SUPERADMIN */}
-            {currentUser.role === "superadmin" && (
-              <>
-                {(estructura.coordinadores || []).map((coord) => (
-                  <div
-                    key={coord.ci}
-                    className="border rounded-lg mb-3 bg-red-50/40"
-                  >
-                    <div
-                      className="flex items-start justify-between p-4 cursor-pointer gap-4"
-                      onClick={() => toggleCoord(coord.ci)}
-                    >
-                      <div className="flex items-start gap-3 flex-1">
-                        {expandedCoords[normalizeCI(coord.ci)] ? (
-                          <ChevronDown className="w-5 h-5 text-red-600" />
-                        ) : (
-                          <ChevronRight className="w-5 h-5 text-red-600" />
-                        )}
-                        <DatosPersona
-                          persona={coord}
-                          rol="Coordinador"
-                          loginCode={coord.login_code}
-                        />
-                      </div>
-
-                      <div className="flex flex-col md:flex-row gap-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            abrirTelefono("coordinador", coord);
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                        >
-                          <Phone className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            quitarPersona(coord.ci, "coordinador");
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {expandedCoords[normalizeCI(coord.ci)] && (
-                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
-                        {(estructura.subcoordinadores || [])
-                          .filter(
-                            (s) =>
-                              normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci)
-                          )
-                          .map((sub) => (
-                            <div
-                              key={sub.ci}
-                              className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4"
-                            >
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="flex items-start gap-3 flex-1">
-                                  {expandedSubs[normalizeCI(sub.ci)] ? (
-                                    <ChevronDown className="w-4 h-4 text-red-600 mt-1 transition-transform" />
-                                  ) : (
-                                    <ChevronRight className="w-4 h-4 text-red-600 mt-1 transition-transform" />
-                                  )}
-                                  <div
-                                    className="cursor-pointer flex-1"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleSub(sub.ci);
-                                    }}
-                                  >
-                                    <DatosPersona
-                                      persona={sub}
-                                      rol="Sub-coordinador"
-                                      loginCode={sub.login_code}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      abrirTelefono("subcoordinador", sub);
-                                    }}
-                                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                  >
-                                    <Phone className="w-5 h-5" />
-                                  </button>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      quitarPersona(sub.ci, "subcoordinador");
-                                    }}
-                                    className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                  >
-                                    <Trash2 className="w-5 h-5" />
-                                  </button>
-                                </div>
-                              </div>
-
-                              {expandedSubs[normalizeCI(sub.ci)] && (
-                                <div className="ml-4 border-l-2 border-gray-200 pl-3 animate-in fade-in duration-200">
-                                  {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                                    <div
-                                      key={v.ci}
-                                      className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3"
-                                    >
-                                      <div className="flex-1">
-                                        <DatosPersona persona={v} rol="Votante" />
-                                        {v.voto_confirmado && (
-                                          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                            Voto Confirmado
-                                          </div>
-                                        )}
-                                      </div>
-                                      <div className="flex gap-2">
-                                        <button
-                                          onClick={() => abrirTelefono("votante", v)}
-                                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                        >
-                                          <Phone className="w-5 h-5" />
-                                        </button>
-
-                                        {!v.voto_confirmado && canConfirmarVoto(v) && (
-                                          <button
-                                            onClick={() => abrirConfirmVoto(v)}
-                                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                            title="Confirmar voto"
-                                          >
-                                            <Check className="w-5 h-5" />
-                                          </button>
-                                        )}
-
-                                        {v.voto_confirmado && canAnularConfirmacion(v) && (
-                                          <button
-                                            onClick={() => abrirAnularConfirmacion(v)}
-                                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                                            title="Anular confirmación"
-                                          >
-                                            <X className="w-5 h-5" />
-                                          </button>
-                                        )}
-
-                                        <button
-                                          onClick={() => quitarPersona(v.ci, "votante")}
-                                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                        >
-                                          <Trash2 className="w-5 h-5" />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-
-                                  {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                                    <p className="text-gray-500 text-sm">
-                                      Sin votantes asignados.
-                                    </p>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-
-                {(estructura.coordinadores || []).length === 0 && (
-                  <p className="text-center text-gray-500 py-8">
-                    No hay coordinadores aún.
-                  </p>
-                )}
-              </>
-            )}
-                        <DatosPersona
-                          persona={coord}
-                          rol="Coordinador"
-                          loginCode={coord.login_code}
-                        />
-                      </div>
-
-                      <div className="flex flex-col md:flex-row gap-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            abrirTelefono("coordinador", coord);
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                        >
-                          <Phone className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            quitarPersona(coord.ci, "coordinador");
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {expandedCoords[normalizeCI(coord.ci)] && (
-                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
-                        {/* SUBS DEL COORD */}
-                        {(estructura.subcoordinadores || [])
-                          .filter(
-                            (s) =>
-                              normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci)
-                          )
-                          .map((sub) => (
-                            <div
-                              key={sub.ci}
-                              className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4"
-                            >
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="flex items-start gap-3 flex-1">
-                                  {expandedCoords[normalizeCI(sub.ci)] ? (
-                                    <ChevronDown className="w-4 h-4 text-red-600 mt-1 transition-transform" />
-                                  ) : (
-                                    <ChevronRight className="w-4 h-4 text-red-600 mt-1 transition-transform" />
-                                  )}
-                                  <div
-                                    className="cursor-pointer flex-1"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleExpand(sub.ci);
-                                    }}
-                                  >
-                                    <DatosPersona
-                                      persona={sub}
-                                      rol="Sub-coordinador"
-                                      loginCode={sub.login_code}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      abrirTelefono("subcoordinador", sub);
-                                    }}
-                                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                  >
-                                    <Phone className="w-5 h-5" />
-                                  </button>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      quitarPersona(sub.ci, "subcoordinador");
-                                    }}
-                                    className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                  >
-                                    <Trash2 className="w-5 h-5" />
-                                  </button>
-                                </div>
-                              </div>
-
-                              {/* Votantes del sub - expandable */}
-                              {expandedCoords[normalizeCI(sub.ci)] && (
-                                <div className="ml-4 border-l-2 border-gray-200 pl-3 animate-in fade-in duration-200">
-                                  {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                                    <div
-                                      key={v.ci}
-                                      className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3"
-                                    >
-                                      <div className="flex-1">
-                                        <DatosPersona persona={v} rol="Votante" />
-                                        {v.voto_confirmado && (
-                                          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                            Voto Confirmado
-                                          </div>
-                                        )}
-                                      </div>
-                                      <div className="flex gap-2">
-                                        <button
-                                          onClick={() => abrirTelefono("votante", v)}
-                                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                        >
-                                          <Phone className="w-5 h-5" />
-                                        </button>
-
-                                        {!v.voto_confirmado && canConfirmarVoto(v) && (
-                                          <button
-                                            onClick={() => abrirConfirmVoto(v)}
-                                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                            title="Confirmar voto"
-                                          >
-                                            <Check className="w-5 h-5" />
-                                          </button>
-                                        )}
-
-                                        {v.voto_confirmado && canAnularConfirmacion(v) && (
-                                          <button
-                                            onClick={() => abrirAnularConfirmacion(v)}
-                                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                                            title="Anular confirmación"
-                                          >
-                                            <X className="w-5 h-5" />
-                                          </button>
-                                        )}
-
-                                        <button
-                                          onClick={() => quitarPersona(v.ci, "votante")}
-                                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                        >
-                                          <Trash2 className="w-5 h-5" />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-
-                                  {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                                    <p className="text-gray-500 text-sm">
-                                      Sin votantes asignados.
-                                    </p>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-
-                {(estructura.coordinadores || []).length === 0 && (
-                  <p className="text-center text-gray-500 py-8">
-                    No hay coordinadores aún.
-                  </p>
-                )}
-              </>
-            )}
-
-            {/* COORDINADOR */}
-            {currentUser.role === "coordinador" && (
-              <>
-                {getMisSubcoordinadores(estructura, currentUser).map((sub) => (
-                  <div
-                    key={sub.ci}
-                    className="border rounded-lg mb-3 bg-red-50/40"
-                  >
-                    <div
-                      className="flex items-start justify-between p-4 cursor-pointer gap-4"
-                      onClick={() => toggleExpand(sub.ci)}
-                    >
-                      <div className="flex items-start gap-3 flex-1">
-                        {expandedCoords[normalizeCI(sub.ci)] ? (
-                          <ChevronDown className="w-5 h-5 text-red-600" />
-                        ) : (
-                          <ChevronRight className="w-5 h-5 text-red-600" />
-                        )}
-                        <DatosPersona
-                          persona={sub}
-                          rol="Sub-coordinador"
-                          loginCode={sub.login_code}
-                        />
-                      </div>
-
-                      <div className="flex flex-col md:flex-row gap-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            abrirTelefono("subcoordinador", sub);
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                        >
-                          <Phone className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            quitarPersona(sub.ci, "subcoordinador");
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {expandedCoords[normalizeCI(sub.ci)] && (
-                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
-                        <p className="text-sm font-semibold mt-3 mb-2">Votantes</p>
-
-                        {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                          <div
-                            key={v.ci}
-                            className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3 ml-2"
-                          >
-                            <div className="flex-1">
-                              <DatosPersona persona={v} rol="Votante" />
-                              {v.voto_confirmado && (
-                                <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                  Voto Confirmado
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => abrirTelefono("votante", v)}
-                                className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                              >
-                                <Phone className="w-5 h-5" />
-                              </button>
-
-                              {!v.voto_confirmado && canConfirmarVoto(v) && (
-                                <button
-                                  onClick={() => abrirConfirmVoto(v)}
-                                  className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                  title="Confirmar voto"
-                                >
-                                  <Check className="w-5 h-5" />
-                                </button>
-                              )}
-
-                              {v.voto_confirmado && canAnularConfirmacion(v) && (
-                                <button
-                                  onClick={() => abrirAnularConfirmacion(v)}
-                                  className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                                  title="Anular confirmación"
-                                >
-                                  <X className="w-5 h-5" />
-                                </button>
-                              )}
-
-                              <button
-                                onClick={() => quitarPersona(v.ci, "votante")}
-                                className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                              >
-                                <Trash2 className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-
-                        {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                          <p className="text-gray-500 text-sm ml-2">
-                            Sin votantes asignados.
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-
-                {getMisVotantes(estructura, currentUser).length > 0 && (
-                  <div className="border rounded-lg mb-3 p-4">
-                    <p className="font-semibold text-gray-700 mb-3">
-                      Mis votantes directos
-                    </p>
-
-                    {getMisVotantes(estructura, currentUser).map((v) => (
-                      <div
-                        key={v.ci}
-                        className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-                      >
-                        <div className="flex-1">
-                          <DatosPersona persona={v} rol="Votante" />
-                          {v.voto_confirmado && (
-                            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                              Voto Confirmado
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => abrirTelefono("votante", v)}
-                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                          >
-                            <Phone className="w-5 h-5" />
-                          </button>
-
-                          {!v.voto_confirmado && canConfirmarVoto(v) && (
-                            <button
-                              onClick={() => abrirConfirmVoto(v)}
-                              className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                              title="Confirmar voto"
-                            >
-                              <Check className="w-5 h-5" />
-                            </button>
-                          )}
-
-                          {v.voto_confirmado && canAnularConfirmacion(v) && (
-                            <button
-                              onClick={() => abrirAnularConfirmacion(v)}
-                              className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                              title="Anular confirmación"
-                            >
-                              <X className="w-5 h-5" />
-                            </button>
-                          )}
-
-                          <button
-                            onClick={() => quitarPersona(v.ci, "votante")}
-                            className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {getMisSubcoordinadores(estructura, currentUser).length === 0 &&
-                  getMisVotantes(estructura, currentUser).length === 0 && (
-                    <p className="text-gray-500 py-6">
-                      Aún no tiene subcoordinadores ni votantes asignados.
-                    </p>
-                  )}
-              </>
-            )}
-
-            {/* SUBCOORDINADOR */}
-            {currentUser.role === "subcoordinador" && (
-              <>
-                {getMisVotantes(estructura, currentUser).map((v) => (
-                  <div
-                    key={v.ci}
-                    className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-                  >
-                    <div className="flex-1">
-                      <DatosPersona persona={v} rol="Votante" />
-                      {v.voto_confirmado && (
-                        <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                          Voto Confirmado
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => abrirTelefono("votante", v)}
-                        className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                      >
-                        <Phone className="w-5 h-5" />
-                      </button>
-
-                      {!v.voto_confirmado && canConfirmarVoto(v) && (
-                        <button
-                          onClick={() => abrirConfirmVoto(v)}
-                          className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                          title="Confirmar voto"
-                        >
-                          <Check className="w-5 h-5" />
-                        </button>
-                      )}
-
-                      <button
-                        onClick={() => quitarPersona(v.ci, "votante")}
-                        className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-
-                {getMisVotantes(estructura, currentUser).length === 0 && (
-                  <p className="text-gray-500 py-6">
-                    No tiene votantes asignados.
-                  </p>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* MODAL TELÉFONO (tu componente) */}
-      <ModalTelefono
-        open={phoneModalOpen}
-        persona={phoneTarget}
-        value={phoneValue}
-        onChange={setPhoneValue}
-        onCancel={() => {
-          setPhoneModalOpen(false);
-          setPhoneTarget(null);
-          setPhoneValue("+595");
-        }}
-        onSave={guardarTelefono}
-      />
-
-      {/* MODAL AGREGAR PERSONA (tu modal real) */}
-      <AddPersonModal
-        show={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        tipo={modalType}
-        onAdd={handleAgregarPersona}
-        disponibles={disponibles}
-      />
-
-      {/* MODAL CONFIRMACIÓN DE VOTO */}
       <ConfirmVotoModal
         open={confirmVotoModalOpen}
         votante={confirmVotoTarget}
