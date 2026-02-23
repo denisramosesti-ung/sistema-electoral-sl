@@ -1263,7 +1263,7 @@ const descargarPDF = async () => {
                     No hay coordinadores aún.
                   </p>
                 )}
-              </>
+              </div>
             )}
 
             {/* COORDINADOR */}
