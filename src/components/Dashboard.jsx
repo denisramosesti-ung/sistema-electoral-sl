@@ -1254,38 +1254,6 @@ const descargarPDF = async () => {
                       </div>
                     )}
 
-                        {/* VOTANTES DIRECTOS DEL COORD */}
-                        {getVotantesDirectosCoord(estructura, coord.ci).map((v) => (
-                          <div
-                            key={v.ci}
-                            className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-                          >
-                            <div className="flex-1">
-                              <DatosPersona persona={v} rol="Votante" />
-                              {v.voto_confirmado && (
-                                <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                  Voto Confirmado
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => abrirTelefono("votante", v)}
-                                className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                              >
-                                <Phone className="w-5 h-5" />
-                              </button>
-                              <button
-                                onClick={() => quitarPersona(v.ci, "votante")}
-                                className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                              >
-                                <Trash2 className="w-5 h-5" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
                 ))}
 
