@@ -336,7 +336,7 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
-  const { votantes = [] } = estructura;
+  const { votantes = [], subcoordinadores = [] } = estructura;
   const fechaGeneracion = new Date().toLocaleString("es-PY");
   const usuario = `${currentUser.nombre} ${currentUser.apellido}`;
 
