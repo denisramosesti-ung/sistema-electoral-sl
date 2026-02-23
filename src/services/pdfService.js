@@ -177,12 +177,13 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
               data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
               data.cell.styles.fontStyle = "bold";
             } else if (data.cell.text[0] === "Pendiente") {
-            data.cell.styles.textColor = [128, 128, 128]; // Gris
+              data.cell.styles.textColor = [128, 128, 128]; // Gris
+            }
           }
-        }
-      },
-    });
-  }
+        },
+      });
+    }
+  });
 
   return doc;
 };
