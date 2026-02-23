@@ -676,6 +676,42 @@ const Dashboard = ({ currentUser, onLogout }) => {
     [estructura, currentUser]
   );
 
+  // ======================= DESCARGAR PDF =======================
+  const descargarPDF = async () => {
+    if (!currentUser) {
+      alert("Usuario no válido");
+      return;
+    }
+
+    try {
+      let doc;
+      let filename = "reporte";
+
+      if (currentUser.role === "superadmin") {
+        doc = generateSuperadminPDF({ estructura, currentUser });
+        filename = "reporte-superadmin";
+      } else if (currentUser.role === "coordinador") {
+        doc = generateCoordinadorPDF({ estructura, currentUser });
+        filename = "reporte-coordinador";
+      } else if (currentUser.role === "subcoordinador") {
+        doc = generateSubcoordinadorPDF({ estructura, currentUser });
+        filename = "reporte-subcoordinador";
+      } else {
+        alert("Rol no soportado para reportes");
+        return;
+      }
+
+      const fecha = new Date();
+      const timestamp = fecha.toISOString().slice(0, 10);
+      const nombreArchivo = `${filename}-${timestamp}.pdf`;
+
+      doc.save(nombreArchivo);
+    } catch (error) {
+      console.error("Error generando PDF:", error);
+      alert("Error al generar el reporte PDF");
+    }
+  };
+
   // ======================= UI =======================
   return (
     <div className="min-h-screen bg-gray-100">
