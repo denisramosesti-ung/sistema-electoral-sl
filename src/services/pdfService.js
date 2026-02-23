@@ -177,22 +177,15 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
               data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
               data.cell.styles.fontStyle = "bold";
             } else if (data.cell.text[0] === "Pendiente") {
-              data.cell.styles.textColor = [128, 128, 128]; // Gris
-            }
+            data.cell.styles.textColor = [128, 128, 128]; // Gris
           }
-        },
-      });
-    }
-  });
+        }
+      },
+    });
+  }
 
   return doc;
 };
-
-/**
- * Genera un PDF profesional para Coordinador
- */
-export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
-  const doc = new jsPDF(PAGE_ORIENTATION, "mm", PAGE_FORMAT);
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
@@ -312,108 +305,6 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
         }
       },
     });
-  const doc = new jsPDF(PAGE_ORIENTATION, "mm", PAGE_FORMAT);
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-
-  const { votantes = [] } = estructura;
-  const fechaGeneracion = new Date().toLocaleString("es-PY");
-  const usuario = `${currentUser.nombre} ${currentUser.apellido}`;
-
-  // Filtrar votantes asignados a este subcoordinador
-  const misVotantes = votantes.filter(
-    (v) => String(v.asignado_por) === String(currentUser.ci)
-  );
-
-  const confirmados = misVotantes.filter((v) => v.voto_confirmado === true).length;
-  const pendientes = misVotantes.length - confirmados;
-  const porcentajeConfirmado = misVotantes.length > 0 ? Math.round((confirmados / misVotantes.length) * 100) : 0;
-
-  // ==================== ENCABEZADO ====================
-  addHeader(doc, "Reporte de Mis Votantes", usuario, currentUser.ci, fechaGeneracion);
-
-  // ==================== RESUMEN EJECUTIVO ====================
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("Resumen Ejecutivo", MARGINS.left, 45);
-
-  const summaryData = [
-    ["Total Votantes", misVotantes.length.toString()],
-    ["Confirmados", confirmados.toString()],
-    ["Pendientes", pendientes.toString()],
-    [`Porcentaje Confirmado`, `${porcentajeConfirmado}%`],
-  ];
-
-  autoTable(doc, {
-    startY: 50,
-    head: [["Métrica", "Valor"]],
-    body: summaryData,
-    margin: { ...MARGINS },
-    columnStyles: {
-      0: { cellWidth: 80, fontStyle: "normal" },
-      1: { cellWidth: 30, fontStyle: "bold", halign: "right" },
-    },
-    headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
-    bodyStyles: { textColor: [0, 0, 0] },
-    didDrawPage: () => {
-      addFooter(doc, pageWidth, pageHeight);
-    },
-  });
-
-  // ==================== TABLA DE VOTANTES ====================
-  let currentY = doc.lastAutoTable.finalY + 8;
-
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("Listado de Votantes", MARGINS.left, currentY);
-
-  if (misVotantes.length === 0) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(9);
-    doc.text("No tiene votantes asignados", MARGINS.left, currentY + 6);
-  } else {
-    const votantesTableData = misVotantes.map((v) => [
-      v.nombre + " " + v.apellido,
-      v.ci,
-      v.telefono || "—",
-      v.voto_confirmado ? "Confirmado" : "Pendiente",
-    ]);
-
-    autoTable(doc, {
-      startY: currentY + 5,
-      head: [["Votante", "CI", "Teléfono", "Estado"]],
-      body: votantesTableData,
-      margin: { ...MARGINS },
-      columnStyles: {
-        0: { cellWidth: 60 },
-        1: { cellWidth: 40 },
-        2: { cellWidth: 40 },
-        3: { cellWidth: 30, halign: "center" },
-      },
-      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
-      bodyStyles: { textColor: [0, 0, 0] },
-      cellStyles: {
-        3: { halign: "center" }, // Estado centrado
-      },
-      didDrawPage: () => {
-        addFooter(doc, pageWidth, pageHeight);
-      },
-      willDrawCell: (data) => {
-        // Colorear columna Estado (índice 3)
-        if (data.column.index === 3) {
-          if (data.cell.text[0] === "Confirmado") {
-            data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
-            data.cell.styles.fontStyle = "bold";
-          } else if (data.cell.text[0] === "Pendiente") {
-            data.cell.styles.textColor = [128, 128, 128]; // Gris
-          }
-        }
-      },
-    });
-  }
-
-  return doc;
-};
 
 /**
  * Genera un PDF profesional para Subcoordinador
