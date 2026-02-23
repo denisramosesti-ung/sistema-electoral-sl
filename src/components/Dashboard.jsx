@@ -686,6 +686,51 @@ const Dashboard = ({ currentUser, onLogout }) => {
     [estructura, currentUser]
   );
 
+  // ======================= DISPONIBLES =======================
+  const disponibles = useMemo(
+    () => getPersonasDisponibles(padron, estructura),
+    [padron, estructura]
+  );
+
+  // ======================= RESULTADOS BÚSQUEDA =======================
+  const resultadosBusqueda = useMemo(() => {
+    const term = normalizeText(searchCI);
+    if (!term) return [];
+
+    const all = [
+      ...(estructura.coordinadores || []).map((c) => ({ tipo: "coordinador", persona: c })),
+      ...(estructura.subcoordinadores || []).map((s) => ({ tipo: "subcoordinador", persona: s })),
+      ...(estructura.votantes || []).map((v) => ({ tipo: "votante", persona: v })),
+    ];
+
+    const allowed = all.filter(({ tipo, persona }) => {
+      if (currentUser.role === "superadmin") return true;
+      if (currentUser.role === "coordinador") {
+        const miCI = normalizeCI(currentUser.ci);
+        if (tipo === "coordinador") return normalizeCI(persona.ci) === miCI;
+        return normalizeCI(persona.coordinador_ci) === miCI;
+      }
+      if (currentUser.role === "subcoordinador") {
+        if (tipo !== "votante") return false;
+        return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
+      }
+      return false;
+    });
+
+    return allowed.filter(({ persona }) => {
+      const ciNorm = normalizeText(persona.ci);
+      const nombreNorm = normalizeText(persona.nombre);
+      const apellidoNorm = normalizeText(persona.apellido);
+      const nombreCompleto = `${nombreNorm} ${apellidoNorm}`;
+      return (
+        ciNorm.includes(term) ||
+        nombreNorm.includes(term) ||
+        apellidoNorm.includes(term) ||
+        nombreCompleto.includes(term)
+      );
+    });
+  }, [searchCI, estructura, currentUser]);
+
   // ======================= DESCARGAR PDF =======================
   const descargarPDF = async () => {
     if (!currentUser) {
