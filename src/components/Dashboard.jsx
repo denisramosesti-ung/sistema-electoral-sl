@@ -1081,10 +1081,8 @@ const descargarPDF = async () => {
         {resultadosBusqueda.length > 50 && (
           <div className="text-xs text-gray-500">
             Mostrando 50 resultados. Refiná la búsqueda para acotar.
-                                </div>
-                              );
-                              })()}
-                            </div>
+          </div>
+        )}
     </div>
   </div>
 )}
