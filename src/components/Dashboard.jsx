@@ -253,40 +253,72 @@ const Dashboard = ({ currentUser, onLogout }) => {
   };
 
   // ======================= CONFIRMACIÓN DE VOTO =======================
-  const canConfirmarVoto = (votante) => {
+  const canConfirmarVoto = (persona, tipo = "votante") => {
     const role = currentUser?.role;
-    if (!role || !votante) return false;
+    if (!role || !persona) return false;
     if (role === "superadmin") return false;
-    if (role === "coordinador") {
-      const miCoordCI = normalizeCI(currentUser.ci);
-      return normalizeCI(votante.coordinador_ci) === miCoordCI;
+
+    if (tipo === "coordinador") {
+      return false;
     }
-    if (role === "subcoordinador") {
-      return normalizeCI(votante.asignado_por) === normalizeCI(currentUser.ci);
+
+    if (tipo === "subcoordinador") {
+      if (role === "coordinador") {
+        const miCoordCI = normalizeCI(currentUser.ci);
+        return normalizeCI(persona.coordinador_ci) === miCoordCI;
+      }
+      return false;
     }
+
+    if (tipo === "votante") {
+      if (role === "coordinador") {
+        const miCoordCI = normalizeCI(currentUser.ci);
+        return normalizeCI(persona.coordinador_ci) === miCoordCI;
+      }
+      if (role === "subcoordinador") {
+        return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
+      }
+    }
+
     return false;
   };
 
-  const canAnularConfirmacion = (votante) => {
+  const canAnularConfirmacion = (persona, tipo = "votante") => {
     const role = currentUser?.role;
-    if (!role || !votante) return false;
-    if (role === "coordinador") {
-      const miCoordCI = normalizeCI(currentUser.ci);
-      return normalizeCI(votante.coordinador_ci) === miCoordCI;
+    if (!role || !persona) return false;
+
+    if (tipo === "coordinador") {
+      return false;
     }
+
+    if (tipo === "subcoordinador") {
+      if (role === "coordinador") {
+        const miCoordCI = normalizeCI(currentUser.ci);
+        return normalizeCI(persona.coordinador_ci) === miCoordCI;
+      }
+      return false;
+    }
+
+    if (tipo === "votante") {
+      if (role === "coordinador") {
+        const miCoordCI = normalizeCI(currentUser.ci);
+        return normalizeCI(persona.coordinador_ci) === miCoordCI;
+      }
+    }
+
     return false;
   };
 
-  const abrirConfirmVoto = (votante) => {
-    if (!canConfirmarVoto(votante)) return;
-    setConfirmVotoTarget(votante);
+  const abrirConfirmVoto = (persona, tipo = "votante") => {
+    if (!canConfirmarVoto(persona, tipo)) return;
+    setConfirmVotoTarget({ ...persona, tipo });
     setIsVotoUndoing(false);
     setConfirmVotoModalOpen(true);
   };
 
-  const abrirAnularConfirmacion = (votante) => {
-    if (!canAnularConfirmacion(votante)) return;
-    setConfirmVotoTarget(votante);
+  const abrirAnularConfirmacion = (persona, tipo = "votante") => {
+    if (!canAnularConfirmacion(persona, tipo)) return;
+    setConfirmVotoTarget({ ...persona, tipo });
     setIsVotoUndoing(true);
     setConfirmVotoModalOpen(true);
   };
@@ -296,10 +328,17 @@ const Dashboard = ({ currentUser, onLogout }) => {
     setIsConfirmVotoLoading(true);
     try {
       const newStatus = !isVotoUndoing;
+      const tipo = confirmVotoTarget.tipo || "votante";
+      
+      let tabla = "votantes";
+      if (tipo === "subcoordinador") tabla = "subcoordinadores";
+      if (tipo === "coordinador") tabla = "coordinadores";
+
       const { error } = await supabase
-        .from("votantes")
+        .from(tabla)
         .update({ voto_confirmado: newStatus })
         .eq("ci", confirmVotoTarget.ci);
+      
       if (error) {
         console.error("Error confirmando voto:", error);
         alert(error.message || "Error procesando confirmación");
@@ -641,18 +680,18 @@ const Dashboard = ({ currentUser, onLogout }) => {
           >
             <Phone className="w-5 h-5" />
           </button>
-          {!v.voto_confirmado && canConfirmarVoto(v) && (
+          {!v.voto_confirmado && canConfirmarVoto(v, "votante") && (
             <button
-              onClick={() => abrirConfirmVoto(v)}
+              onClick={() => abrirConfirmVoto(v, "votante")}
               className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
               title="Confirmar voto"
             >
               <Check className="w-5 h-5" />
             </button>
           )}
-          {showAnular !== false && v.voto_confirmado && canAnularConfirmacion(v) && (
+          {showAnular !== false && v.voto_confirmado && canAnularConfirmacion(v, "votante") && (
             <button
-              onClick={() => abrirAnularConfirmacion(v)}
+              onClick={() => abrirAnularConfirmacion(v, "votante")}
               className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
               title="Anular confirmación"
             >
@@ -965,18 +1004,18 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           >
                             <Pencil className="w-4 h-4" />
                           </button>
-                          {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona) && (
+                          {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona, tipo) && (
                             <button
-                              onClick={() => abrirConfirmVoto(persona)}
+                              onClick={() => abrirConfirmVoto(persona, tipo)}
                               className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
                               title="Confirmar voto"
                             >
                               <Check className="w-4 h-4" />
                             </button>
                           )}
-                          {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona) && (
+                          {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona, tipo) && (
                             <button
-                              onClick={() => abrirAnularConfirmacion(persona)}
+                              onClick={() => abrirAnularConfirmacion(persona, tipo)}
                               className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
                               title="Anular confirmación"
                             >
@@ -1079,6 +1118,11 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                           loginCode={sub.login_code}
                                           onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
                                         />
+                                        {sub.voto_confirmado && (
+                                          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                                            Voto Confirmado
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                     <div className="flex gap-2">
@@ -1133,12 +1177,19 @@ const Dashboard = ({ currentUser, onLogout }) => {
                         ) : (
                           <ChevronRight className="w-5 h-5 text-red-600" />
                         )}
-                        <DatosPersona 
-                          persona={sub} 
-                          rol="Sub-coordinador" 
-                          loginCode={sub.login_code}
-                          onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
-                        />
+                        <div className="flex-1">
+                          <DatosPersona 
+                            persona={sub} 
+                            rol="Sub-coordinador" 
+                            loginCode={sub.login_code}
+                            onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
+                          />
+                          {sub.voto_confirmado && (
+                            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                              Voto Confirmado
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <div className="flex flex-col md:flex-row gap-2">
                         <button
@@ -1147,6 +1198,24 @@ const Dashboard = ({ currentUser, onLogout }) => {
                         >
                           <Phone className="w-5 h-5" />
                         </button>
+                        {!sub.voto_confirmado && canConfirmarVoto(sub, "subcoordinador") && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); abrirConfirmVoto(sub, "subcoordinador"); }}
+                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                            title="Confirmar voto"
+                          >
+                            <Check className="w-5 h-5" />
+                          </button>
+                        )}
+                        {sub.voto_confirmado && canAnularConfirmacion(sub, "subcoordinador") && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); abrirAnularConfirmacion(sub, "subcoordinador"); }}
+                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                            title="Anular confirmación"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        )}
                         <button
                           onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
                           className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
