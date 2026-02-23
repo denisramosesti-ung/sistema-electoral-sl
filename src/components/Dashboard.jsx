@@ -14,10 +14,12 @@ import {
   Check,
   X,
   Download,
+  MapPin,
 } from "lucide-react";
 
 import AddPersonModal from "../AddPersonModal";
 import ModalTelefono from "./ModalTelefono";
+import ModalDireccion from "./ModalDireccion";
 import ConfirmVotoModal from "./ConfirmVotoModal";
 import {
   generateSuperadminPDF,
@@ -55,6 +57,11 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
   const [phoneTarget, setPhoneTarget] = useState(null);
   const [phoneValue, setPhoneValue] = useState("+595");
+
+  // Dirección
+  const [direccionModalOpen, setDireccionModalOpen] = useState(false);
+  const [direccionTarget, setDireccionTarget] = useState(null);
+  const [direccionValue, setDireccionValue] = useState("");
 
   // Confirmación de voto
   const [confirmVotoModalOpen, setConfirmVotoModalOpen] = useState(false);
@@ -149,7 +156,8 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
         (arr || []).map((x) => {
           const ci = normalizeCI(x.ci);
           const p = padronMap.get(ci);
-          return { ...x, ...(p || {}), ci };
+          // Primero el padrón, luego x para que direccion_override y telefono no sean sobrescritos
+          return { ...(p || {}), ...x, ci };
         });
 
       setEstructura({
@@ -440,6 +448,94 @@ const guardarTelefono = async () => {
   setPhoneModalOpen(false);
   setPhoneTarget(null);
   setPhoneValue("+595");
+  alert("Teléfono actualizado correctamente");
+  recargarEstructura();
+};
+
+  // ======================= DIRECCIÓN =======================
+
+// Abre el modal de dirección
+const abrirDireccion = (tipo, p) => {
+  setDireccionTarget({ tipo, ...p });
+  // Mostrar direccion_override si existe, si no mostrar direccion del padrón
+  const direccionMostrar = p.direccion_override || p.direccion || "";
+  setDireccionValue(direccionMostrar);
+  setDireccionModalOpen(true);
+};
+
+// Guarda la dirección con VALIDACIÓN DE PERMISOS
+const guardarDireccion = async () => {
+  if (!direccionTarget) return;
+
+  // ======================= VALIDACIÓN DE PERMISOS =======================
+  // Superadmin: siempre permitido
+  if (currentUser.role !== "superadmin") {
+    // COORDINADOR
+    if (currentUser.role === "coordinador") {
+      const miCI = normalizeCI(currentUser.ci);
+
+      // Puede editar:
+      // - subcoordinadores de su red
+      // - votantes de su red
+      const perteneceAMiRed =
+        normalizeCI(direccionTarget.coordinador_ci) === miCI;
+
+      if (!perteneceAMiRed) {
+        alert("No tiene permiso para editar la dirección de esta persona.");
+        return;
+      }
+
+      // Un coordinador NO puede editar otro coordinador
+      if (direccionTarget.tipo === "coordinador") {
+        alert("No tiene permiso para editar la dirección de otro coordinador.");
+        return;
+      }
+    }
+
+    // SUBCOORDINADOR
+    if (currentUser.role === "subcoordinador") {
+      // Solo puede editar votantes
+      if (direccionTarget.tipo !== "votante") {
+        alert("No tiene permiso para editar esta persona.");
+        return;
+      }
+
+      // Solo sus votantes directos
+      const esMiVotante =
+        normalizeCI(direccionTarget.asignado_por) ===
+        normalizeCI(currentUser.ci);
+
+      if (!esMiVotante) {
+        alert("No tiene permiso para editar la dirección de este votante.");
+        return;
+      }
+    }
+  }
+
+  // ======================= RESOLVER TABLA =======================
+  let tabla = "votantes";
+  if (direccionTarget.tipo === "coordinador") tabla = "coordinadores";
+  if (direccionTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
+
+  // ======================= UPDATE EN SUPABASE =======================
+  const direccion_override = String(direccionValue || "").trim();
+  
+  const { error } = await supabase
+    .from(tabla)
+    .update({ direccion_override })
+    .eq("ci", direccionTarget.ci);
+
+  if (error) {
+    console.error("Error guardando dirección:", error);
+    alert(error.message || "Error guardando dirección");
+    return;
+  }
+
+  // ======================= LIMPIEZA Y RECARGA =======================
+  setDireccionModalOpen(false);
+  setDireccionTarget(null);
+  setDireccionValue("");
+  alert("Dirección actualizada correctamente");
   recargarEstructura();
 };
 
@@ -593,6 +689,9 @@ const handleAgregarPersona = async (persona) => {
 
   // ======================= COMPONENTE DATOS PERSONA =======================
   const DatosPersona = ({ persona, rol, loginCode }) => {
+    // Mostrar direccion_override si existe, si no mostrar direccion del padrón
+    const direccionMostrar = persona.direccion_override || persona.direccion;
+
     return (
       <div className="space-y-1 text-xs sm:text-sm">
         <p className="font-semibold truncate">
@@ -621,7 +720,7 @@ const handleAgregarPersona = async (persona) => {
         {persona.local_votacion && <p className="truncate">Local: {persona.local_votacion}</p>}
         {persona.mesa && <p>Mesa: {persona.mesa}</p>}
         {persona.orden && <p>Orden: {persona.orden}</p>}
-        {persona.direccion && <p className="truncate">Dirección: {persona.direccion}</p>}
+        {direccionMostrar && <p className="truncate">Dirección: {direccionMostrar}</p>}
         {persona.telefono && <p className="truncate">Tel: {persona.telefono}</p>}
       </div>
     );
@@ -1041,6 +1140,14 @@ const descargarPDF = async () => {
                     <Phone className="w-4 h-4" />
                   </button>
 
+                  <button
+                    onClick={() => abrirDireccion(tipo, persona)}
+                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                    title="Editar dirección"
+                  >
+                    <MapPin className="w-4 h-4" />
+                  </button>
+
                   {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona) && (
                     <button
                       onClick={() => abrirConfirmVoto(persona)}
@@ -1133,6 +1240,16 @@ const descargarPDF = async () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
+                            abrirDireccion("coordinador", coord);
+                          }}
+                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                          title="Editar dirección"
+                        >
+                          <MapPin className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
                             quitarPersona(coord.ci, "coordinador");
                           }}
                           className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -1181,6 +1298,13 @@ const descargarPDF = async () => {
                                     <Phone className="w-4 h-4" />
                                   </button>
                                   <button
+                                    onClick={() => abrirDireccion("subcoordinador", sub)}
+                                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                                    title="Editar dirección"
+                                  >
+                                    <MapPin className="w-4 h-4" />
+                                  </button>
+                                  <button
                                     onClick={() => quitarPersona(sub.ci, "subcoordinador")}
                                     className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                                   >
@@ -1211,6 +1335,14 @@ const descargarPDF = async () => {
                                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                                         >
                                           <Phone className="w-4 h-4" />
+                                        </button>
+
+                                        <button
+                                          onClick={() => abrirDireccion("votante", v)}
+                                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                                          title="Editar dirección"
+                                        >
+                                          <MapPin className="w-4 h-4" />
                                         </button>
 
                                         {!v.voto_confirmado && canConfirmarVoto(v) && (
@@ -1306,6 +1438,16 @@ const descargarPDF = async () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
+                            abrirDireccion("subcoordinador", sub);
+                          }}
+                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                          title="Editar dirección"
+                        >
+                          <MapPin className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
                             quitarPersona(sub.ci, "subcoordinador");
                           }}
                           className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -1338,6 +1480,14 @@ const descargarPDF = async () => {
                                 className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                               >
                                 <Phone className="w-4 h-4" />
+                              </button>
+
+                              <button
+                                onClick={() => abrirDireccion("votante", v)}
+                                className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                                title="Editar dirección"
+                              >
+                                <MapPin className="w-4 h-4" />
                               </button>
 
                               {!v.voto_confirmado && canConfirmarVoto(v) && (
@@ -1407,6 +1557,14 @@ const descargarPDF = async () => {
                             <Phone className="w-4 h-4" />
                           </button>
 
+                          <button
+                            onClick={() => abrirDireccion("votante", v)}
+                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                            title="Editar dirección"
+                          >
+                            <MapPin className="w-4 h-4" />
+                          </button>
+
                           {!v.voto_confirmado && canConfirmarVoto(v) && (
                             <button
                               onClick={() => abrirConfirmVoto(v)}
@@ -1471,6 +1629,14 @@ const descargarPDF = async () => {
             <Phone className="w-4 h-4" />
           </button>
 
+          <button
+            onClick={() => abrirDireccion("votante", v)}
+            className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+            title="Editar dirección"
+          >
+            <MapPin className="w-4 h-4" />
+          </button>
+
           {!v.voto_confirmado && canConfirmarVoto(v) && (
             <button
               onClick={() => abrirConfirmVoto(v)}
@@ -1517,7 +1683,21 @@ const descargarPDF = async () => {
         onSave={guardarTelefono}
       />
 
-      {/* MODAL AGREGAR PERSONA (tu modal real) */}
+      {/* MODAL DIRECCIÓN */}
+      <ModalDireccion
+        open={direccionModalOpen}
+        persona={direccionTarget}
+        value={direccionValue}
+        onChange={setDireccionValue}
+        onCancel={() => {
+          setDireccionModalOpen(false);
+          setDireccionTarget(null);
+          setDireccionValue("");
+        }}
+        onSave={guardarDireccion}
+      />
+
+      {/* MODAL AGREGAR PERSONA */}
       <AddPersonModal
         show={showAddModal}
         onClose={() => setShowAddModal(false)}

@@ -32,7 +32,7 @@ const ConfirmVotoModal = ({
         <p className="text-xs sm:text-sm text-gray-700 mb-4 sm:mb-6">
           {isUndoing
             ? "¿Está seguro que desea anular la confirmación de este votante?"
-            : "¿Confirmar que este votante ya emitió su voto?"}
+            : "¿Está seguro que desea confirmar este voto? Esta acción no podrá deshacerse."}
         </p>
 
         <div className="flex gap-2">
