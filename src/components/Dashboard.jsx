@@ -1142,7 +1142,7 @@ const descargarPDF = async () => {
                     </div>
 
                     {expandedCoords[normalizeCI(coord.ci)] && (
-                      <div className="bg-white px-4 pb-4">
+                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
                         {/* SUBS DEL COORD */}
                         {(estructura.subcoordinadores || [])
                           .filter(
@@ -1152,14 +1152,26 @@ const descargarPDF = async () => {
                           .map((sub) => (
                             <div
                               key={sub.ci}
-                              className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3"
+                              className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4"
                             >
                               <div className="flex items-start justify-between gap-3">
-                                <DatosPersona
-                                  persona={sub}
-                                  rol="Sub-coordinador"
-                                  loginCode={sub.login_code}
-                                />
+                                <div className="flex items-start gap-3 flex-1">
+                                  {expandedCoords[normalizeCI(sub.ci)] ? (
+                                    <ChevronDown className="w-4 h-4 text-red-600 mt-1 transition-transform" />
+                                  ) : (
+                                    <ChevronRight className="w-4 h-4 text-red-600 mt-1 transition-transform" />
+                                  )}
+                                  <div
+                                    className="cursor-pointer flex-1"
+                                    onClick={() => toggleExpand(sub.ci)}
+                                  >
+                                    <DatosPersona
+                                      persona={sub}
+                                      rol="Sub-coordinador"
+                                      loginCode={sub.login_code}
+                                    />
+                                  </div>
+                                </div>
                                 <div className="flex gap-2">
                                   <button
                                     onClick={() => abrirTelefono("subcoordinador", sub)}
@@ -1176,44 +1188,71 @@ const descargarPDF = async () => {
                                 </div>
                               </div>
 
-                              {/* Votantes del sub */}
-                              {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                                <div
-                                  key={v.ci}
-                                  className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-                                >
-                                  <div className="flex-1">
-                                    <DatosPersona persona={v} rol="Votante" />
-                                    {v.voto_confirmado && (
-                                      <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                        Voto Confirmado
+                              {/* Votantes del sub - expandable */}
+                              {expandedCoords[normalizeCI(sub.ci)] && (
+                                <div className="ml-4 border-l-2 border-gray-200 pl-3 animate-in fade-in duration-200">
+                                  {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
+                                    <div
+                                      key={v.ci}
+                                      className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3"
+                                    >
+                                      <div className="flex-1">
+                                        <DatosPersona persona={v} rol="Votante" />
+                                        {v.voto_confirmado && (
+                                          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                                            Voto Confirmado
+                                          </div>
+                                        )}
                                       </div>
-                                    )}
-                                  </div>
-                                  <div className="flex gap-2">
-                                    <button
-                                      onClick={() => abrirTelefono("votante", v)}
-                                      className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                    >
-                                      <Phone className="w-5 h-5" />
-                                    </button>
-                                    <button
-                                      onClick={() => quitarPersona(v.ci, "votante")}
-                                      className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                    >
-                                      <Trash2 className="w-5 h-5" />
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
+                                      <div className="flex gap-2">
+                                        <button
+                                          onClick={() => abrirTelefono("votante", v)}
+                                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                                        >
+                                          <Phone className="w-5 h-5" />
+                                        </button>
 
-                              {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                                <p className="text-gray-500 text-sm">
-                                  Sin votantes asignados.
-                                </p>
+                                        {!v.voto_confirmado && canConfirmarVoto(v) && (
+                                          <button
+                                            onClick={() => abrirConfirmVoto(v)}
+                                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                            title="Confirmar voto"
+                                          >
+                                            <Check className="w-5 h-5" />
+                                          </button>
+                                        )}
+
+                                        {v.voto_confirmado && canAnularConfirmacion(v) && (
+                                          <button
+                                            onClick={() => abrirAnularConfirmacion(v)}
+                                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                                            title="Anular confirmación"
+                                          >
+                                            <X className="w-5 h-5" />
+                                          </button>
+                                        )}
+
+                                        <button
+                                          onClick={() => quitarPersona(v.ci, "votante")}
+                                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                                        >
+                                          <Trash2 className="w-5 h-5" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
+                                    <p className="text-gray-500 text-sm">
+                                      Sin votantes asignados.
+                                    </p>
+                                  )}
+                                </div>
                               )}
                             </div>
                           ))}
+                      </div>
+                    )}
 
                         {/* VOTANTES DIRECTOS DEL COORD */}
                         {getVotantesDirectosCoord(estructura, coord.ci).map((v) => (
@@ -1306,13 +1345,13 @@ const descargarPDF = async () => {
                     </div>
 
                     {expandedCoords[normalizeCI(sub.ci)] && (
-                      <div className="bg-white px-4 pb-4">
-                        <p className="text-sm font-semibold mt-2">Votantes</p>
+                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
+                        <p className="text-sm font-semibold mt-3 mb-2">Votantes</p>
 
                         {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
                           <div
                             key={v.ci}
-                            className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
+                            className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3 ml-2"
                           >
                             <div className="flex-1">
                               <DatosPersona persona={v} rol="Votante" />
@@ -1359,6 +1398,14 @@ const descargarPDF = async () => {
                             </div>
                           </div>
                         ))}
+
+                        {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
+                          <p className="text-gray-500 text-sm ml-2">
+                            Sin votantes asignados.
+                          </p>
+                        )}
+                      </div>
+                    )}
 
                         {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
                           <p className="text-gray-500 text-sm mt-2">
