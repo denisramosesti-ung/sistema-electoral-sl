@@ -120,8 +120,6 @@ export default function ReportCoordinador({ estructura, currentUser }) {
         });
         html += `</tbody></table>`;
       }
-
-      if (idx < misSubs.length - 1) html += `<div class="page-break"></div>`;
     });
   }
 

@@ -769,6 +769,8 @@ const descargarPDF = () => {
     return;
   }
 
+  const fechaGeneracion = new Date().toLocaleString("es-PY");
+
   win.document.open();
   win.document.write(`
     <html>
@@ -781,19 +783,19 @@ const descargarPDF = () => {
           <div class="brand">
             <div>
               <h1 class="title">${title}</h1>
-              <div class="small muted">Sistema Electoral</div>
+              <div class="small muted">Sistema Electoral SL</div>
             </div>
             <div class="meta">
               <div><b>Usuario:</b> ${currentUser.nombre} ${currentUser.apellido}</div>
               <div><b>CI:</b> ${currentUser.ci}</div>
-              <div><b>Generado:</b> ${new Date().toLocaleString("es-PY")}</div>
+              <div><b>Generado:</b> ${fechaGeneracion}</div>
             </div>
           </div>
         </header>
 
         <footer class="report-footer">
-          <div>Documento interno</div>
-          <div class="muted">Imprimir / Guardar como PDF</div>
+          <div>Documento confidencial - Sistema Electoral</div>
+          <div><span class="page-number">Página <span id="page"></span> de <span id="total"></span></span></div>
         </footer>
 
         <main class="report-body">
@@ -802,6 +804,15 @@ const descargarPDF = () => {
 
         <script>
           window.onload = function () {
+            // Numeración de páginas para navegadores que lo soportan
+            const pageSpan = document.getElementById('page');
+            const totalSpan = document.getElementById('total');
+            
+            // En navegadores modernos, esto se calcula al imprimir
+            // Por ahora mostramos un placeholder
+            pageSpan.textContent = '?';
+            totalSpan.textContent = '?';
+            
             window.focus();
             window.print();
           };
@@ -811,6 +822,7 @@ const descargarPDF = () => {
   `);
   win.document.close();
 };
+
 
 
   // ======================= UI =======================

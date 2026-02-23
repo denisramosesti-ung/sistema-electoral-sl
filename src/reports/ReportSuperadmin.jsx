@@ -213,8 +213,11 @@ export default function ReportSuperadmin({ estructura, currentUser }) {
       html += `</tbody></table>`;
     }
 
-    // Salto de página entre coordinadores
-    if (idx < coordinadores.length - 1) html += `<div class="page-break"></div>`;
+    // Salto de página entre coordinadores (solo si hay espacio suficiente)
+    // Permitir paginación natural basada en contenido
+    if (idx < coordinadores.length - 1) {
+      html += `<hr />`;
+    }
   });
 
   return html;

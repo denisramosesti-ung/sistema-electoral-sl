@@ -8,7 +8,11 @@ export const REPORT_CSS = `
     --border:#e5e7eb;
   }
 
-  @page { margin: 16mm 12mm; }
+  @page { 
+    size: A4 landscape;
+    margin: 20mm 15mm;
+  }
+  
   * { box-sizing: border-box; }
 
   body{
@@ -18,128 +22,157 @@ export const REPORT_CSS = `
     margin: 0;
   }
 
-  /* Header / Footer impresión */
+  /* Header profesional */
   header.report-header{
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    padding: 10mm 12mm 6mm 12mm;
+    padding: 12mm 15mm 8mm;
     border-bottom: 2px solid var(--red);
     background: #fff;
+    z-index: 1000;
   }
 
+  /* Footer con página X de Y */
   footer.report-footer{
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 6mm 12mm 10mm 12mm;
+    padding: 8mm 15mm 12mm;
     border-top: 1px solid var(--border);
     color: var(--muted);
-    font-size: 11px;
-    display:flex;
+    font-size: 10px;
+    display: flex;
     justify-content: space-between;
     background: #fff;
+    z-index: 1000;
   }
 
-  /* Área real del reporte (evitar solapar header/footer) */
+  /* Área principal sin solapamiento */
   main.report-body{
-    padding: 32mm 12mm 22mm 12mm; /* deja espacio para header/footer */
+    padding: 40mm 15mm 28mm 15mm;
   }
 
   .brand{
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
   }
+  
   .brand .title{
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 800;
     color: var(--red);
     margin: 0;
+    padding: 0;
   }
+  
   .brand .meta{
-    text-align:right;
-    font-size: 12px;
+    text-align: right;
+    font-size: 11px;
     color: var(--muted);
-    line-height: 1.4;
+    line-height: 1.3;
+    margin: 0;
   }
 
   h2{
-    margin: 18px 0 8px 0;
+    margin: 16px 0 6px 0;
     color: var(--red);
-    font-size: 16px;
+    font-size: 15px;
+    page-break-after: avoid;
   }
+  
   h3{
-    margin: 14px 0 8px 0;
-    font-size: 13px;
+    margin: 12px 0 6px 0;
+    font-size: 12px;
     color: #1f2937;
+    page-break-after: avoid;
   }
 
   .grid-2{
-    display:grid;
+    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 8px;
+    margin: 12px 0;
   }
 
   .card{
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 8px;
+    padding: 8px;
     background: #fff;
+    page-break-inside: avoid;
   }
+  
   .card .label{
     color: var(--muted);
-    font-size: 12px;
+    font-size: 11px;
   }
+  
   .card .value{
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 800;
     color: var(--red);
-    margin-top: 4px;
+    margin-top: 3px;
   }
 
   .pill{
-    display:inline-block;
-    padding: 3px 8px;
+    display: inline-block;
+    padding: 2px 6px;
     border-radius: 999px;
     background: var(--red-soft);
     color: var(--red);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
   }
 
   table{
     width: 100%;
     border-collapse: collapse;
-    margin-top: 8px;
+    margin: 6px 0;
+    page-break-inside: auto;
   }
+  
+  table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  
   th, td{
     border: 1px solid var(--border);
-    padding: 8px;
-    font-size: 12px;
+    padding: 6px;
+    font-size: 11px;
     text-align: left;
     vertical-align: top;
   }
+  
   th{
     background: var(--red-soft);
     font-weight: 700;
   }
 
-  .muted{ color: var(--muted); }
-  .small{ font-size: 11px; }
-
-  .indent-1{ margin-left: 14px; }
-  .indent-2{ margin-left: 28px; }
-  .indent-3{ margin-left: 42px; }
-
-  .page-break{
-    page-break-after: always;
+  hr{
+    margin: 16px 0;
+    border: none;
+    border-top: 1px solid var(--border);
+    page-break-after: avoid;
   }
 
-  /* Evita que títulos queden al final de una página */
-  h2, h3, table { break-inside: avoid; }
+  .muted{ color: var(--muted); }
+  .small{ font-size: 10px; }
+
+  .indent-1{ margin-left: 12px; }
+  .indent-2{ margin-left: 24px; }
+  .indent-3{ margin-left: 36px; }
+
+  p{
+    margin: 6px 0;
+    line-height: 1.4;
+  }
+
+  /* Evita que contenedores se corten en nuevas páginas */
+  h2, h3, section { break-inside: avoid; }
 `;
