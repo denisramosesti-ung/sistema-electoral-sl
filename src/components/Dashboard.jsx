@@ -961,10 +961,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           </div>
                         </div>
 
-                        {expandedCoords[normalizeCI(coord.ci)] && (
+                        {expandedCoords[normalizeCI(coord.ci)] && (() => {
+                          const allSubs = estructura.subcoordinadores || [];
+                          const filteredSubs = allSubs.filter((s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci));
+                          console.log("[v0] Coord CI:", coord.ci, "normalized:", normalizeCI(coord.ci));
+                          console.log("[v0] All subs count:", allSubs.length, "subs coordinador_ci values:", allSubs.map(s => s.coordinador_ci));
+                          console.log("[v0] Filtered subs for this coord:", filteredSubs.length, filteredSubs.map(s => ({ ci: s.ci, coordinador_ci: s.coordinador_ci })));
+                          return (
                           <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
-                            {(estructura.subcoordinadores || [])
-                              .filter((s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci))
+                            {filteredSubs
                               .map((sub) => (
                                 <div key={sub.ci} className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4">
                                   <div className="flex items-start justify-between gap-3">
@@ -1010,7 +1015,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                 </div>
                               ))}
                           </div>
-                        )}
+                          );
+                        })()}
                       </div>
                     ))}
                   </div>
