@@ -1442,7 +1442,6 @@ const descargarPDF = async () => {
                       Aún no tiene subcoordinadores ni votantes asignados.
                     </p>
                   )}
-              </>
             )}
 {/* SUBCOORDINADOR */}
 {currentUser.role === "subcoordinador" && (
