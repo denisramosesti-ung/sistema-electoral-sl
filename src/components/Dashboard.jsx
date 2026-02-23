@@ -1374,14 +1374,6 @@ const descargarPDF = async () => {
                         )}
                       </div>
                     )}
-
-                        {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                          <p className="text-gray-500 text-sm mt-2">
-                            Sin votantes asignados.
-                          </p>
-                        )}
-                      </div>
-                    )}
                   </div>
                 ))}
 
