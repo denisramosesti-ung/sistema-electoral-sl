@@ -1215,6 +1215,7 @@ const descargarPDF = async () => {
                                           </div>
                                         )}
                                       </div>
+                                      <div className="flex gap-2">
                                         <button
                                           onClick={() => abrirTelefono("votante", v)}
                                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
