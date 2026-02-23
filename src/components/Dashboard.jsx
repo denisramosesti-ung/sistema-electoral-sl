@@ -821,106 +821,102 @@ const descargarPDF = async () => {
       {/* TARJETAS ESTADÍSTICAS */}
       <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {currentUser.role === "superadmin" && (
-  <>
-    {/* COORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Coordinadores</p>
-      <p className="text-4xl font-bold text-red-600">
-        {stats?.coordinadores ?? 0}
-      </p>
-    </div>
+          <>
+            {/* COORDINADORES */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600 text-sm">Coordinadores</p>
+              <p className="text-4xl font-bold text-red-600">
+                {stats?.coordinadores ?? 0}
+              </p>
+            </div>
 
-    {/* SUBCOORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Subcoordinadores</p>
-      <p className="text-4xl font-bold text-red-600">
-        {stats?.subcoordinadores ?? 0}
-      </p>
-    </div>
+            {/* SUBCOORDINADORES */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600 text-sm">Subcoordinadores</p>
+              <p className="text-4xl font-bold text-red-600">
+                {stats?.subcoordinadores ?? 0}
+              </p>
+            </div>
 
-    {/* VOTANTES */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Votantes</p>
-      <p className="text-4xl font-bold text-red-600">
-        {stats?.votantes ?? 0}
-      </p>
-    </div>
+            {/* VOTANTES */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600 text-sm">Votantes</p>
+              <p className="text-4xl font-bold text-red-600">
+                {stats?.votantes ?? 0}
+              </p>
+            </div>
 
-    {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-      <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
-        Votantes totales
-      </p>
-      <p className="text-4xl font-extrabold text-red-700 mt-1">
-        {stats?.votantesTotales ?? 0}
-      </p>
-    </div>
-  </>
-)}
-
+            {/* VOTANTES TOTALES (DESTACADO) */}
+            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
+              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
+                Votantes totales
+              </p>
+              <p className="text-4xl font-extrabold text-red-700 mt-1">
+                {stats?.votantesTotales ?? 0}
+              </p>
+            </div>
+          </>
+        )}
 
         {currentUser.role === "coordinador" && (
-  <>
-    {/* SUBCOORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Subcoordinadores</p>
-      <p className="text-4xl font-bold text-red-600">
-        {stats?.subcoordinadores ?? 0}
-      </p>
-    </div>
+          <>
+            {/* SUBCOORDINADORES */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600 text-sm">Subcoordinadores</p>
+              <p className="text-4xl font-bold text-red-600">
+                {stats?.subcoordinadores ?? 0}
+              </p>
+            </div>
 
-    {/* VOTANTES DIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Votantes directos</p>
-      <p className="text-4xl font-bold text-red-600">
-        {stats?.votantesDirectos ?? 0}
-      </p>
-    </div>
+            {/* VOTANTES DIRECTOS */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600 text-sm">Votantes directos</p>
+              <p className="text-4xl font-bold text-red-600">
+                {stats?.votantesDirectos ?? 0}
+              </p>
+            </div>
 
-    {/* VOTANTES INDIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Votantes indirectos</p>
-      <p className="text-4xl font-bold text-red-600">
-  {stats?.votantesIndirectos ?? 0}
-</p>
+            {/* VOTANTES INDIRECTOS */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600 text-sm">Votantes indirectos</p>
+              <p className="text-4xl font-bold text-red-600">
+                {stats?.votantesIndirectos ?? 0}
+              </p>
+            </div>
 
-    </div>
-
-    {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-      <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
-        Votantes totales
-      </p>
-      <p className="text-4xl font-extrabold text-red-700 mt-1">
-        {stats?.total ?? 0}
-      </p>
-    </div>
-  </>
+            {/* VOTANTES TOTALES (DESTACADO) */}
+            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
+              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
+                Votantes totales
+              </p>
+              <p className="text-4xl font-extrabold text-red-700 mt-1">
+                {stats?.total ?? 0}
+              </p>
+            </div>
+          </>
         )}
 
         {currentUser.role === "subcoordinador" && (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {/* VOTANTES DIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Votantes directos</p>
-      <p className="text-4xl font-bold text-red-600">
-        {stats?.votantes ?? 0}
-      </p>
-    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* VOTANTES DIRECTOS */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600 text-sm">Votantes directos</p>
+              <p className="text-4xl font-bold text-red-600">
+                {stats?.votantes ?? 0}
+              </p>
+            </div>
 
-    {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-      <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
-        Votantes totales
-      </p>
-      <p className="text-4xl font-extrabold text-red-700 mt-1">
-        {stats?.votantes ?? 0}
-      </p>
-    </div>
-  </div>
-)}
-
-
+            {/* VOTANTES TOTALES (DESTACADO) */}
+            <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
+              <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
+                Votantes totales
+              </p>
+              <p className="text-4xl font-extrabold text-red-700 mt-1">
+                {stats?.votantes ?? 0}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ACCIONES */}
@@ -966,133 +962,133 @@ const descargarPDF = async () => {
         )}
 
         {/* PDF */}
-<button
-  onClick={descargarPDF}
-  className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
->
-  <BarChart3 className="w-4 h-4" />
-  Descargar PDF
-</button>
-
-      </div>
-{/* BUSCADOR INTERNO (solo dentro de la estructura visible por rol) */}
-<div className="max-w-7xl mx-auto px-4 mb-4">
-  <div className="bg-white rounded-lg shadow p-4">
-    <label className="block text-sm font-semibold text-gray-700 mb-2">
-      Buscar dentro de mi estructura
-    </label>
-
-    <input
-      value={searchCI}
-      onChange={(e) => setSearchCI(e.target.value)}
-      placeholder="Buscar por CI, nombre, apellido o combinación"
-      className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-300"
-    />
-
-    {normalizeText(searchCI) && (
-      <p className="text-xs text-gray-500 mt-2">
-        Resultados: <b>{resultadosBusqueda.length}</b>
-      </p>
-    )}
-  </div>
-</div>
-
-{/* RESULTADOS (solo si hay búsqueda escrita) */}
-{normalizeText(searchCI) && (
-  <div className="max-w-7xl mx-auto px-4 mb-6">
-    <div className="bg-white rounded-lg shadow">
-      <div className="p-4 border-b">
-        <h3 className="font-bold text-gray-800">Resultados de búsqueda</h3>
-        <p className="text-xs text-gray-500">
-          Solo dentro de la estructura permitida para tu rol.
-        </p>
+        <button
+          onClick={descargarPDF}
+          className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
+        >
+          <BarChart3 className="w-4 h-4" />
+          Descargar PDF
+        </button>
       </div>
 
-      <div className="p-4 space-y-3">
-        {resultadosBusqueda.length === 0 ? (
-          <div className="text-sm text-gray-600">
-            No se encontraron coincidencias en tu estructura.
-          </div>
-        ) : (
-          resultadosBusqueda.slice(0, 50).map(({ tipo, persona }) => (
-            <div
-              key={`${tipo}-${persona.ci}`}
-              className="border rounded-lg p-3 hover:bg-gray-50"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="font-semibold text-sm flex items-center gap-2">
-                    {persona.nombre || "-"} {persona.apellido || ""}
-                    {tipo === "votante" && persona.voto_confirmado && (
-                      <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                        Voto Confirmado
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    <b>CI:</b> {persona.ci}{" "}
-                    <span className="ml-2">
-                      <b>Tipo:</b>{" "}
-                      {tipo === "coordinador"
-                        ? "Coordinador"
-                        : tipo === "subcoordinador"
-                        ? "Subcoordinador"
-                        : "Votante"}
-                    </span>
-                  </div>
-                </div>
+      {/* BUSCADOR INTERNO (solo dentro de la estructura visible por rol) */}
+      <div className="max-w-7xl mx-auto px-4 mb-4">
+        <div className="bg-white rounded-lg shadow p-4">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Buscar dentro de mi estructura
+          </label>
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => abrirTelefono(tipo, persona)}
-                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                    title="Editar teléfono"
-                  >
-                    <Phone className="w-4 h-4" />
-                  </button>
+          <input
+            value={searchCI}
+            onChange={(e) => setSearchCI(e.target.value)}
+            placeholder="Buscar por CI, nombre, apellido o combinación"
+            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-300"
+          />
 
-                  {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona) && (
-                    <button
-                      onClick={() => abrirConfirmVoto(persona)}
-                      className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                      title="Confirmar voto"
-                    >
-                      <Check className="w-4 h-4" />
-                    </button>
-                  )}
+          {normalizeText(searchCI) && (
+            <p className="text-xs text-gray-500 mt-2">
+              Resultados: <b>{resultadosBusqueda.length}</b>
+            </p>
+          )}
+        </div>
+      </div>
 
-                  {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona) && (
-                    <button
-                      onClick={() => abrirAnularConfirmacion(persona)}
-                      className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                      title="Anular confirmación"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => quitarPersona(tipo, persona)}
-                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                    title="Eliminar"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+      {/* RESULTADOS (solo si hay búsqueda escrita) */}
+      {normalizeText(searchCI) && (
+        <div className="max-w-7xl mx-auto px-4 mb-6">
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-4 border-b">
+              <h3 className="font-bold text-gray-800">Resultados de búsqueda</h3>
+              <p className="text-xs text-gray-500">
+                Solo dentro de la estructura permitida para tu rol.
+              </p>
             </div>
-          ))
-        )}
 
-        {resultadosBusqueda.length > 50 && (
-          <div className="text-xs text-gray-500">
-            Mostrando 50 resultados. Refiná la búsqueda para acotar.
+            <div className="p-4 space-y-3">
+              {resultadosBusqueda.length === 0 ? (
+                <div className="text-sm text-gray-600">
+                  No se encontraron coincidencias en tu estructura.
+                </div>
+              ) : (
+                resultadosBusqueda.slice(0, 50).map(({ tipo, persona }) => (
+                  <div
+                    key={`${tipo}-${persona.ci}`}
+                    className="border rounded-lg p-3 hover:bg-gray-50"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="font-semibold text-sm flex items-center gap-2">
+                          {persona.nombre || "-"} {persona.apellido || ""}
+                          {tipo === "votante" && persona.voto_confirmado && (
+                            <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                              Voto Confirmado
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs text-gray-600">
+                          <b>CI:</b> {persona.ci}{" "}
+                          <span className="ml-2">
+                            <b>Tipo:</b>{" "}
+                            {tipo === "coordinador"
+                              ? "Coordinador"
+                              : tipo === "subcoordinador"
+                              ? "Subcoordinador"
+                              : "Votante"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => abrirTelefono(tipo, persona)}
+                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                          title="Editar teléfono"
+                        >
+                          <Phone className="w-4 h-4" />
+                        </button>
+
+                        {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona) && (
+                          <button
+                            onClick={() => abrirConfirmVoto(persona)}
+                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                            title="Confirmar voto"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                        )}
+
+                        {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona) && (
+                          <button
+                            onClick={() => abrirAnularConfirmacion(persona)}
+                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                            title="Anular confirmación"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => quitarPersona(tipo, persona)}
+                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+                          title="Eliminar"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+
+              {resultadosBusqueda.length > 50 && (
+                <div className="text-xs text-gray-500">
+                  Mostrando 50 resultados. Refiná la búsqueda para acotar.
+                </div>
+              )}
+            </div>
           </div>
-        )}
-    </div>
-  </div>
-)}
-
+        </div>
+      )}
 
       {/* MI ESTRUCTURA (UI REAL) */}
       <div className="max-w-7xl mx-auto px-4 mb-10">
@@ -1270,7 +1266,6 @@ const descargarPDF = async () => {
                           ))}
                       </div>
                     )}
-
                   </div>
                 ))}
 
@@ -1448,8 +1443,10 @@ const descargarPDF = async () => {
                             <Trash2 className="w-5 h-5" />
                           </button>
                         </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
 
                 {getMisSubcoordinadores(estructura, currentUser).length === 0 &&
                   getMisVotantes(estructura, currentUser).length === 0 && (
@@ -1462,57 +1459,60 @@ const descargarPDF = async () => {
 
             {/* SUBCOORDINADOR */}
             {currentUser.role === "subcoordinador" && (
-  <>
-    {getMisVotantes(estructura, currentUser).map((v) => (
-      <div
-        key={v.ci}
-        className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
-      >
-        <div className="flex-1">
-          <DatosPersona persona={v} rol="Votante" />
-          {v.voto_confirmado && (
-            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-              Voto Confirmado
-            </div>
-          )}
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => abrirTelefono("votante", v)}
-            className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-          >
-            <Phone className="w-5 h-5" />
-          </button>
+              <>
+                {getMisVotantes(estructura, currentUser).map((v) => (
+                  <div
+                    key={v.ci}
+                    className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
+                  >
+                    <div className="flex-1">
+                      <DatosPersona persona={v} rol="Votante" />
+                      {v.voto_confirmado && (
+                        <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                          Voto Confirmado
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => abrirTelefono("votante", v)}
+                        className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                      >
+                        <Phone className="w-5 h-5" />
+                      </button>
 
-          {!v.voto_confirmado && canConfirmarVoto(v) && (
-            <button
-              onClick={() => abrirConfirmVoto(v)}
-              className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-              title="Confirmar voto"
-            >
-              <Check className="w-5 h-5" />
-            </button>
-          )}
+                      {!v.voto_confirmado && canConfirmarVoto(v) && (
+                        <button
+                          onClick={() => abrirConfirmVoto(v)}
+                          className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                          title="Confirmar voto"
+                        >
+                          <Check className="w-5 h-5" />
+                        </button>
+                      )}
 
-          <button
-            onClick={() => quitarPersona(v.ci, "votante")}
-            className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-          >
-            <Trash2 className="w-5 h-5" />
-          </button>
+                      <button
+                        onClick={() => quitarPersona(v.ci, "votante")}
+                        className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {getMisVotantes(estructura, currentUser).length === 0 && (
+                  <p className="text-gray-500 py-6">
+                    No tiene votantes asignados.
+                  </p>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
-    ))}
 
-    {getMisVotantes(estructura, currentUser).length === 0 && (
-      <p className="text-gray-500 py-6">
-        No tiene votantes asignados.
-      </p>
-    )}
-  </>
-)}
-
-          {/* MODAL TELÉFONO (tu componente) */}
+      {/* MODAL TELÉFONO (tu componente) */}
       <ModalTelefono
         open={phoneModalOpen}
         persona={phoneTarget}
