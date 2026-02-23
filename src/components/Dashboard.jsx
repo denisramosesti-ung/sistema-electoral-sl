@@ -886,6 +886,7 @@ const descargarPDF = async () => {
         {stats?.total ?? 0}
       </p>
     </div>
+  </div>
         )}
 
         {currentUser.role === "subcoordinador" && (
@@ -1261,12 +1262,12 @@ const descargarPDF = async () => {
                     No hay coordinadores aún.
                   </p>
                 )}
-              </>
+              </div>
             )}
 
             {/* COORDINADOR */}
             {currentUser.role === "coordinador" && (
-            </div>
+              <div>
                 {getMisSubcoordinadores(estructura, currentUser).map((sub) => (
                   <div
                     key={sub.ci}
@@ -1441,8 +1442,9 @@ const descargarPDF = async () => {
                       Aún no tiene subcoordinadores ni votantes asignados.
                     </p>
                   )}
-            </>
-            )} 
+              </div>
+            )}
+
 {/* SUBCOORDINADOR */}
 {currentUser.role === "subcoordinador" && (
   <div>
