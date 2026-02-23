@@ -568,7 +568,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
   };
 
   // ======================= COMPONENTE DATOS PERSONA =======================
-  const DatosPersona = ({ persona, rol, loginCode }) => {
+  const DatosPersona = ({ persona, rol, loginCode, onEditDireccion }) => {
     return (
       <div className="space-y-1 text-xs md:text-sm">
         <p className="font-semibold">
@@ -597,166 +597,78 @@ const Dashboard = ({ currentUser, onLogout }) => {
         {persona.local_votacion && <p>Local: {persona.local_votacion}</p>}
         {persona.mesa && <p>Mesa: {persona.mesa}</p>}
         {persona.orden && <p>Orden: {persona.orden}</p>}
-        {persona.direccion && <p>Dirección: {persona.direccion}</p>}
+        {persona.direccion && (
+          <div>
+            <p>Dirección: {persona.direccion}</p>
+            {onEditDireccion && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEditDireccion();
+                }}
+                className="text-blue-600 hover:text-blue-800 text-xs inline-flex items-center gap-1 mt-1"
+              >
+                <Pencil className="w-3 h-3" /> Editar dirección
+              </button>
+            )}
+          </div>
+        )}
         {persona.telefono && <p>Tel: {persona.telefono}</p>}
       </div>
     );
   };
 
-  // ======================= STATS =======================
-  const stats = useMemo(() => getEstadisticas(estructura, currentUser), [estructura, currentUser]);
-
-  // ======================= DISPONIBLES PARA MODAL =======================
-  const disponibles = useMemo(
-    () => getPersonasDisponibles(padron, estructura),
-    [padron, estructura]
-  );
-
-  // ======================= BUSCADOR INTERNO (SEGÚN ROL) =======================
-  const normalizeText = (v) =>
-    (v ?? "")
-      .toString()
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-
-  const personasVisibles = useMemo(() => {
-    const role = currentUser?.role;
-    const miCI = normalizeCI(currentUser?.ci);
-    const coords = estructura.coordinadores || [];
-    const subs = estructura.subcoordinadores || [];
-    const vots = estructura.votantes || [];
-    const out = [];
-    const pushUnique = (tipo, persona) => {
-      const key = `${tipo}:${normalizeCI(persona?.ci)}`;
-      if (!pushUnique._set) pushUnique._set = new Set();
-      if (pushUnique._set.has(key)) return;
-      pushUnique._set.add(key);
-      out.push({ tipo, persona });
-    };
-    if (role === "superadmin") {
-      coords.forEach((p) => pushUnique("coordinador", p));
-      subs.forEach((p) => pushUnique("subcoordinador", p));
-      vots.forEach((p) => pushUnique("votante", p));
-      return out;
-    }
-    if (role === "coordinador") {
-      const misSubs = subs.filter((s) => normalizeCI(s.coordinador_ci) === miCI);
-      const misSubsSet = new Set(misSubs.map((s) => normalizeCI(s.ci)));
-      misSubs.forEach((p) => pushUnique("subcoordinador", p));
-      vots.filter((v) => normalizeCI(v.asignado_por) === miCI).forEach((p) => pushUnique("votante", p));
-      vots.filter((v) => misSubsSet.has(normalizeCI(v.asignado_por))).forEach((p) => pushUnique("votante", p));
-      return out;
-    }
-    if (role === "subcoordinador") {
-      vots.filter((v) => normalizeCI(v.asignado_por) === miCI).forEach((p) => pushUnique("votante", p));
-      return out;
-    }
-    return [];
-  }, [estructura, currentUser]);
-
-  const resultadosBusqueda = useMemo(() => {
-    const qRaw = normalizeText(searchCI);
-    if (!qRaw) return personasVisibles;
-    const tokens = qRaw.split(" ").filter(Boolean);
-    return personasVisibles.filter(({ persona }) => {
-      const ci = normalizeText(persona?.ci);
-      const nombre = normalizeText(persona?.nombre);
-      const apellido = normalizeText(persona?.apellido);
-      const full1 = `${nombre} ${apellido}`.trim();
-      const full2 = `${apellido} ${nombre}`.trim();
-      return tokens.every((t) => {
-        return ci.includes(t) || nombre.includes(t) || apellido.includes(t) || full1.includes(t) || full2.includes(t);
-      });
-    });
-  }, [searchCI, personasVisibles]);
-
-  // ======================= DESCARGAR REPORTE =======================
-  const descargarPDF = async () => {
-    if (!currentUser) {
-      alert("Usuario no válido");
-      return;
-    }
-    try {
-      let doc;
-      let filename = "reporte";
-      if (currentUser.role === "superadmin") {
-        doc = generateSuperadminPDF({ estructura, currentUser });
-        filename = "reporte-superadmin";
-      } else if (currentUser.role === "coordinador") {
-        doc = generateCoordinadorPDF({ estructura, currentUser });
-        filename = "reporte-coordinador";
-      } else if (currentUser.role === "subcoordinador") {
-        doc = generateSubcoordinadorPDF({ estructura, currentUser });
-        filename = "reporte-subcoordinador";
-      } else {
-        alert("Rol no soportado para reportes");
-        return;
-      }
-      const fecha = new Date();
-      const timestamp = fecha.toISOString().slice(0, 10);
-      const nombreArchivo = `${filename}-${timestamp}.pdf`;
-      doc.save(nombreArchivo);
-    } catch (error) {
-      console.error("Error generando PDF:", error);
-      alert("Error al generar el reporte PDF");
-    }
+  // ======================= COMPONENTE VOTANTE CARD =======================
+  const VotanteCard = ({ v, showAnular = true }) => {
+    return (
+      <div key={v.ci} className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3">
+        <div className="flex-1">
+          <DatosPersona 
+            persona={v} 
+            rol="Votante"
+            onEditDireccion={() => abrirDireccion("votante", v)}
+          />
+          {v.voto_confirmado && (
+            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+              Voto Confirmado
+            </div>
+          )}
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => abrirTelefono("votante", v)}
+            className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+          >
+            <Phone className="w-5 h-5" />
+          </button>
+          {!v.voto_confirmado && canConfirmarVoto(v) && (
+            <button
+              onClick={() => abrirConfirmVoto(v)}
+              className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              title="Confirmar voto"
+            >
+              <Check className="w-5 h-5" />
+            </button>
+          )}
+          {showAnular !== false && v.voto_confirmado && canAnularConfirmacion(v) && (
+            <button
+              onClick={() => abrirAnularConfirmacion(v)}
+              className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
+              title="Anular confirmación"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+          <button
+            onClick={() => quitarPersona(v.ci, "votante")}
+            className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            <Trash2 className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    );
   };
-
-  // ======================= RENDER VOTANTE CARD =======================
-  const VotanteCard = ({ v, showAnular }) => (
-    <div className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3">
-      <div className="flex-1">
-        <DatosPersona persona={v} rol="Votante" />
-        {v.voto_confirmado && (
-          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-            Voto Confirmado
-          </div>
-        )}
-      </div>
-      <div className="flex gap-2">
-        <button
-          onClick={() => abrirTelefono("votante", v)}
-          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-        >
-          <Phone className="w-5 h-5" />
-        </button>
-        <button
-          onClick={() => abrirDireccion("votante", v)}
-          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-          title="Editar dirección"
-        >
-          <Pencil className="w-5 h-5" />
-        </button>
-        {!v.voto_confirmado && canConfirmarVoto(v) && (
-          <button
-            onClick={() => abrirConfirmVoto(v)}
-            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-            title="Confirmar voto"
-          >
-            <Check className="w-5 h-5" />
-          </button>
-        )}
-        {showAnular !== false && v.voto_confirmado && canAnularConfirmacion(v) && (
-          <button
-            onClick={() => abrirAnularConfirmacion(v)}
-            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-            title="Anular confirmación"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        )}
-        <button
-          onClick={() => quitarPersona(v.ci, "votante")}
-          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-        >
-          <Trash2 className="w-5 h-5" />
-        </button>
-      </div>
-    </div>
-  );
 
   // ======================= UI =======================
   return (
@@ -1024,7 +936,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
                             ) : (
                               <ChevronRight className="w-5 h-5 text-red-600" />
                             )}
-                            <DatosPersona persona={coord} rol="Coordinador" loginCode={coord.login_code} />
+                            <DatosPersona 
+                              persona={coord} 
+                              rol="Coordinador" 
+                              loginCode={coord.login_code}
+                              onEditDireccion={() => abrirDireccion("coordinador", coord)}
+                            />
                           </div>
                           <div className="flex flex-col md:flex-row gap-2">
                             <button
@@ -1032,13 +949,6 @@ const Dashboard = ({ currentUser, onLogout }) => {
                               className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                             >
                               <Phone className="w-5 h-5" />
-                            </button>
-                            <button
-                              onClick={(e) => { e.stopPropagation(); abrirDireccion("coordinador", coord); }}
-                              className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                              title="Editar dirección"
-                            >
-                              <Pencil className="w-5 h-5" />
                             </button>
                             <button
                               onClick={(e) => { e.stopPropagation(); quitarPersona(coord.ci, "coordinador"); }}
@@ -1066,7 +976,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                         className="cursor-pointer flex-1"
                                         onClick={(e) => { e.stopPropagation(); toggleSub(sub.ci); }}
                                       >
-                                        <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} />
+                                        <DatosPersona 
+                                          persona={sub} 
+                                          rol="Sub-coordinador" 
+                                          loginCode={sub.login_code}
+                                          onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
+                                        />
                                       </div>
                                     </div>
                                     <div className="flex gap-2">
@@ -1075,13 +990,6 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                         className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                                       >
                                         <Phone className="w-5 h-5" />
-                                      </button>
-                                      <button
-                                        onClick={(e) => { e.stopPropagation(); abrirDireccion("subcoordinador", sub); }}
-                                        className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                                        title="Editar dirección"
-                                      >
-                                        <Pencil className="w-5 h-5" />
                                       </button>
                                       <button
                                         onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
@@ -1128,7 +1036,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
                         ) : (
                           <ChevronRight className="w-5 h-5 text-red-600" />
                         )}
-                        <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} />
+                        <DatosPersona 
+                          persona={sub} 
+                          rol="Sub-coordinador" 
+                          loginCode={sub.login_code}
+                          onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
+                        />
                       </div>
                       <div className="flex flex-col md:flex-row gap-2">
                         <button
@@ -1136,13 +1049,6 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                         >
                           <Phone className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); abrirDireccion("subcoordinador", sub); }}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                          title="Editar dirección"
-                        >
-                          <Pencil className="w-5 h-5" />
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
