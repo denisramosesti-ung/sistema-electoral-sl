@@ -14,10 +14,12 @@ import {
   Check,
   X,
   Download,
+  Pencil,
 } from "lucide-react";
 
 import AddPersonModal from "../AddPersonModal";
 import ModalTelefono from "./ModalTelefono";
+import ModalDireccion from "./ModalDireccion";
 import ConfirmVotoModal from "./ConfirmVotoModal";
 import {
   generateSuperadminPDF,
@@ -56,6 +58,11 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
   const [phoneTarget, setPhoneTarget] = useState(null);
   const [phoneValue, setPhoneValue] = useState("+595");
+
+  // Dirección
+  const [direccionModalOpen, setDireccionModalOpen] = useState(false);
+  const [direccionTarget, setDireccionTarget] = useState(null);
+  const [direccionValue, setDireccionValue] = useState("");
 
   // Confirmación de voto
   const [confirmVotoModalOpen, setConfirmVotoModalOpen] = useState(false);
@@ -380,6 +387,65 @@ const Dashboard = ({ currentUser, onLogout }) => {
     recargarEstructura();
   };
 
+  // ======================= DIRECCIÓN =======================
+  const abrirDireccion = (tipo, p) => {
+    setDireccionTarget({ tipo, ...p });
+    setDireccionValue(p.direccion_override || "");
+    setDireccionModalOpen(true);
+  };
+
+  const guardarDireccion = async () => {
+    if (!direccionTarget) return;
+
+    if (currentUser.role !== "superadmin") {
+      if (currentUser.role === "coordinador") {
+        const miCI = normalizeCI(currentUser.ci);
+        const perteneceAMiRed = normalizeCI(direccionTarget.coordinador_ci) === miCI;
+        if (!perteneceAMiRed) {
+          alert("No tiene permiso para editar la dirección de esta persona.");
+          return;
+        }
+        if (direccionTarget.tipo === "coordinador") {
+          alert("No tiene permiso para editar la dirección de otro coordinador.");
+          return;
+        }
+      }
+      if (currentUser.role === "subcoordinador") {
+        if (direccionTarget.tipo !== "votante") {
+          alert("No tiene permiso para editar esta persona.");
+          return;
+        }
+        const esMiVotante = normalizeCI(direccionTarget.asignado_por) === normalizeCI(currentUser.ci);
+        if (!esMiVotante) {
+          alert("No tiene permiso para editar la dirección de este votante.");
+          return;
+        }
+      }
+    }
+
+    const direccion_override = String(direccionValue || "").trim();
+
+    let tabla = "votantes";
+    if (direccionTarget.tipo === "coordinador") tabla = "coordinadores";
+    if (direccionTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
+
+    const { error } = await supabase
+      .from(tabla)
+      .update({ direccion_override })
+      .eq("ci", direccionTarget.ci);
+
+    if (error) {
+      console.error("Error guardando dirección:", error);
+      alert(error.message || "Error guardando dirección");
+      return;
+    }
+
+    setDireccionModalOpen(false);
+    setDireccionTarget(null);
+    setDireccionValue("");
+    recargarEstructura();
+  };
+
   // ======================= AGREGAR PERSONA =======================
   const handleAgregarPersona = async (persona) => {
     if (!modalType) return alert("Seleccione tipo.");
@@ -657,6 +723,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
         >
           <Phone className="w-5 h-5" />
         </button>
+        <button
+          onClick={() => abrirDireccion("votante", v)}
+          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+          title="Editar dirección"
+        >
+          <Pencil className="w-5 h-5" />
+        </button>
         {!v.voto_confirmado && canConfirmarVoto(v) && (
           <button
             onClick={() => abrirConfirmVoto(v)}
@@ -876,6 +949,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           >
                             <Phone className="w-4 h-4" />
                           </button>
+                          <button
+                            onClick={() => abrirDireccion(tipo, persona)}
+                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                            title="Editar dirección"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
                           {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona) && (
                             <button
                               onClick={() => abrirConfirmVoto(persona)}
@@ -954,6 +1034,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
                               <Phone className="w-5 h-5" />
                             </button>
                             <button
+                              onClick={(e) => { e.stopPropagation(); abrirDireccion("coordinador", coord); }}
+                              className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                              title="Editar dirección"
+                            >
+                              <Pencil className="w-5 h-5" />
+                            </button>
+                            <button
                               onClick={(e) => { e.stopPropagation(); quitarPersona(coord.ci, "coordinador"); }}
                               className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                             >
@@ -962,15 +1049,10 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           </div>
                         </div>
 
-                        {expandedCoords[normalizeCI(coord.ci)] && (() => {
-                          const allSubs = estructura.subcoordinadores || [];
-                          const filteredSubs = allSubs.filter((s) => s.coordinador_ci && s.coordinador_ci === normalizeCI(coord.ci));
-                          console.log("[v0] Coord CI:", coord.ci, "normalized:", normalizeCI(coord.ci));
-                          console.log("[v0] All subs count:", allSubs.length, "subs coordinador_ci values:", allSubs.map(s => s.coordinador_ci));
-                          console.log("[v0] Filtered subs for this coord:", filteredSubs.length, filteredSubs.map(s => ({ ci: s.ci, coordinador_ci: s.coordinador_ci })));
-                          return (
+                        {expandedCoords[normalizeCI(coord.ci)] && (
                           <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
-                            {filteredSubs
+                            {(estructura.subcoordinadores || [])
+                              .filter((s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci))
                               .map((sub) => (
                                 <div key={sub.ci} className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4">
                                   <div className="flex items-start justify-between gap-3">
@@ -995,6 +1077,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                         <Phone className="w-5 h-5" />
                                       </button>
                                       <button
+                                        onClick={(e) => { e.stopPropagation(); abrirDireccion("subcoordinador", sub); }}
+                                        className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                                        title="Editar dirección"
+                                      >
+                                        <Pencil className="w-5 h-5" />
+                                      </button>
+                                      <button
                                         onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
                                         className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                                       >
@@ -1016,8 +1105,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                 </div>
                               ))}
                           </div>
-                          );
-                        })()}
+                        )}
                       </div>
                     ))}
                   </div>
@@ -1048,6 +1136,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                         >
                           <Phone className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); abrirDireccion("subcoordinador", sub); }}
+                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                          title="Editar dirección"
+                        >
+                          <Pencil className="w-5 h-5" />
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
@@ -1120,6 +1215,19 @@ const Dashboard = ({ currentUser, onLogout }) => {
           setPhoneValue("+595");
         }}
         onSave={guardarTelefono}
+      />
+
+      <ModalDireccion
+        open={direccionModalOpen}
+        persona={direccionTarget}
+        value={direccionValue}
+        onChange={setDireccionValue}
+        onCancel={() => {
+          setDireccionModalOpen(false);
+          setDireccionTarget(null);
+          setDireccionValue("");
+        }}
+        onSave={guardarDireccion}
       />
 
       <AddPersonModal
