@@ -594,11 +594,11 @@ const handleAgregarPersona = async (persona) => {
   // ======================= COMPONENTE DATOS PERSONA =======================
   const DatosPersona = ({ persona, rol, loginCode }) => {
     return (
-      <div className="space-y-1 text-xs md:text-sm">
-        <p className="font-semibold">
+      <div className="space-y-1 text-xs sm:text-sm">
+        <p className="font-semibold truncate">
           {persona.nombre || "-"} {persona.apellido || ""}
         </p>
-        <p>
+        <p className="truncate">
           <b>CI:</b> {persona.ci}
         </p>
         {rol && (
@@ -612,17 +612,17 @@ const handleAgregarPersona = async (persona) => {
               e.stopPropagation();
               copyToClipboard(loginCode);
             }}
-            className="p-1 border rounded text-red-600 inline-flex items-center gap-1"
+            className="px-2 py-1 border rounded text-red-600 inline-flex items-center gap-1 text-xs hover:bg-red-50"
           >
-            <Copy className="w-4 h-4" /> Copiar acceso
+            <Copy className="w-3 h-3 sm:w-4 sm:h-4" /> Copiar acceso
           </button>
         )}
-        {persona.seccional && <p>Seccional: {persona.seccional}</p>}
-        {persona.local_votacion && <p>Local: {persona.local_votacion}</p>}
+        {persona.seccional && <p className="truncate">Seccional: {persona.seccional}</p>}
+        {persona.local_votacion && <p className="truncate">Local: {persona.local_votacion}</p>}
         {persona.mesa && <p>Mesa: {persona.mesa}</p>}
         {persona.orden && <p>Orden: {persona.orden}</p>}
-        {persona.direccion && <p>Dirección: {persona.direccion}</p>}
-        {persona.telefono && <p>Tel: {persona.telefono}</p>}
+        {persona.direccion && <p className="truncate">Dirección: {persona.direccion}</p>}
+        {persona.telefono && <p className="truncate">Tel: {persona.telefono}</p>}
       </div>
     );
   };
@@ -786,10 +786,10 @@ const descargarPDF = async () => {
     <div className="min-h-screen bg-gray-100">
       {/* HEADER */}
       <div className="bg-red-600 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold">Sistema Electoral</h1>
-            <p className="text-red-200 text-sm mt-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex flex-wrap sm:flex-nowrap justify-between items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold truncate">Sistema Electoral</h1>
+            <p className="text-red-200 text-xs sm:text-sm mt-1 truncate">
               {currentUser.nombre} {currentUser.apellido} —{" "}
               {currentUser.role === "superadmin"
                 ? "⭐ Superadmin"
@@ -801,127 +801,127 @@ const descargarPDF = async () => {
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 bg-red-700 hover:bg-red-800 px-4 py-2 rounded-lg transition"
+            className="flex items-center gap-2 bg-red-700 hover:bg-red-800 px-4 h-10 rounded-lg transition shrink-0"
           >
             <LogOut className="w-4 h-4" />
-            Salir
+            <span className="hidden sm:inline">Salir</span>
           </button>
         </div>
       </div>
 
       {/* TARJETAS ESTADÍSTICAS */}
-      <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {currentUser.role === "superadmin" && (
-  <div>
+  <>
     {/* COORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Coordinadores</p>
-      <p className="text-4xl font-bold text-red-600">
+    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+      <p className="text-gray-600 text-xs sm:text-sm">Coordinadores</p>
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
         {stats?.coordinadores ?? 0}
       </p>
     </div>
 
     {/* SUBCOORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Subcoordinadores</p>
-      <p className="text-4xl font-bold text-red-600">
+    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+      <p className="text-gray-600 text-xs sm:text-sm">Subcoordinadores</p>
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
         {stats?.subcoordinadores ?? 0}
       </p>
     </div>
 
     {/* VOTANTES */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Votantes</p>
-      <p className="text-4xl font-bold text-red-600">
+    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+      <p className="text-gray-600 text-xs sm:text-sm">Votantes</p>
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
         {stats?.votantes ?? 0}
       </p>
     </div>
 
     {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-      <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
+    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-3 sm:p-4">
+      <p className="text-red-700 text-xs sm:text-sm font-semibold uppercase tracking-wide">
         Votantes totales
       </p>
-      <p className="text-4xl font-extrabold text-red-700 mt-1">
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-red-700 mt-1">
         {stats?.votantesTotales ?? 0}
       </p>
     </div>
-  </div>
+  </>
 )}
 
 
         {currentUser.role === "coordinador" && (
-  <div>
+  <>
     {/* SUBCOORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Subcoordinadores</p>
-      <p className="text-4xl font-bold text-red-600">
+    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+      <p className="text-gray-600 text-xs sm:text-sm">Subcoordinadores</p>
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
         {stats?.subcoordinadores ?? 0}
       </p>
     </div>
 
     {/* VOTANTES DIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Votantes directos</p>
-      <p className="text-4xl font-bold text-red-600">
+    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+      <p className="text-gray-600 text-xs sm:text-sm">Votantes directos</p>
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
         {stats?.votantesDirectos ?? 0}
       </p>
     </div>
 
     {/* VOTANTES INDIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Votantes indirectos</p>
-      <p className="text-4xl font-bold text-red-600">
+    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+      <p className="text-gray-600 text-xs sm:text-sm">Votantes indirectos</p>
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
   {stats?.votantesIndirectos ?? 0}
 </p>
 
     </div>
 
     {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-      <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
+    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-3 sm:p-4">
+      <p className="text-red-700 text-xs sm:text-sm font-semibold uppercase tracking-wide">
         Votantes totales
       </p>
-      <p className="text-4xl font-extrabold text-red-700 mt-1">
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-red-700 mt-1">
         {stats?.total ?? 0}
       </p>
     </div>
-        )}
+        </>)}
 
         {currentUser.role === "subcoordinador" && (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <>
     {/* VOTANTES DIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">Votantes directos</p>
-      <p className="text-4xl font-bold text-red-600">
+    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+      <p className="text-gray-600 text-xs sm:text-sm">Votantes directos</p>
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
         {stats?.votantes ?? 0}
       </p>
     </div>
 
     {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-6">
-      <p className="text-red-700 text-sm font-semibold uppercase tracking-wide">
+    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-3 sm:p-4">
+      <p className="text-red-700 text-xs sm:text-sm font-semibold uppercase tracking-wide">
         Votantes totales
       </p>
-      <p className="text-4xl font-extrabold text-red-700 mt-1">
+      <p className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-red-700 mt-1">
         {stats?.votantes ?? 0}
       </p>
     </div>
-  </div>
+  </>
 )}
 
 
       </div>
 
       {/* ACCIONES */}
-      <div className="max-w-7xl mx-auto px-4 mb-6 flex flex-wrap gap-3 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 flex flex-wrap gap-2 sm:gap-3 items-center">
         {currentUser.role === "superadmin" && (
           <button
             onClick={() => {
               setModalType("coordinador");
               setShowAddModal(true);
             }}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            className="flex items-center gap-2 bg-red-600 text-white px-4 h-10 rounded-lg hover:bg-red-700 w-full sm:w-auto text-sm"
           >
             <UserPlus className="w-4 h-4" />
             Agregar Coordinador
@@ -934,7 +934,7 @@ const descargarPDF = async () => {
               setModalType("subcoordinador");
               setShowAddModal(true);
             }}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            className="flex items-center gap-2 bg-red-600 text-white px-4 h-10 rounded-lg hover:bg-red-700 w-full sm:w-auto text-sm"
           >
             <UserPlus className="w-4 h-4" />
             Agregar Subcoordinador
@@ -948,7 +948,7 @@ const descargarPDF = async () => {
               setModalType("votante");
               setShowAddModal(true);
             }}
-            className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
+            className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 h-10 rounded-lg hover:bg-red-50 w-full sm:w-auto text-sm"
           >
             <UserPlus className="w-4 h-4" />
             Agregar Votante
@@ -958,7 +958,7 @@ const descargarPDF = async () => {
         {/* PDF */}
 <button
   onClick={descargarPDF}
-  className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
+  className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 h-10 rounded-lg hover:bg-red-50 w-full sm:w-auto text-sm"
 >
   <BarChart3 className="w-4 h-4" />
   Descargar PDF
@@ -966,9 +966,9 @@ const descargarPDF = async () => {
 
       </div>
 {/* BUSCADOR INTERNO (solo dentro de la estructura visible por rol) */}
-<div className="max-w-7xl mx-auto px-4 mb-4">
-  <div className="bg-white rounded-lg shadow p-4">
-    <label className="block text-sm font-semibold text-gray-700 mb-2">
+<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+  <div className="bg-white rounded-lg shadow p-4 sm:p-5">
+    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
       Buscar dentro de mi estructura
     </label>
 
@@ -976,7 +976,7 @@ const descargarPDF = async () => {
       value={searchCI}
       onChange={(e) => setSearchCI(e.target.value)}
       placeholder="Buscar por CI, nombre, apellido o combinación"
-      className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-300"
+      className="w-full border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
     />
 
     {normalizeText(searchCI) && (
@@ -989,37 +989,37 @@ const descargarPDF = async () => {
 
 {/* RESULTADOS (solo si hay búsqueda escrita) */}
 {normalizeText(searchCI) && (
-  <div className="max-w-7xl mx-auto px-4 mb-6">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
     <div className="bg-white rounded-lg shadow">
-      <div className="p-4 border-b">
-        <h3 className="font-bold text-gray-800">Resultados de búsqueda</h3>
+      <div className="p-3 sm:p-4 border-b">
+        <h3 className="font-bold text-sm sm:text-base text-gray-800">Resultados de búsqueda</h3>
         <p className="text-xs text-gray-500">
           Solo dentro de la estructura permitida para tu rol.
         </p>
       </div>
 
-      <div className="p-4 space-y-3">
+      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
         {resultadosBusqueda.length === 0 ? (
-          <div className="text-sm text-gray-600">
+          <div className="text-xs sm:text-sm text-gray-600">
             No se encontraron coincidencias en tu estructura.
           </div>
         ) : (
           resultadosBusqueda.slice(0, 50).map(({ tipo, persona }) => (
             <div
               key={`${tipo}-${persona.ci}`}
-              className="border rounded-lg p-3 hover:bg-gray-50"
+              className="border rounded-lg p-2 sm:p-3 hover:bg-gray-50"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="font-semibold text-sm flex items-center gap-2">
-                    {persona.nombre || "-"} {persona.apellido || ""}
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-xs sm:text-sm flex flex-wrap items-center gap-2">
+                    <span className="truncate">{persona.nombre || "-"} {persona.apellido || ""}</span>
                     {tipo === "votante" && persona.voto_confirmado && (
-                      <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
+                      <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium shrink-0">
                         Voto Confirmado
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xs text-gray-600 mt-1">
                     <b>CI:</b> {persona.ci}{" "}
                     <span className="ml-2">
                       <b>Tipo:</b>{" "}
@@ -1032,7 +1032,7 @@ const descargarPDF = async () => {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 justify-end shrink-0">
                   <button
                     onClick={() => abrirTelefono(tipo, persona)}
                     className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
@@ -1086,39 +1086,41 @@ const descargarPDF = async () => {
 
 
       {/* MI ESTRUCTURA (UI REAL) */}
-      <div className="max-w-7xl mx-auto px-4 mb-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
         <div className="bg-white rounded-lg shadow">
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-bold text-gray-800">Mi Estructura</h2>
+          <div className="p-4 sm:p-5 border-b">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800">Mi Estructura</h2>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 sm:p-5">
             {/* SUPERADMIN */}
             {currentUser.role === "superadmin" && (
               <div>
                 {(estructura.coordinadores || []).map((coord) => (
                   <div
                     key={coord.ci}
-                    className="border rounded-lg mb-3 bg-red-50/40"
+                    className="border rounded-lg mb-2 sm:mb-3 bg-red-50/40"
                   >
                     <div
-                      className="flex items-start justify-between p-4 cursor-pointer gap-4"
+                      className="flex items-start justify-between p-3 sm:p-4 cursor-pointer gap-3"
                       onClick={() => toggleExpand(coord.ci)}
                     >
-                      <div className="flex items-start gap-3 flex-1">
+                      <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                         {expandedCoords[normalizeCI(coord.ci)] ? (
-                          <ChevronDown className="w-5 h-5 text-red-600" />
+                          <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
                         ) : (
-                          <ChevronRight className="w-5 h-5 text-red-600" />
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
                         )}
-                        <DatosPersona
-                          persona={coord}
-                          rol="Coordinador"
-                          loginCode={coord.login_code}
-                        />
+                        <div className="flex-1 min-w-0">
+                          <DatosPersona
+                            persona={coord}
+                            rol="Coordinador"
+                            loginCode={coord.login_code}
+                          />
+                        </div>
                       </div>
 
-                      <div className="flex flex-col md:flex-row gap-2">
+                      <div className="flex gap-2 shrink-0">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1126,7 +1128,7 @@ const descargarPDF = async () => {
                           }}
                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                         >
-                          <Phone className="w-5 h-5" />
+                          <Phone className="w-4 h-4" />
                         </button>
                         <button
                           onClick={(e) => {
@@ -1135,13 +1137,13 @@ const descargarPDF = async () => {
                           }}
                           className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
 
                     {expandedCoords[normalizeCI(coord.ci)] && (
-                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
+                      <div className="bg-white px-3 sm:px-4 pb-3 sm:pb-4 border-t animate-in fade-in duration-200 overflow-x-auto">
                         {/* SUBS DEL COORD */}
                         {(estructura.subcoordinadores || [])
                           .filter(
@@ -1151,17 +1153,17 @@ const descargarPDF = async () => {
                           .map((sub) => (
                             <div
                               key={sub.ci}
-                              className="border rounded p-3 mb-2 bg-red-50/40 flex flex-col gap-3 ml-4"
+                              className="border rounded p-2 sm:p-3 mb-2 bg-red-50/40 flex flex-col gap-2 sm:gap-3 ml-2 sm:ml-4"
                             >
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="flex items-start gap-3 flex-1">
+                              <div className="flex items-start justify-between gap-2 sm:gap-3">
+                                <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                                   {expandedCoords[normalizeCI(sub.ci)] ? (
-                                    <ChevronDown className="w-4 h-4 text-red-600 mt-1 transition-transform" />
+                                    <ChevronDown className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
                                   ) : (
-                                    <ChevronRight className="w-4 h-4 text-red-600 mt-1 transition-transform" />
+                                    <ChevronRight className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
                                   )}
                                   <div
-                                    className="cursor-pointer flex-1"
+                                    className="cursor-pointer flex-1 min-w-0"
                                     onClick={() => toggleExpand(sub.ci)}
                                   >
                                     <DatosPersona
@@ -1171,31 +1173,31 @@ const descargarPDF = async () => {
                                     />
                                   </div>
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 shrink-0">
                                   <button
                                     onClick={() => abrirTelefono("subcoordinador", sub)}
                                     className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                                   >
-                                    <Phone className="w-5 h-5" />
+                                    <Phone className="w-4 h-4" />
                                   </button>
                                   <button
                                     onClick={() => quitarPersona(sub.ci, "subcoordinador")}
                                     className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                                   >
-                                    <Trash2 className="w-5 h-5" />
+                                    <Trash2 className="w-4 h-4" />
                                   </button>
                                 </div>
                               </div>
 
                               {/* Votantes del sub - expandable */}
                               {expandedCoords[normalizeCI(sub.ci)] && (
-                                <div className="ml-4 border-l-2 border-gray-200 pl-3 animate-in fade-in duration-200">
+                                <div className="ml-2 sm:ml-4 border-l-2 border-gray-200 pl-2 sm:pl-3 animate-in fade-in duration-200">
                                   {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
                                     <div
                                       key={v.ci}
-                                      className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3"
+                                      className="bg-white border p-2 sm:p-3 mb-2 rounded flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3"
                                     >
-                                      <div className="flex-1">
+                                      <div className="flex-1 min-w-0">
                                         <DatosPersona persona={v} rol="Votante" />
                                         {v.voto_confirmado && (
                                           <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
@@ -1203,12 +1205,12 @@ const descargarPDF = async () => {
                                           </div>
                                         )}
                                       </div>
-                                      <div className="flex gap-2">
+                                      <div className="flex gap-2 shrink-0 justify-end">
                                         <button
                                           onClick={() => abrirTelefono("votante", v)}
                                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                                         >
-                                          <Phone className="w-5 h-5" />
+                                          <Phone className="w-4 h-4" />
                                         </button>
 
                                         {!v.voto_confirmado && canConfirmarVoto(v) && (
@@ -1217,7 +1219,7 @@ const descargarPDF = async () => {
                                             className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
                                             title="Confirmar voto"
                                           >
-                                            <Check className="w-5 h-5" />
+                                            <Check className="w-4 h-4" />
                                           </button>
                                         )}
 
@@ -1227,7 +1229,7 @@ const descargarPDF = async () => {
                                             className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
                                             title="Anular confirmación"
                                           >
-                                            <X className="w-5 h-5" />
+                                            <X className="w-4 h-4" />
                                           </button>
                                         )}
 
@@ -1235,14 +1237,14 @@ const descargarPDF = async () => {
                                           onClick={() => quitarPersona(v.ci, "votante")}
                                           className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                                         >
-                                          <Trash2 className="w-5 h-5" />
+                                          <Trash2 className="w-4 h-4" />
                                         </button>
                                       </div>
                                     </div>
                                   ))}
 
                                   {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                                    <p className="text-gray-500 text-sm">
+                                    <p className="text-gray-500 text-xs sm:text-sm">
                                       Sin votantes asignados.
                                     </p>
                                   )}
@@ -1266,30 +1268,32 @@ const descargarPDF = async () => {
 
             {/* COORDINADOR */}
             {currentUser.role === "coordinador" && (
-            </div>
+            <>
                 {getMisSubcoordinadores(estructura, currentUser).map((sub) => (
                   <div
                     key={sub.ci}
-                    className="border rounded-lg mb-3 bg-red-50/40"
+                    className="border rounded-lg mb-2 sm:mb-3 bg-red-50/40"
                   >
                     <div
-                      className="flex items-start justify-between p-4 cursor-pointer gap-4"
+                      className="flex items-start justify-between p-3 sm:p-4 cursor-pointer gap-3"
                       onClick={() => toggleExpand(sub.ci)}
                     >
-                      <div className="flex items-start gap-3 flex-1">
+                      <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                         {expandedCoords[normalizeCI(sub.ci)] ? (
-                          <ChevronDown className="w-5 h-5 text-red-600" />
+                          <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
                         ) : (
-                          <ChevronRight className="w-5 h-5 text-red-600" />
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
                         )}
-                        <DatosPersona
-                          persona={sub}
-                          rol="Sub-coordinador"
-                          loginCode={sub.login_code}
-                        />
+                        <div className="flex-1 min-w-0">
+                          <DatosPersona
+                            persona={sub}
+                            rol="Sub-coordinador"
+                            loginCode={sub.login_code}
+                          />
+                        </div>
                       </div>
 
-                      <div className="flex flex-col md:flex-row gap-2">
+                      <div className="flex gap-2 shrink-0">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1297,7 +1301,7 @@ const descargarPDF = async () => {
                           }}
                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                         >
-                          <Phone className="w-5 h-5" />
+                          <Phone className="w-4 h-4" />
                         </button>
                         <button
                           onClick={(e) => {
@@ -1306,21 +1310,21 @@ const descargarPDF = async () => {
                           }}
                           className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
 
                     {expandedCoords[normalizeCI(sub.ci)] && (
-                      <div className="bg-white px-4 pb-4 border-t animate-in fade-in duration-200 overflow-hidden">
-                        <p className="text-sm font-semibold mt-3 mb-2">Votantes</p>
+                      <div className="bg-white px-3 sm:px-4 pb-3 sm:pb-4 border-t animate-in fade-in duration-200 overflow-x-auto">
+                        <p className="text-xs sm:text-sm font-semibold mt-3 mb-2">Votantes</p>
 
                         {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
                           <div
                             key={v.ci}
-                            className="bg-white border p-3 mb-2 rounded flex justify-between items-start gap-3 ml-2"
+                            className="bg-white border p-2 sm:p-3 mb-2 rounded flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3 ml-1 sm:ml-2"
                           >
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-0">
                               <DatosPersona persona={v} rol="Votante" />
                               {v.voto_confirmado && (
                                 <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
@@ -1328,12 +1332,12 @@ const descargarPDF = async () => {
                                 </div>
                               )}
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 shrink-0 justify-end">
                               <button
                                 onClick={() => abrirTelefono("votante", v)}
                                 className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                               >
-                                <Phone className="w-5 h-5" />
+                                <Phone className="w-4 h-4" />
                               </button>
 
                               {!v.voto_confirmado && canConfirmarVoto(v) && (
@@ -1342,7 +1346,7 @@ const descargarPDF = async () => {
                                   className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
                                   title="Confirmar voto"
                                 >
-                                  <Check className="w-5 h-5" />
+                                  <Check className="w-4 h-4" />
                                 </button>
                               )}
 
@@ -1352,7 +1356,7 @@ const descargarPDF = async () => {
                                   className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
                                   title="Anular confirmación"
                                 >
-                                  <X className="w-5 h-5" />
+                                  <X className="w-4 h-4" />
                                 </button>
                               )}
 
@@ -1360,14 +1364,14 @@ const descargarPDF = async () => {
                                 onClick={() => quitarPersona(v.ci, "votante")}
                                 className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                               >
-                                <Trash2 className="w-5 h-5" />
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
                         ))}
 
                         {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                          <p className="text-gray-500 text-sm ml-2">
+                          <p className="text-gray-500 text-xs sm:text-sm ml-1 sm:ml-2">
                             Sin votantes asignados.
                           </p>
                         )}
@@ -1377,17 +1381,17 @@ const descargarPDF = async () => {
                 ))}
 
                 {getMisVotantes(estructura, currentUser).length > 0 && (
-                  <div className="border rounded-lg mb-3 p-4">
-                    <p className="font-semibold text-gray-700 mb-3">
+                  <div className="border rounded-lg mb-2 sm:mb-3 p-3 sm:p-4">
+                    <p className="font-semibold text-gray-700 mb-3 text-sm sm:text-base">
                       Mis votantes directos
                     </p>
 
                     {getMisVotantes(estructura, currentUser).map((v) => (
                       <div
                         key={v.ci}
-                        className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
+                        className="bg-white border p-2 sm:p-3 mt-2 rounded flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3"
                       >
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <DatosPersona persona={v} rol="Votante" />
                           {v.voto_confirmado && (
                             <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
@@ -1395,12 +1399,12 @@ const descargarPDF = async () => {
                             </div>
                           )}
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 shrink-0 justify-end">
                           <button
                             onClick={() => abrirTelefono("votante", v)}
                             className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
                           >
-                            <Phone className="w-5 h-5" />
+                            <Phone className="w-4 h-4" />
                           </button>
 
                           {!v.voto_confirmado && canConfirmarVoto(v) && (
@@ -1409,7 +1413,7 @@ const descargarPDF = async () => {
                               className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
                               title="Confirmar voto"
                             >
-                              <Check className="w-5 h-5" />
+                              <Check className="w-4 h-4" />
                             </button>
                           )}
 
@@ -1419,7 +1423,7 @@ const descargarPDF = async () => {
                               className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
                               title="Anular confirmación"
                             >
-                              <X className="w-5 h-5" />
+                              <X className="w-4 h-4" />
                             </button>
                           )}
 
@@ -1427,7 +1431,7 @@ const descargarPDF = async () => {
                             onClick={() => quitarPersona(v.ci, "votante")}
                             className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
                           >
-                            <Trash2 className="w-5 h-5" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </div>
@@ -1437,7 +1441,7 @@ const descargarPDF = async () => {
 
                 {getMisSubcoordinadores(estructura, currentUser).length === 0 &&
                   getMisVotantes(estructura, currentUser).length === 0 && (
-                    <p className="text-gray-500 py-6">
+                    <p className="text-gray-500 py-6 text-sm sm:text-base">
                       Aún no tiene subcoordinadores ni votantes asignados.
                     </p>
                   )}
@@ -1449,9 +1453,9 @@ const descargarPDF = async () => {
     {getMisVotantes(estructura, currentUser).map((v) => (
       <div
         key={v.ci}
-        className="bg-white border p-3 mt-2 rounded flex justify-between items-start gap-3"
+        className="bg-white border p-2 sm:p-3 mt-2 rounded flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3"
       >
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <DatosPersona persona={v} rol="Votante" />
           {v.voto_confirmado && (
             <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
@@ -1459,12 +1463,12 @@ const descargarPDF = async () => {
             </div>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0 justify-end">
           <button
             onClick={() => abrirTelefono("votante", v)}
             className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
           >
-            <Phone className="w-5 h-5" />
+            <Phone className="w-4 h-4" />
           </button>
 
           {!v.voto_confirmado && canConfirmarVoto(v) && (
@@ -1473,7 +1477,7 @@ const descargarPDF = async () => {
               className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
               title="Confirmar voto"
             >
-              <Check className="w-5 h-5" />
+              <Check className="w-4 h-4" />
             </button>
           )}
 
@@ -1481,14 +1485,14 @@ const descargarPDF = async () => {
             onClick={() => quitarPersona(v.ci, "votante")}
             className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
           >
-            <Trash2 className="w-5 h-5" />
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       </div>
     ))}
 
     {getMisVotantes(estructura, currentUser).length === 0 && (
-      <p className="text-gray-500 py-6">
+      <p className="text-gray-500 py-6 text-sm sm:text-base">
         No tiene votantes asignados.
       </p>
     )}
