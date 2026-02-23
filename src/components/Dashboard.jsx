@@ -79,7 +79,10 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
 
   const toggleExpand = (ci) => {
     const key = normalizeCI(ci);
-    setExpandedCoords((prev) => ({ ...prev, [key]: !prev[key] }));
+    setExpandedCoords((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
   };
 
   // ======================= CARGAR PADRÓN COMPLETO =======================
@@ -1078,9 +1081,10 @@ const descargarPDF = async () => {
         {resultadosBusqueda.length > 50 && (
           <div className="text-xs text-gray-500">
             Mostrando 50 resultados. Refiná la búsqueda para acotar.
-          </div>
-        )}
-      </div>
+                                </div>
+                              );
+                              })()}
+                            </div>
     </div>
   </div>
 )}
@@ -1213,7 +1217,6 @@ const descargarPDF = async () => {
                                           </div>
                                         )}
                                       </div>
-                                      <div className="flex gap-2">
                                         <button
                                           onClick={() => abrirTelefono("votante", v)}
                                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
