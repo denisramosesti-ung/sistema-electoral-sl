@@ -151,26 +151,37 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
         v.voto_confirmado ? "Confirmado" : "Pendiente",
       ]);
 
-      autoTable(doc, {
-        startY: currentY + 5,
-        head: [["Votante", "CI", "Teléfono", "Estado"]],
-        body: votantesTableData,
-        margin: { ...MARGINS },
-        columnStyles: {
-          0: { cellWidth: 60 },
-          1: { cellWidth: 40 },
-          2: { cellWidth: 40 },
-          3: { cellWidth: 30, halign: "center" },
-        },
-        headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
-        bodyStyles: { textColor: [0, 0, 0] },
-        cellStyles: {
-          3: { halign: "center" }, // Estado centrado
-        },
-        didDrawPage: () => {
-          addFooter(doc, pageWidth, pageHeight);
-        },
-      });
+    autoTable(doc, {
+      startY: currentY + 5,
+      head: [["Votante", "CI", "Teléfono", "Estado"]],
+      body: votantesTableData,
+      margin: { ...MARGINS },
+      columnStyles: {
+        0: { cellWidth: 60 },
+        1: { cellWidth: 40 },
+        2: { cellWidth: 40 },
+        3: { cellWidth: 30, halign: "center" },
+      },
+      headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: "bold" },
+      bodyStyles: { textColor: [0, 0, 0] },
+      cellStyles: {
+        3: { halign: "center" }, // Estado centrado
+      },
+      didDrawPage: () => {
+        addFooter(doc, pageWidth, pageHeight);
+      },
+      willDrawCell: (data) => {
+        // Colorear columna Estado (índice 3)
+        if (data.column.index === 3) {
+          if (data.cell.text[0] === "Confirmado") {
+            data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
+            data.cell.styles.fontStyle = "bold";
+          } else if (data.cell.text[0] === "Pendiente") {
+            data.cell.styles.textColor = [128, 128, 128]; // Gris
+          }
+        }
+      },
+    });
     }
   });
 
@@ -289,16 +300,18 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
       didDrawPage: () => {
         addFooter(doc, pageWidth, pageHeight);
       },
+      willDrawCell: (data) => {
+        // Colorear columna Estado (índice 3)
+        if (data.column.index === 3) {
+          if (data.cell.text[0] === "Confirmado") {
+            data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
+            data.cell.styles.fontStyle = "bold";
+          } else if (data.cell.text[0] === "Pendiente") {
+            data.cell.styles.textColor = [128, 128, 128]; // Gris
+          }
+        }
+      },
     });
-  }
-
-  return doc;
-};
-
-/**
- * Genera un PDF profesional para Subcoordinador
- */
-export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
   const doc = new jsPDF(PAGE_ORIENTATION, "mm", PAGE_FORMAT);
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -384,6 +397,17 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
       },
       didDrawPage: () => {
         addFooter(doc, pageWidth, pageHeight);
+      },
+      willDrawCell: (data) => {
+        // Colorear columna Estado (índice 3)
+        if (data.column.index === 3) {
+          if (data.cell.text[0] === "Confirmado") {
+            data.cell.styles.textColor = [34, 139, 34]; // Verde sobrio
+            data.cell.styles.fontStyle = "bold";
+          } else if (data.cell.text[0] === "Pendiente") {
+            data.cell.styles.textColor = [128, 128, 128]; // Gris
+          }
+        }
       },
     });
   }
