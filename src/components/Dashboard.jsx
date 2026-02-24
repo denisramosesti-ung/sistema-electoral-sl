@@ -1285,19 +1285,19 @@ const descargarPDF = async () => {
                           .map((sub) => (
                             <div
                               key={sub.ci}
-                              className="border rounded p-2 sm:p-3 mb-2 bg-red-50/40 flex flex-col gap-2 sm:gap-3 ml-2 sm:ml-4"
+                              className="border rounded-lg mb-2 sm:mb-3 bg-red-50/40"
                             >
-                              <div className="flex items-start justify-between gap-2 sm:gap-3">
+                              <div
+                                className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 cursor-pointer"
+                                onClick={() => toggleExpand(sub.ci)}
+                              >
                                 <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                                   {expandedCoords[normalizeCI(sub.ci)] ? (
-                                    <ChevronDown className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+                                    <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
                                   ) : (
-                                    <ChevronRight className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+                                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
                                   )}
-                                  <div
-                                    className="cursor-pointer flex-1 min-w-0"
-                                    onClick={() => toggleExpand(sub.ci)}
-                                  >
+                                  <div className="flex-1 min-w-0">
                                     <DatosPersona
                                       persona={sub}
                                       rol="Sub-coordinador"
@@ -1305,6 +1305,7 @@ const descargarPDF = async () => {
                                     />
                                   </div>
                                 </div>
+
                                 <div className="flex gap-2 shrink-0">
                                   <button
                                     onClick={() => abrirTelefono("subcoordinador", sub)}
