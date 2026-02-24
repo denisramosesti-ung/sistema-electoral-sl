@@ -90,7 +90,7 @@ const MiEstructura = ({
                   />
                 </div>
 
-                <div className="flex justify-end gap-2 sm:justify-start">
+                <div className="flex gap-2 sm:justify-start">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -137,7 +137,7 @@ const MiEstructura = ({
                             className="bg-white border p-2 mt-2 rounded flex flex-col gap-2 sm:flex-row sm:justify-between"
                           >
                             <DatosPersona persona={v} rol="Votante" />
-                            <div className="flex justify-end gap-2">
+                            <div className="flex gap-2">
                               <button
                                 onClick={() =>
                                   abrirTelefono("votante", v)
@@ -166,7 +166,7 @@ const MiEstructura = ({
                       className="bg-white border p-2 mt-2 rounded flex flex-col gap-2 sm:flex-row sm:justify-between"
                     >
                       <DatosPersona persona={v} rol="Votante" />
-                      <div className="flex justify-end gap-2">
+                      <div className="flex gap-2">
                         <button
                           onClick={() => abrirTelefono("votante", v)}
                           className="w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg"
@@ -220,7 +220,7 @@ const MiEstructura = ({
                       className="bg-white border p-2 mt-2 rounded flex flex-col gap-2 sm:flex-row sm:justify-between"
                     >
                       <DatosPersona persona={v} rol="Votante" />
-                      <div className="flex justify-end gap-2">
+                      <div className="flex gap-2">
                         <button
                           onClick={() => abrirTelefono("votante", v)}
                           className="w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg"
@@ -249,7 +249,7 @@ const MiEstructura = ({
               className="bg-white border p-3 mt-2 rounded flex flex-col gap-2 sm:flex-row sm:justify-between"
             >
               <DatosPersona persona={v} rol="Votante" />
-              <div className="flex justify-end gap-2">
+              <div className="flex gap-2">
                 <button
                   onClick={() => abrirTelefono("votante", v)}
                   className="w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg"

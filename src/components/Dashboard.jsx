@@ -1146,7 +1146,7 @@ const descargarPDF = async () => {
                   </div>
                 </div>
 
-                <div className="flex gap-2 justify-end shrink-0">
+                <div className="flex gap-2 shrink-0">
                   <button
                     onClick={() => abrirTelefono(tipo, persona)}
                     className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
@@ -1345,7 +1345,7 @@ const descargarPDF = async () => {
                                           </div>
                                         )}
                                       </div>
-                                      <div className="flex gap-2 shrink-0 justify-end">
+                            <div className="flex gap-2 shrink-0">
                                         <button
                                           onClick={() => abrirTelefono("votante", v)}
                                           className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
@@ -1490,7 +1490,7 @@ const descargarPDF = async () => {
                                 </div>
                               )}
                             </div>
-                            <div className="flex gap-2 shrink-0 justify-end">
+                        <div className="flex gap-2 shrink-0">
                               <button
                                 onClick={() => abrirTelefono("votante", v)}
                                 className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
@@ -1565,7 +1565,7 @@ const descargarPDF = async () => {
                             </div>
                           )}
                         </div>
-                        <div className="flex gap-2 shrink-0 justify-end">
+        <div className="flex gap-2 shrink-0">
                           <button
                             onClick={() => abrirTelefono("votante", v)}
                             className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
@@ -1637,7 +1637,7 @@ const descargarPDF = async () => {
             </div>
           )}
         </div>
-        <div className="flex gap-2 shrink-0 justify-end">
+              <div className="flex gap-2 shrink-0">
           <button
             onClick={() => abrirTelefono("votante", v)}
             className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
