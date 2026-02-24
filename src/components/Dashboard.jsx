@@ -69,6 +69,9 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [isVotoUndoing, setIsVotoUndoing] = useState(false);
   const [isConfirmVotoLoading, setIsConfirmVotoLoading] = useState(false);
 
+  // Loading
+  const [loadingEstructura, setLoadingEstructura] = useState(true);
+
   // PDF MENU (ESTO FALTABA)
 const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
 
@@ -125,6 +128,8 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
   // ======================= RECARGAR ESTRUCTURA =======================
   const recargarEstructura = async () => {
     try {
+      setLoadingEstructura(true);
+      
       // Asegurar padrón cargado para merge
       let padronData = padron;
       if (!padronData || padronData.length === 0) {
@@ -167,6 +172,8 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
       });
     } catch (e) {
       console.error("Error recargando estructura:", e);
+    } finally {
+      setLoadingEstructura(false);
     }
   };
 
@@ -883,6 +890,14 @@ const descargarPDF = async () => {
   // ======================= UI =======================
   return (
     <div className="min-h-screen bg-gray-100">
+      {/* SPLASH SCREEN DE CARGA */}
+      {loadingEstructura && (
+        <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center h-full">
+          <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-red-600 font-semibold text-lg">Cargando estructura</p>
+        </div>
+      )}
+
       {/* HEADER */}
       <div className="bg-red-600 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex flex-wrap sm:flex-nowrap justify-between items-center gap-3">
