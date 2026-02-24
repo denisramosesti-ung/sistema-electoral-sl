@@ -1224,7 +1224,7 @@ const descargarPDF = async () => {
                     className="border rounded-lg mb-2 sm:mb-3 bg-red-50/40"
                   >
                     <div
-                      className="flex items-start justify-between p-3 sm:p-4 cursor-pointer gap-3"
+                      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 cursor-pointer"
                       onClick={() => toggleExpand(coord.ci)}
                     >
                       <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
@@ -1422,7 +1422,7 @@ const descargarPDF = async () => {
                     className="border rounded-lg mb-2 sm:mb-3 bg-red-50/40"
                   >
                     <div
-                      className="flex items-start justify-between p-3 sm:p-4 cursor-pointer gap-3"
+                      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 cursor-pointer"
                       onClick={() => toggleExpand(sub.ci)}
                     >
                       <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
