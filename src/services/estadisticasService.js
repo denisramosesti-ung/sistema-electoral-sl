@@ -9,21 +9,33 @@ export const getEstadisticas = (estructura, currentUser) => {
     const subcoordinadores = estructura.subcoordinadores.length;
     const votantes = estructura.votantes.length;
 
-    // Votos confirmados
+    // Confirmed subs
+    const subsConfirmados = estructura.subcoordinadores.filter(
+      (s) => s.confirmado === true
+    ).length;
+
+    // Confirmed voters
     const votosConfirmados = estructura.votantes.filter(
       (v) => v.voto_confirmado === true
     ).length;
+
+    // Total confirmable = subs + voters; confirmed = confirmedSubs + confirmedVoters
+    const totalConfirmable = subcoordinadores + votantes;
+    const totalConfirmados = subsConfirmados + votosConfirmados;
     const porcentajeConfirmados =
-      votantes > 0 ? Math.round((votosConfirmados / votantes) * 100) : 0;
+      totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
     return {
       coordinadores,
       subcoordinadores,
+      subsConfirmados,
       votantes,
       totalRed: coordinadores + subcoordinadores + votantes,
       totalVotantes: votantes,
+      totalConfirmable,
+      totalConfirmados,
       votosConfirmados,
-      votosPendientes: votantes - votosConfirmados,
+      votosPendientes: totalConfirmable - totalConfirmados,
       porcentajeConfirmados,
     };
   }
@@ -52,8 +64,11 @@ export const getEstadisticas = (estructura, currentUser) => {
       0
     );
 
-    // Total voters = direct + indirect (subs are NOT voters, no inflation)
+    // Total voters = direct + indirect
     const totalVotantes = votantesDirectos.length + votantesIndirectos;
+
+    // Confirmed subs
+    const subsConfirmados = subs.filter((s) => s.confirmado === true).length;
 
     // Confirmed votes: direct confirmed + indirect confirmed
     const votosDirectosConfirmados = votantesDirectos.filter(
@@ -73,18 +88,23 @@ export const getEstadisticas = (estructura, currentUser) => {
 
     const votosConfirmados = votosDirectosConfirmados + votosIndirectosConfirmados;
 
-    // Percentage based on actual voters only
+    // Total confirmable = subs + all voters; confirmed = confirmedSubs + confirmedVoters
+    const totalConfirmable = subs.length + totalVotantes;
+    const totalConfirmados = subsConfirmados + votosConfirmados;
     const porcentajeConfirmados =
-      totalVotantes > 0 ? Math.round((votosConfirmados / totalVotantes) * 100) : 0;
+      totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
     return {
       subcoordinadores: subs.length,
+      subsConfirmados,
       votantesDirectos: votantesDirectos.length,
       votantesIndirectos,
       totalRed: 1 + subs.length + totalVotantes,
       totalVotantes,
+      totalConfirmable,
+      totalConfirmados,
       votosConfirmados,
-      votosPendientes: totalVotantes - votosConfirmados,
+      votosPendientes: totalConfirmable - totalConfirmados,
       porcentajeConfirmados,
     };
   }
@@ -110,6 +130,8 @@ export const getEstadisticas = (estructura, currentUser) => {
       votantes: misVotantes.length,
       totalRed: 1 + misVotantes.length,
       totalVotantes: misVotantes.length,
+      totalConfirmable: misVotantes.length,
+      totalConfirmados: votosConfirmados,
       votosConfirmados,
       votosPendientes: misVotantes.length - votosConfirmados,
       porcentajeConfirmados,

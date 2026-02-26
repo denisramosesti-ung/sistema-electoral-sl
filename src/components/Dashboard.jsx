@@ -302,6 +302,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [isVotoUndoing, setIsVotoUndoing] = useState(false);
   const [isConfirmVotoLoading, setIsConfirmVotoLoading] = useState(false);
 
+  // Sub confirmation state (uses subcoordinadores.confirmado column)
+  const [confirmSubModalOpen, setConfirmSubModalOpen] = useState(false);
+  const [confirmSubTarget, setConfirmSubTarget] = useState(null);
+  const [isSubUndoing, setIsSubUndoing] = useState(false);
+  const [isConfirmSubLoading, setIsConfirmSubLoading] = useState(false);
+
   const [loadingEstructura, setLoadingEstructura] = useState(true);
 
   // ======================= HELPERS =======================
@@ -504,6 +510,58 @@ const Dashboard = ({ currentUser, onLogout }) => {
     }
   };
 
+  // ======================= CONFIRM SUB =======================
+  const abrirConfirmSub = (sub) => {
+    setConfirmSubTarget(sub);
+    setIsSubUndoing(false);
+    setConfirmSubModalOpen(true);
+  };
+
+  const abrirAnularConfirmSub = (sub) => {
+    setConfirmSubTarget(sub);
+    setIsSubUndoing(true);
+    setConfirmSubModalOpen(true);
+  };
+
+  const handleConfirmSub = async () => {
+    if (!confirmSubTarget) return;
+    setIsConfirmSubLoading(true);
+    try {
+      const newStatus = !isSubUndoing;
+      const targetCI = normalizeCI(confirmSubTarget.ci);
+
+      const { error } = await supabase
+        .from("subcoordinadores")
+        .update({ confirmado: newStatus })
+        .eq("ci", targetCI);
+
+      if (error) {
+        console.error("Error confirmando sub:", error);
+        alert(error.message || "Error procesando confirmación de subcoordinador");
+        setIsConfirmSubLoading(false);
+        return;
+      }
+
+      // Update local state instantly
+      setEstructura((prev) => ({
+        ...prev,
+        subcoordinadores: prev.subcoordinadores.map((s) =>
+          normalizeCI(s.ci) === targetCI
+            ? { ...s, confirmado: newStatus }
+            : s
+        ),
+      }));
+
+      setConfirmSubModalOpen(false);
+      setConfirmSubTarget(null);
+    } catch (e) {
+      console.error("Error confirmando sub:", e);
+      alert("Error procesando confirmación de subcoordinador");
+    } finally {
+      setIsConfirmSubLoading(false);
+    }
+  };
+
   // ======================= LOGOUT =======================
   const handleLogout = () => {
     setExpandedCoords({});
@@ -698,12 +756,17 @@ const Dashboard = ({ currentUser, onLogout }) => {
     const map = {};
     (estructura.coordinadores || []).forEach((coord) => {
       const ci = normalizeCI(coord.ci);
+      const subs = (estructura.subcoordinadores || []).filter(
+        (s) => normalizeCI(s.coordinador_ci) === ci
+      );
       const voters = (estructura.votantes || []).filter(
         (v) => normalizeCI(v.coordinador_ci) === ci
       );
+      const subsConfirmed = subs.filter((s) => s.confirmado === true).length;
+      const votersConfirmed = voters.filter((v) => v.voto_confirmado === true).length;
       map[ci] = {
-        total: voters.length,
-        confirmed: voters.filter((v) => v.voto_confirmado === true).length,
+        total: subs.length + voters.length,
+        confirmed: subsConfirmed + votersConfirmed,
       };
     });
     return map;
@@ -876,15 +939,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
               <StatCard label="Coordinadores" value={stats?.coordinadores} icon={Users} />
               <StatCard label="Subcoordinadores" value={stats?.subcoordinadores} icon={Users} />
               <StatCard label="Votantes" value={stats?.votantes} icon={Users} />
-              <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
+              <StatCard label="Confirmados" value={stats?.totalConfirmados} icon={CheckCircle2} />
               <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
             </div>
           )}
           {currentUser.role === "superadmin" && (
             <div className="mt-3">
               <VoteProgressCard
-                confirmed={stats?.votosConfirmados}
-                total={stats?.totalVotantes}
+                confirmed={stats?.totalConfirmados}
+                total={stats?.totalConfirmable}
                 percentage={stats?.porcentajeConfirmados}
               />
             </div>
@@ -896,15 +959,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
               <StatCard label="Subcoordinadores" value={stats?.subcoordinadores} icon={Users} />
               <StatCard label="Votantes directos" value={stats?.votantesDirectos} icon={Users} />
               <StatCard label="Total votantes" value={stats?.totalVotantes} icon={Users} />
-              <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
+              <StatCard label="Confirmados" value={stats?.totalConfirmados} icon={CheckCircle2} />
               <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
             </div>
           )}
           {currentUser.role === "coordinador" && (
             <div className="mt-3">
               <VoteProgressCard
-                confirmed={stats?.votosConfirmados}
-                total={stats?.totalVotantes}
+                confirmed={stats?.totalConfirmados}
+                total={stats?.totalConfirmable}
                 percentage={stats?.porcentajeConfirmados}
               />
             </div>
@@ -914,15 +977,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               <StatCard label="Total red" value={stats?.totalRed} icon={TrendingUp} accent />
               <StatCard label="Mis votantes" value={stats?.votantes} icon={Users} />
-              <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
+              <StatCard label="Confirmados" value={stats?.totalConfirmados} icon={CheckCircle2} />
               <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
             </div>
           )}
           {currentUser.role === "subcoordinador" && (
             <div className="mt-3">
               <VoteProgressCard
-                confirmed={stats?.votosConfirmados}
-                total={stats?.totalVotantes}
+                confirmed={stats?.totalConfirmados}
+                total={stats?.totalConfirmable}
                 percentage={stats?.porcentajeConfirmados}
               />
             </div>
@@ -1187,6 +1250,14 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                           onCopy={copyToClipboard}
                                           counter={<VoteCounter confirmed={subCounts.confirmed} total={subCounts.total} />}
                                         />
+                                        {sub.confirmado && (
+                                          <div className="mt-1">
+                                            <Badge variant="green">
+                                              <Check className="w-3 h-3 mr-1" />
+                                              Sub confirmado
+                                            </Badge>
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                     <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -1238,6 +1309,40 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                 Sin subcoordinadores asignados.
                               </p>
                             )}
+
+                            {/* Direct voters of this coordinator */}
+                            {(() => {
+                              const directVoters = (estructura.votantes || []).filter(
+                                (v) => normalizeCI(v.asignado_por) === coordCI
+                              );
+                              if (directVoters.length === 0) return null;
+                              return (
+                                <div className="border border-slate-200 rounded-lg bg-white overflow-hidden">
+                                  <div className="px-3 py-2 bg-slate-50 border-b border-slate-100">
+                                    <p className="font-semibold text-xs text-slate-600 flex items-center gap-1.5">
+                                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                                      Votantes directos del coordinador
+                                      <span className="text-slate-400 font-normal">({directVoters.length})</span>
+                                    </p>
+                                  </div>
+                                  <div className="p-2.5 space-y-1.5">
+                                    {directVoters.map((v) => (
+                                      <VotanteRow
+                                        key={v.ci}
+                                        v={v}
+                                        onTelefono={abrirTelefono}
+                                        onDireccion={abrirDireccion}
+                                        onConfirmar={abrirConfirmVoto}
+                                        onAnular={abrirAnularConfirmacion}
+                                        onQuitar={quitarPersona}
+                                        canConfirmar={canConfirmarVoto}
+                                        canAnular={canAnularConfirmacion}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })()}
                           </div>
                         </div>
                       )}
@@ -1274,9 +1379,27 @@ const Dashboard = ({ currentUser, onLogout }) => {
                               onCopy={copyToClipboard}
                               counter={<VoteCounter confirmed={subCounts.confirmed} total={subCounts.total} />}
                             />
+                            {sub.confirmado && (
+                              <div className="mt-1">
+                                <Badge variant="green">
+                                  <Check className="w-3 h-3 mr-1" />
+                                  Sub confirmado
+                                </Badge>
+                              </div>
+                            )}
                           </div>
                         </div>
                         <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                          {!sub.confirmado && (
+                            <ActionBtn onClick={() => abrirConfirmSub(sub)} title="Confirmar subcoordinador" variant="success-solid">
+                              <Check className="w-3.5 h-3.5" />
+                            </ActionBtn>
+                          )}
+                          {sub.confirmado && (
+                            <ActionBtn onClick={() => abrirAnularConfirmSub(sub)} title="Anular confirmación sub" variant="danger">
+                              <X className="w-3.5 h-3.5" />
+                            </ActionBtn>
+                          )}
                           <ActionBtn onClick={() => abrirTelefono("subcoordinador", sub)} title="Editar teléfono" variant="green">
                             <Phone className="w-3.5 h-3.5" />
                           </ActionBtn>
@@ -1424,6 +1547,20 @@ const Dashboard = ({ currentUser, onLogout }) => {
         onCancel={() => { setConfirmVotoModalOpen(false); setConfirmVotoTarget(null); setIsVotoUndoing(false); }}
         onConfirm={handleConfirmVoto}
         isLoading={isConfirmVotoLoading}
+      />
+
+      {/* Sub confirmation modal — reuses same visual pattern with custom labels */}
+      <ConfirmVotoModal
+        open={confirmSubModalOpen}
+        votante={confirmSubTarget}
+        isUndoing={isSubUndoing}
+        onCancel={() => { setConfirmSubModalOpen(false); setConfirmSubTarget(null); setIsSubUndoing(false); }}
+        onConfirm={handleConfirmSub}
+        isLoading={isConfirmSubLoading}
+        titleConfirm="Confirmar Subcoordinador"
+        titleUndo="Anular Confirmación de Sub"
+        descConfirm="¿Está seguro que desea confirmar a este subcoordinador? Esto indica que el subcoordinador ha sido verificado y está activo."
+        descUndo="¿Está seguro que desea anular la confirmación de este subcoordinador? El registro volverá al estado pendiente."
       />
     </div>
   );

@@ -8,6 +8,10 @@ const ConfirmVotoModal = ({
   onCancel,
   onConfirm,
   isLoading,
+  titleConfirm = "Confirmar Voto",
+  titleUndo = "Anular Confirmación",
+  descConfirm = "¿Está seguro que desea confirmar el voto de esta persona? Esta acción quedará registrada en el sistema.",
+  descUndo = "¿Está seguro que desea anular la confirmación de voto de esta persona? El registro volverá al estado pendiente.",
 }) => {
   if (!open || !votante) return null;
 
@@ -32,7 +36,7 @@ const ConfirmVotoModal = ({
               )}
             </div>
             <h3 className="text-base font-bold text-slate-800">
-              {isUndoing ? "Anular Confirmación" : "Confirmar Voto"}
+              {isUndoing ? titleUndo : titleConfirm}
             </h3>
           </div>
           <button
@@ -55,9 +59,7 @@ const ConfirmVotoModal = ({
           </div>
 
           <p className="text-sm text-slate-600 leading-relaxed">
-            {isUndoing
-              ? "¿Está seguro que desea anular la confirmación de voto de esta persona? El registro volverá al estado pendiente."
-              : "¿Está seguro que desea confirmar el voto de esta persona? Esta acción quedará registrada en el sistema."}
+            {isUndoing ? descUndo : descConfirm}
           </p>
         </div>
 
