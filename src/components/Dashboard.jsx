@@ -14,7 +14,7 @@ import {
   Check,
   X,
   Download,
-  MapPin,
+  Pencil,
 } from "lucide-react";
 
 import AddPersonModal from "../AddPersonModal";
@@ -51,6 +51,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [modalType, setModalType] = useState("");
   const [expandedCoords, setExpandedCoords] = useState({});
+  const [expandedSubs, setExpandedSubs] = useState({});
   const [searchCI, setSearchCI] = useState("");
 
   // Teléfono
@@ -69,12 +70,11 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const [isVotoUndoing, setIsVotoUndoing] = useState(false);
   const [isConfirmVotoLoading, setIsConfirmVotoLoading] = useState(false);
 
+  // PDF MENU
+  const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
+
   // Loading
-  const [loadingEstructura, setLoadingEstructura] = useState(true);
-
-  // PDF MENU (ESTO FALTABA)
-const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
 
   // ======================= HELPERS UI =======================
   const copyToClipboard = async (text) => {
@@ -89,7 +89,26 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
 
   const toggleExpand = (ci) => {
     const key = normalizeCI(ci);
-    setExpandedCoords((prev) => ({ ...prev, [key]: !prev[key] }));
+    setExpandedCoords((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const toggleCoord = (ci) => {
+    const key = normalizeCI(ci);
+    setExpandedCoords((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const toggleSub = (ci) => {
+    const key = normalizeCI(ci);
+    setExpandedSubs((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
   };
 
   // ======================= CARGAR PADRÓN COMPLETO =======================
@@ -127,10 +146,8 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
 
   // ======================= RECARGAR ESTRUCTURA =======================
   const recargarEstructura = async () => {
+    setIsLoading(true);
     try {
-      setLoadingEstructura(true);
-      
-      // Asegurar padrón cargado para merge
       let padronData = padron;
       if (!padronData || padronData.length === 0) {
         const { data: p } = await supabase.from("padron").select("*");
@@ -161,8 +178,14 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
         (arr || []).map((x) => {
           const ci = normalizeCI(x.ci);
           const p = padronMap.get(ci);
-          // Primero el padrón, luego x para que direccion_override y telefono no sean sobrescritos
-          return { ...(p || {}), ...x, ci };
+          return {
+            ...(p || {}),
+            ...x,
+            ci,
+            coordinador_ci: x.coordinador_ci ? normalizeCI(x.coordinador_ci) : null,
+            asignado_por: x.asignado_por ? normalizeCI(x.asignado_por) : null,
+            direccion: x.direccion_override || p?.direccion || null,
+          };
         });
 
       setEstructura({
@@ -173,7 +196,7 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
     } catch (e) {
       console.error("Error recargando estructura:", e);
     } finally {
-      setLoadingEstructura(false);
+      setIsLoading(false);
     }
   };
 
@@ -189,486 +212,384 @@ const [pdfMenuOpen, setPdfMenuOpen] = useState(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
-// ======================= PERMISOS (RBAC) =======================
-const getMiCoordinadorCI = () => {
-  // Si soy coordinador, mi coordinador_ci soy yo
-  if (currentUser?.role === "coordinador") return normalizeCI(currentUser.ci);
-
-  // Si soy subcoordinador, tengo que mirar mi fila en subcoordinadores
-  if (currentUser?.role === "subcoordinador") {
-    const sub = (estructura.subcoordinadores || []).find(
-      (s) => normalizeCI(s.ci) === normalizeCI(currentUser.ci)
-    );
-    return normalizeCI(sub?.coordinador_ci);
-  }
-
-  return null;
-};
-
-// Puede editar teléfono?
-const canEditarTelefono = (tipo, persona) => {
-  const role = currentUser?.role;
-  if (!role || !persona) return false;
-
-  if (role === "superadmin") return true;
-
-  // Coordinador: puede editar teléfono de su red (subs + votantes de su coordinador_ci)
-  if (role === "coordinador") {
-    const miCoordCI = normalizeCI(currentUser.ci);
-
-    if (tipo === "subcoordinador") {
-      return normalizeCI(persona.coordinador_ci) === miCoordCI;
-    }
-    if (tipo === "votante") {
-      return normalizeCI(persona.coordinador_ci) === miCoordCI;
-    }
-    // coordinador editando otro coordinador: NO
-    return false;
-  }
-
-  // Subcoordinador: solo sus votantes directos
-  if (role === "subcoordinador") {
-    if (tipo !== "votante") return false;
-    return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
-  }
-
-  return false;
-};
-
-// Puede eliminar?
-const canEliminar = (tipo, persona) => {
-  const role = currentUser?.role;
-  if (!role || !persona) return false;
-
-  if (role === "superadmin") return true;
-
-  if (role === "coordinador") {
-    const miCoordCI = normalizeCI(currentUser.ci);
-
-    // puede eliminar sus subcoordinadores
-    if (tipo === "subcoordinador") {
-      return normalizeCI(persona.coordinador_ci) === miCoordCI;
-    }
-
-    // puede eliminar votantes de su red
-    if (tipo === "votante") {
-      return normalizeCI(persona.coordinador_ci) === miCoordCI;
-    }
-
-    // no puede eliminar coordinadores
-    return false;
-  }
-
-  if (role === "subcoordinador") {
-    // solo puede eliminar sus votantes directos
-    if (tipo !== "votante") return false;
-    return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
-  }
-
-  return false;
-};
-
-// ======================= CONFIRMACIÓN DE VOTO =======================
-
-// Verificar permisos para confirmar voto
-const canConfirmarVoto = (votante) => {
-  const role = currentUser?.role;
-  if (!role || !votante) return false;
-
-  // Superadmin no puede confirmar (no tiene rol de coordinador/subcoordinador)
-  if (role === "superadmin") return false;
-
-  // Coordinador puede confirmar votantes de su red
-  if (role === "coordinador") {
-    const miCoordCI = normalizeCI(currentUser.ci);
-    // Si el votante tiene coordinador_ci igual al del coordinador actual
-    return normalizeCI(votante.coordinador_ci) === miCoordCI;
-  }
-
-  // Subcoordinador solo puede confirmar sus votantes directos
-  if (role === "subcoordinador") {
-    return normalizeCI(votante.asignado_por) === normalizeCI(currentUser.ci);
-  }
-
-  return false;
-};
-
-// Verificar permisos para anular confirmación (solo Coordinador)
-const canAnularConfirmacion = (votante) => {
-  const role = currentUser?.role;
-  if (!role || !votante) return false;
-
-  // Solo Coordinador puede anular
-  if (role === "coordinador") {
-    const miCoordCI = normalizeCI(currentUser.ci);
-    return normalizeCI(votante.coordinador_ci) === miCoordCI;
-  }
-
-  return false;
-};
-
-// Abrir modal de confirmación
-const abrirConfirmVoto = (votante) => {
-  if (!canConfirmarVoto(votante)) return;
-  setConfirmVotoTarget(votante);
-  setIsVotoUndoing(false);
-  setConfirmVotoModalOpen(true);
-};
-
-// Abrir modal de anulación
-const abrirAnularConfirmacion = (votante) => {
-  if (!canAnularConfirmacion(votante)) return;
-  setConfirmVotoTarget(votante);
-  setIsVotoUndoing(true);
-  setConfirmVotoModalOpen(true);
-};
-
-// Confirmar/Anular voto
-const handleConfirmVoto = async () => {
-  if (!confirmVotoTarget) return;
-
-  setIsConfirmVotoLoading(true);
-  try {
-    const newStatus = !isVotoUndoing;
-    const { error } = await supabase
-      .from("votantes")
-      .update({ voto_confirmado: newStatus })
-      .eq("ci", confirmVotoTarget.ci);
-
-    if (error) {
-      console.error("Error confirmando voto:", error);
-      alert(error.message || "Error procesando confirmación");
-      setIsConfirmVotoLoading(false);
-      return;
-    }
-
-    // Recargar estructura y cerrar modal
-    setConfirmVotoModalOpen(false);
-    setConfirmVotoTarget(null);
-    await recargarEstructura();
-  } catch (e) {
-    console.error("Error confirmando voto:", e);
-    alert("Error procesando confirmación");
-  } finally {
-    setIsConfirmVotoLoading(false);
-  }
-};
-
- // ======================= BUSCADOR INTERNO POR CI (SEGÚN ROL) =======================
-// - Superadmin: busca en toda la estructura (coords + subs + votantes). Si no está, muestra "padron" como fallback.
-// - Coordinador: busca SOLO dentro de su red (sus subcoordinadores + votantes directos + votantes de sus subcoordinadores).
-// - Subcoordinador: busca SOLO sus votantes directos.
-
-  // ======================= LOGOUT =======================
-  const handleLogout = () => {
-  setExpandedCoords({});
-  setSearchCI("");
-  onLogout?.();
-};
-
-
-  // ======================= TELÉFONO =======================
-
-// Abre el modal de teléfono
-// OJO: acá NO validamos permisos, solo abrimos.
-// La validación REAL se hace al guardar (backend lógico).
-const abrirTelefono = (tipo, p) => {
-  setPhoneTarget({ tipo, ...p });
-  setPhoneValue(p.telefono || "+595");
-  setPhoneModalOpen(true);
-};
-
-// Guarda el teléfono con VALIDACIÓN DE PERMISOS
-const guardarTelefono = async () => {
-  if (!phoneTarget) return;
-
-  // ======================= VALIDACIÓN DE PERMISOS =======================
-  // Superadmin: siempre permitido
-  if (currentUser.role !== "superadmin") {
-    // COORDINADOR
-    if (currentUser.role === "coordinador") {
-      const miCI = normalizeCI(currentUser.ci);
-
-      // Puede editar:
-      // - subcoordinadores de su red
-      // - votantes de su red
-      const perteneceAMiRed =
-        normalizeCI(phoneTarget.coordinador_ci) === miCI;
-
-      if (!perteneceAMiRed) {
-        alert("No tiene permiso para editar el teléfono de esta persona.");
-        return;
-      }
-
-      // Un coordinador NO puede editar otro coordinador
-      if (phoneTarget.tipo === "coordinador") {
-        alert("No tiene permiso para editar el teléfono de otro coordinador.");
-        return;
-      }
-    }
-
-    // SUBCOORDINADOR
-    if (currentUser.role === "subcoordinador") {
-      // Solo puede editar votantes
-      if (phoneTarget.tipo !== "votante") {
-        alert("No tiene permiso para editar esta persona.");
-        return;
-      }
-
-      // Solo sus votantes directos
-      const esMiVotante =
-        normalizeCI(phoneTarget.asignado_por) ===
-        normalizeCI(currentUser.ci);
-
-      if (!esMiVotante) {
-        alert("No tiene permiso para editar el teléfono de este votante.");
-        return;
-      }
-    }
-  }
-
-  // ======================= VALIDACIÓN DE TELÉFONO =======================
-  const telefono = String(phoneValue || "").trim();
-  if (!telefono) {
-    alert("Ingrese número de teléfono.");
-    return;
-  }
-
-  // ======================= RESOLVER TABLA =======================
-  let tabla = "votantes";
-  if (phoneTarget.tipo === "coordinador") tabla = "coordinadores";
-  if (phoneTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
-
-  // ======================= UPDATE EN SUPABASE =======================
-  const { error } = await supabase
-    .from(tabla)
-    .update({ telefono })
-    .eq("ci", phoneTarget.ci);
-
-  if (error) {
-    console.error("Error guardando teléfono:", error);
-    alert(error.message || "Error guardando teléfono");
-    return;
-  }
-
-  // ======================= LIMPIEZA Y RECARGA =======================
-  setPhoneModalOpen(false);
-  setPhoneTarget(null);
-  setPhoneValue("+595");
-  alert("Teléfono actualizado correctamente");
-  recargarEstructura();
-};
-
-  // ======================= DIRECCIÓN =======================
-
-// Abre el modal de dirección
-const abrirDireccion = (tipo, p) => {
-  setDireccionTarget({ tipo, ...p });
-  // Mostrar direccion_override si existe, si no mostrar direccion del padrón
-  const direccionMostrar = p.direccion_override || p.direccion || "";
-  setDireccionValue(direccionMostrar);
-  setDireccionModalOpen(true);
-};
-
-// Guarda la dirección con VALIDACIÓN DE PERMISOS
-const guardarDireccion = async () => {
-  if (!direccionTarget) return;
-
-  // ======================= VALIDACIÓN DE PERMISOS =======================
-  // Superadmin: siempre permitido
-  if (currentUser.role !== "superadmin") {
-    // COORDINADOR
-    if (currentUser.role === "coordinador") {
-      const miCI = normalizeCI(currentUser.ci);
-
-      // Puede editar:
-      // - subcoordinadores de su red
-      // - votantes de su red
-      const perteneceAMiRed =
-        normalizeCI(direccionTarget.coordinador_ci) === miCI;
-
-      if (!perteneceAMiRed) {
-        alert("No tiene permiso para editar la dirección de esta persona.");
-        return;
-      }
-
-      // Un coordinador NO puede editar otro coordinador
-      if (direccionTarget.tipo === "coordinador") {
-        alert("No tiene permiso para editar la dirección de otro coordinador.");
-        return;
-      }
-    }
-
-    // SUBCOORDINADOR
-    if (currentUser.role === "subcoordinador") {
-      // Solo puede editar votantes
-      if (direccionTarget.tipo !== "votante") {
-        alert("No tiene permiso para editar esta persona.");
-        return;
-      }
-
-      // Solo sus votantes directos
-      const esMiVotante =
-        normalizeCI(direccionTarget.asignado_por) ===
-        normalizeCI(currentUser.ci);
-
-      if (!esMiVotante) {
-        alert("No tiene permiso para editar la dirección de este votante.");
-        return;
-      }
-    }
-  }
-
-  // ======================= RESOLVER TABLA =======================
-  let tabla = "votantes";
-  if (direccionTarget.tipo === "coordinador") tabla = "coordinadores";
-  if (direccionTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
-
-  // ======================= UPDATE EN SUPABASE =======================
-  const direccion_override = String(direccionValue || "").trim();
-  
-  const { error } = await supabase
-    .from(tabla)
-    .update({ direccion_override })
-    .eq("ci", direccionTarget.ci);
-
-  if (error) {
-    console.error("Error guardando dirección:", error);
-    alert(error.message || "Error guardando dirección");
-    return;
-  }
-
-  // ======================= LIMPIEZA Y RECARGA =======================
-  setDireccionModalOpen(false);
-  setDireccionTarget(null);
-  setDireccionValue("");
-  alert("Dirección actualizada correctamente");
-  recargarEstructura();
-};
-
-
-  // ======================= AGREGAR PERSONA =======================
-const handleAgregarPersona = async (persona) => {
-  if (!modalType) return alert("Seleccione tipo.");
-
-  const ci = normalizeCI(persona.ci);
-  let tabla = "";
-  let data = {};
-
-  // ======================= COORDINADOR =======================
-  if (modalType === "coordinador") {
-    if (currentUser.role !== "superadmin") {
-      alert("Solo el superadmin puede agregar coordinadores.");
-      return;
-    }
-
-    const accessCode = generarAccessCode(8);
-
-    tabla = "coordinadores";
-    data = {
-      ci,
-      login_code: accessCode,
-      asignado_por_nombre: "Superadmin",
-    };
-
-    const { error } = await supabase.from(tabla).insert([data]);
-    if (error) {
-      console.error("Error creando coordinador:", error);
-      alert(error.message || "Error creando coordinador");
-      return;
-    }
-
-    alert(`Código de acceso del coordinador:\n\n${accessCode}`);
-    setShowAddModal(false);
-    recargarEstructura();
-    return;
-  }
-
-  // ======================= SUBCOORDINADOR =======================
-  if (modalType === "subcoordinador") {
-    if (currentUser.role !== "coordinador") {
-      alert("Solo un coordinador puede agregar subcoordinadores.");
-      return;
-    }
-
-    const accessCode = generarAccessCode(8);
-
-    tabla = "subcoordinadores";
-    data = {
-      ci,
-      coordinador_ci: normalizeCI(currentUser.ci),
-      login_code: accessCode,
-      asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
-    };
-
-    const { error } = await supabase.from(tabla).insert([data]);
-    if (error) {
-      console.error("Error creando subcoordinador:", error);
-      alert(error.message || "Error creando subcoordinador");
-      return;
-    }
-
-    alert(`Código de acceso del subcoordinador:\n\n${accessCode}`);
-    setShowAddModal(false);
-    recargarEstructura();
-    return;
-  }
-
-  // ======================= VOTANTE =======================
-  if (modalType === "votante") {
-    if (
-      currentUser.role !== "coordinador" &&
-      currentUser.role !== "subcoordinador"
-    ) {
-      alert("No permitido.");
-      return;
-    }
-
-    tabla = "votantes";
-
-    let coordinador_ci = null;
-
-    if (currentUser.role === "coordinador") {
-      coordinador_ci = normalizeCI(currentUser.ci);
-    } else {
+  // ======================= PERMISOS (RBAC) =======================
+  const getMiCoordinadorCI = () => {
+    if (currentUser?.role === "coordinador") return normalizeCI(currentUser.ci);
+    if (currentUser?.role === "subcoordinador") {
       const sub = (estructura.subcoordinadores || []).find(
         (s) => normalizeCI(s.ci) === normalizeCI(currentUser.ci)
       );
-      coordinador_ci = normalizeCI(sub?.coordinador_ci);
+      return normalizeCI(sub?.coordinador_ci);
+    }
+    return null;
+  };
+
+  const canEditarTelefono = (tipo, persona) => {
+    const role = currentUser?.role;
+    if (!role || !persona) return false;
+    if (role === "superadmin") return true;
+    if (role === "coordinador") {
+      const miCI = normalizeCI(currentUser.ci);
+      if (tipo === "subcoordinador") return normalizeCI(persona.coordinador_ci) === miCI;
+      if (tipo === "votante") return normalizeCI(persona.coordinador_ci) === miCI;
+      return false;
+    }
+    if (role === "subcoordinador") {
+      if (tipo !== "votante") return false;
+      return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
+    }
+    return false;
+  };
+
+  const canEliminar = (tipo, persona) => {
+    const role = currentUser?.role;
+    if (!role || !persona) return false;
+    if (role === "superadmin") return true;
+    if (role === "coordinador") {
+      const miCI = normalizeCI(currentUser.ci);
+      if (tipo === "subcoordinador") return normalizeCI(persona.coordinador_ci) === miCI;
+      if (tipo === "votante") return normalizeCI(persona.coordinador_ci) === miCI;
+      return false;
+    }
+    if (role === "subcoordinador") {
+      if (tipo !== "votante") return false;
+      return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
+    }
+    return false;
+  };
+
+  // ======================= CONFIRMACIÓN DE VOTO =======================
+  const canConfirmarVoto = (persona, tipo = "votante") => {
+    const role = currentUser?.role;
+    if (!role || !persona) return false;
+    if (role === "superadmin") return false;
+
+    if (tipo === "coordinador") {
+      return false;
     }
 
-    if (!coordinador_ci) {
-      alert("Error interno: no se pudo resolver coordinador_ci");
+    if (tipo === "subcoordinador") {
+      if (role === "coordinador") {
+        const miCoordCI = normalizeCI(currentUser.ci);
+        return normalizeCI(persona.coordinador_ci) === miCoordCI;
+      }
+      return false;
+    }
+
+    if (tipo === "votante") {
+      if (role === "coordinador") {
+        const miCoordCI = normalizeCI(currentUser.ci);
+        return normalizeCI(persona.coordinador_ci) === miCoordCI;
+      }
+      if (role === "subcoordinador") {
+        return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
+      }
+    }
+
+    return false;
+  };
+
+  const canAnularConfirmacion = (persona, tipo = "votante") => {
+    const role = currentUser?.role;
+    if (!role || !persona) return false;
+
+    if (tipo === "coordinador") {
+      return false;
+    }
+
+    if (tipo === "subcoordinador") {
+      if (role === "coordinador") {
+        const miCoordCI = normalizeCI(currentUser.ci);
+        return normalizeCI(persona.coordinador_ci) === miCoordCI;
+      }
+      return false;
+    }
+
+    if (tipo === "votante") {
+      if (role === "coordinador") {
+        const miCoordCI = normalizeCI(currentUser.ci);
+        return normalizeCI(persona.coordinador_ci) === miCoordCI;
+      }
+    }
+
+    return false;
+  };
+
+  const abrirConfirmVoto = (persona, tipo = "votante") => {
+    if (!canConfirmarVoto(persona, tipo)) return;
+    setConfirmVotoTarget({ ...persona, tipo });
+    setIsVotoUndoing(false);
+    setConfirmVotoModalOpen(true);
+  };
+
+  const abrirAnularConfirmacion = (persona, tipo = "votante") => {
+    if (!canAnularConfirmacion(persona, tipo)) return;
+    setConfirmVotoTarget({ ...persona, tipo });
+    setIsVotoUndoing(true);
+    setConfirmVotoModalOpen(true);
+  };
+
+  const handleConfirmVoto = async () => {
+    if (!confirmVotoTarget) return;
+    setIsConfirmVotoLoading(true);
+    try {
+      const newStatus = !isVotoUndoing;
+      const tipo = confirmVotoTarget.tipo || "votante";
+      
+      let tabla = "votantes";
+      if (tipo === "subcoordinador") tabla = "subcoordinadores";
+      if (tipo === "coordinador") tabla = "coordinadores";
+
+      const { error } = await supabase
+        .from(tabla)
+        .update({ voto_confirmado: newStatus })
+        .eq("ci", confirmVotoTarget.ci);
+      
+      if (error) {
+        console.error("Error confirmando voto:", error);
+        alert(error.message || "Error procesando confirmación");
+        setIsConfirmVotoLoading(false);
+        return;
+      }
+      setConfirmVotoModalOpen(false);
+      setConfirmVotoTarget(null);
+      await recargarEstructura();
+    } catch (e) {
+      console.error("Error confirmando voto:", e);
+      alert("Error procesando confirmación");
+    } finally {
+      setIsConfirmVotoLoading(false);
+    }
+  };
+
+  // ======================= LOGOUT =======================
+  const handleLogout = () => {
+    setExpandedCoords({});
+    setSearchCI("");
+    onLogout?.();
+  };
+
+  // ======================= TELÉFONO =======================
+  const abrirTelefono = (tipo, p) => {
+    setPhoneTarget({ tipo, ...p });
+    setPhoneValue(p.telefono || "+595");
+    setPhoneModalOpen(true);
+  };
+
+  const guardarTelefono = async () => {
+    if (!phoneTarget) return;
+
+    if (currentUser.role !== "superadmin") {
+      if (currentUser.role === "coordinador") {
+        const miCI = normalizeCI(currentUser.ci);
+        const perteneceAMiRed = normalizeCI(phoneTarget.coordinador_ci) === miCI;
+        if (!perteneceAMiRed) {
+          alert("No tiene permiso para editar el teléfono de esta persona.");
+          return;
+        }
+        if (phoneTarget.tipo === "coordinador") {
+          alert("No tiene permiso para editar el teléfono de otro coordinador.");
+          return;
+        }
+      }
+      if (currentUser.role === "subcoordinador") {
+        if (phoneTarget.tipo !== "votante") {
+          alert("No tiene permiso para editar esta persona.");
+          return;
+        }
+        const esMiVotante = normalizeCI(phoneTarget.asignado_por) === normalizeCI(currentUser.ci);
+        if (!esMiVotante) {
+          alert("No tiene permiso para editar el teléfono de este votante.");
+          return;
+        }
+      }
+    }
+
+    const telefono = String(phoneValue || "").trim();
+    if (!telefono) {
+      alert("Ingrese número de teléfono.");
       return;
     }
 
-    data = {
-      ci,
-      asignado_por: normalizeCI(currentUser.ci),
-      asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
-      coordinador_ci,
-    };
+    let tabla = "votantes";
+    if (phoneTarget.tipo === "coordinador") tabla = "coordinadores";
+    if (phoneTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
 
-    const { error } = await supabase.from(tabla).insert([data]);
+    const { error } = await supabase
+      .from(tabla)
+      .update({ telefono })
+      .eq("ci", phoneTarget.ci);
+
     if (error) {
-      console.error("Error creando votante:", error);
-      alert(error.message || "Error creando votante");
+      console.error("Error guardando teléfono:", error);
+      alert(error.message || "Error guardando teléfono");
       return;
     }
 
-    setShowAddModal(false);
+    setPhoneModalOpen(false);
+    setPhoneTarget(null);
+    setPhoneValue("+595");
     recargarEstructura();
-    return;
-  }
-};
+  };
+
+  // ======================= DIRECCIÓN =======================
+  const abrirDireccion = (tipo, p) => {
+    setDireccionTarget({ tipo, ...p });
+    setDireccionValue(p.direccion_override || "");
+    setDireccionModalOpen(true);
+  };
+
+  const guardarDireccion = async () => {
+    if (!direccionTarget) return;
+
+    if (currentUser.role !== "superadmin") {
+      if (currentUser.role === "coordinador") {
+        const miCI = normalizeCI(currentUser.ci);
+        const perteneceAMiRed = normalizeCI(direccionTarget.coordinador_ci) === miCI;
+        if (!perteneceAMiRed) {
+          alert("No tiene permiso para editar la dirección de esta persona.");
+          return;
+        }
+        if (direccionTarget.tipo === "coordinador") {
+          alert("No tiene permiso para editar la dirección de otro coordinador.");
+          return;
+        }
+      }
+      if (currentUser.role === "subcoordinador") {
+        if (direccionTarget.tipo !== "votante") {
+          alert("No tiene permiso para editar esta persona.");
+          return;
+        }
+        const esMiVotante = normalizeCI(direccionTarget.asignado_por) === normalizeCI(currentUser.ci);
+        if (!esMiVotante) {
+          alert("No tiene permiso para editar la dirección de este votante.");
+          return;
+        }
+      }
+    }
+
+    const direccion_override = String(direccionValue || "").trim();
+
+    let tabla = "votantes";
+    if (direccionTarget.tipo === "coordinador") tabla = "coordinadores";
+    if (direccionTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
+
+    const { error } = await supabase
+      .from(tabla)
+      .update({ direccion_override })
+      .eq("ci", direccionTarget.ci);
+
+    if (error) {
+      console.error("Error guardando dirección:", error);
+      alert(error.message || "Error guardando dirección");
+      return;
+    }
+
+    setDireccionModalOpen(false);
+    setDireccionTarget(null);
+    setDireccionValue("");
+    recargarEstructura();
+  };
+
+  // ======================= AGREGAR PERSONA =======================
+  const handleAgregarPersona = async (persona) => {
+    if (!modalType) return alert("Seleccione tipo.");
+
+    const ci = normalizeCI(persona.ci);
+    let tabla = "";
+    let data = {};
+
+    if (modalType === "coordinador") {
+      if (currentUser.role !== "superadmin") {
+        alert("Solo el superadmin puede agregar coordinadores.");
+        return;
+      }
+      const accessCode = generarAccessCode(8);
+      tabla = "coordinadores";
+      data = {
+        ci,
+        login_code: accessCode,
+        asignado_por_nombre: "Superadmin",
+      };
+      const { error } = await supabase.from(tabla).insert([data]);
+      if (error) {
+        console.error("Error creando coordinador:", error);
+        alert(error.message || "Error creando coordinador");
+        return;
+      }
+      alert(`Código de acceso del coordinador:\n\n${accessCode}`);
+      setShowAddModal(false);
+      recargarEstructura();
+      return;
+    }
+
+    if (modalType === "subcoordinador") {
+      if (currentUser.role !== "coordinador") {
+        alert("Solo un coordinador puede agregar subcoordinadores.");
+        return;
+      }
+      const accessCode = generarAccessCode(8);
+      tabla = "subcoordinadores";
+      data = {
+        ci,
+        coordinador_ci: normalizeCI(currentUser.ci),
+        login_code: accessCode,
+        asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
+      };
+      const { error } = await supabase.from(tabla).insert([data]);
+      if (error) {
+        console.error("Error creando subcoordinador:", error);
+        alert(error.message || "Error creando subcoordinador");
+        return;
+      }
+      alert(`Código de acceso del subcoordinador:\n\n${accessCode}`);
+      setShowAddModal(false);
+      recargarEstructura();
+      return;
+    }
+
+    if (modalType === "votante") {
+      if (currentUser.role !== "coordinador" && currentUser.role !== "subcoordinador") {
+        alert("No permitido.");
+        return;
+      }
+      tabla = "votantes";
+      let coordinador_ci = null;
+      if (currentUser.role === "coordinador") {
+        coordinador_ci = normalizeCI(currentUser.ci);
+      } else {
+        const sub = (estructura.subcoordinadores || []).find(
+          (s) => normalizeCI(s.ci) === normalizeCI(currentUser.ci)
+        );
+        coordinador_ci = normalizeCI(sub?.coordinador_ci);
+      }
+      if (!coordinador_ci) {
+        alert("Error interno: no se pudo resolver coordinador_ci");
+        return;
+      }
+      data = {
+        ci,
+        asignado_por: normalizeCI(currentUser.ci),
+        asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
+        coordinador_ci,
+      };
+      const { error } = await supabase.from(tabla).insert([data]);
+      if (error) {
+        console.error("Error creando votante:", error);
+        alert(error.message || "Error creando votante");
+        return;
+      }
+      setShowAddModal(false);
+      recargarEstructura();
+      return;
+    }
+  };
 
   // ======================= QUITAR PERSONA =======================
   const quitarPersona = async (ci, tipo) => {
     if (!window.confirm("¿Quitar persona?")) return;
-
     const isSuper = currentUser.role === "superadmin";
     ci = normalizeCI(ci);
-
     try {
       if (tipo === "coordinador") {
         if (!isSuper) return alert("Solo superadmin.");
@@ -677,16 +598,13 @@ const handleAgregarPersona = async (persona) => {
         await supabase.from("votantes").delete().eq("asignado_por", ci);
         await supabase.from("coordinadores").delete().eq("ci", ci);
       }
-
       if (tipo === "subcoordinador") {
         await supabase.from("votantes").delete().eq("asignado_por", ci);
         await supabase.from("subcoordinadores").delete().eq("ci", ci);
       }
-
       if (tipo === "votante") {
         await supabase.from("votantes").delete().eq("ci", ci);
       }
-
       recargarEstructura();
     } catch (e) {
       console.error("Error quitando persona:", e);
@@ -695,16 +613,15 @@ const handleAgregarPersona = async (persona) => {
   };
 
   // ======================= COMPONENTE DATOS PERSONA =======================
-  const DatosPersona = ({ persona, rol, loginCode }) => {
-    // Mostrar direccion_override si existe, si no mostrar direccion del padrón
-    const direccionMostrar = persona.direccion_override || persona.direccion;
-
+  const DatosPersona = ({ persona, rol, loginCode, onEditDireccion, hideName }) => {
     return (
-      <div className="space-y-1 text-xs sm:text-sm">
-        <p className="font-semibold truncate">
-          {persona.nombre || "-"} {persona.apellido || ""}
-        </p>
-        <p className="truncate">
+      <div className="space-y-1 text-xs md:text-sm">
+        {!hideName && (
+          <p className="font-semibold">
+            {persona.nombre || "-"} {persona.apellido || ""}
+          </p>
+        )}
+        <p>
           <b>CI:</b> {persona.ci}
         </p>
         {rol && (
@@ -727,727 +644,729 @@ const handleAgregarPersona = async (persona) => {
         {persona.local_votacion && <p className="truncate">Local: {persona.local_votacion}</p>}
         {persona.mesa && <p>Mesa: {persona.mesa}</p>}
         {persona.orden && <p>Orden: {persona.orden}</p>}
-        {direccionMostrar && <p className="truncate">Dirección: {direccionMostrar}</p>}
-        {persona.telefono && <p className="truncate">Tel: {persona.telefono}</p>}
+        {persona.direccion && (
+          <div>
+            <p>Dirección: {persona.direccion}</p>
+            {onEditDireccion && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEditDireccion();
+                }}
+                className="text-blue-600 hover:text-blue-800 text-xs inline-flex items-center gap-1 mt-1"
+              >
+                <Pencil className="w-3 h-3" /> Editar dirección
+              </button>
+            )}
+          </div>
+        )}
+        {persona.telefono && <p>Tel: {persona.telefono}</p>}
       </div>
     );
   };
 
-  // ======================= STATS =======================
-  const stats = useMemo(() => getEstadisticas(estructura, currentUser), [estructura, currentUser]);
+  // ======================= COMPONENTE VOTANTE CARD =======================
+  const VotanteCard = ({ v, showAnular = true }) => {
+    return (
+      <div key={v.ci} className="bg-white border-2 border-gray-100 hover:border-red-200 p-4 mb-3 rounded-xl shadow-sm hover:shadow-md transition-all flex justify-between items-start gap-4">
+        <div className="flex-1">
+          <DatosPersona 
+            persona={v} 
+            rol="Votante"
+            onEditDireccion={() => abrirDireccion("votante", v)}
+          />
+          {v.voto_confirmado && (
+            <div className="mt-3 inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold shadow-sm">
+              ✓ Voto Confirmado
+            </div>
+          )}
+          {!v.voto_confirmado && (
+            <div className="mt-3 inline-flex items-center px-3 py-1.5 bg-gray-200 text-gray-600 text-xs rounded-full font-semibold">
+              Pendiente
+            </div>
+          )}
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={() => abrirTelefono("votante", v)}
+            className="inline-flex items-center justify-center w-11 h-11 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
+          >
+            <Phone className="w-5 h-5" />
+          </button>
+          {!v.voto_confirmado && canConfirmarVoto(v, "votante") && (
+            <button
+              onClick={() => abrirConfirmVoto(v, "votante")}
+              className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
+              title="Confirmar voto"
+            >
+              <Check className="w-5 h-5" />
+            </button>
+          )}
+          {showAnular !== false && v.voto_confirmado && canAnularConfirmacion(v, "votante") && (
+            <button
+              onClick={() => abrirAnularConfirmacion(v, "votante")}
+              className="inline-flex items-center justify-center w-11 h-11 border-2 border-red-500 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
+              title="Anular confirmación"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+          <button
+            onClick={() => quitarPersona(v.ci, "votante")}
+            className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
+          >
+            <Trash2 className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    );
+  };
 
-  // ======================= DISPONIBLES PARA MODAL =======================
+  // ======================= NORMALIZAR TEXTO =======================
+  const normalizeText = (v) =>
+    (v ?? "")
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  // ======================= ESTADÍSTICAS =======================
+  const stats = useMemo(
+    () => getEstadisticas(estructura, currentUser),
+    [estructura, currentUser]
+  );
+
+  // ======================= DISPONIBLES =======================
   const disponibles = useMemo(
     () => getPersonasDisponibles(padron, estructura),
     [padron, estructura]
   );
 
-  // ======================= BUSCADOR INTERNO (SEGÚN ROL) =======================
-// Busca SOLO dentro de lo que el rol puede ver (estructura).
-// Soporta CI, nombre, apellido, nombre+apellido (en cualquier orden), y acentos.
+  // ======================= RESULTADOS BÚSQUEDA =======================
+  const resultadosBusqueda = useMemo(() => {
+    const term = normalizeText(searchCI);
+    if (!term) return [];
 
-const normalizeText = (v) =>
-  (v ?? "")
-    .toString()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // quita acentos
-    .replace(/\s+/g, " ")
-    .trim();
+    const all = [
+      ...(estructura.coordinadores || []).map((c) => ({ tipo: "coordinador", persona: c })),
+      ...(estructura.subcoordinadores || []).map((s) => ({ tipo: "subcoordinador", persona: s })),
+      ...(estructura.votantes || []).map((v) => ({ tipo: "votante", persona: v })),
+    ];
 
-const personasVisibles = useMemo(() => {
-  const role = currentUser?.role;
-  const miCI = normalizeCI(currentUser?.ci);
+    const allowed = all.filter(({ tipo, persona }) => {
+      if (currentUser.role === "superadmin") return true;
+      if (currentUser.role === "coordinador") {
+        const miCI = normalizeCI(currentUser.ci);
+        if (tipo === "coordinador") return normalizeCI(persona.ci) === miCI;
+        return normalizeCI(persona.coordinador_ci) === miCI;
+      }
+      if (currentUser.role === "subcoordinador") {
+        if (tipo !== "votante") return false;
+        return normalizeCI(persona.asignado_por) === normalizeCI(currentUser.ci);
+      }
+      return false;
+    });
 
-  const coords = estructura.coordinadores || [];
-  const subs = estructura.subcoordinadores || [];
-  const vots = estructura.votantes || [];
-
-  // Vamos a devolver una lista plana con objetos { tipo, persona }
-  // tipo: "coordinador" | "subcoordinador" | "votante"
-  const out = [];
-  const pushUnique = (tipo, persona) => {
-    const key = `${tipo}:${normalizeCI(persona?.ci)}`;
-    if (!pushUnique._set) pushUnique._set = new Set();
-    if (pushUnique._set.has(key)) return;
-    pushUnique._set.add(key);
-    out.push({ tipo, persona });
-  };
-
-  // SUPERADMIN: ve todo
-  if (role === "superadmin") {
-    coords.forEach((p) => pushUnique("coordinador", p));
-    subs.forEach((p) => pushUnique("subcoordinador", p));
-    vots.forEach((p) => pushUnique("votante", p));
-    return out;
-  }
-
-  // COORDINADOR: ve sus subcoordinadores + sus votantes directos + votantes de sus subcoordinadores
-  if (role === "coordinador") {
-    const misSubs = subs.filter((s) => normalizeCI(s.coordinador_ci) === miCI);
-    const misSubsSet = new Set(misSubs.map((s) => normalizeCI(s.ci)));
-
-    misSubs.forEach((p) => pushUnique("subcoordinador", p));
-
-    // votantes directos del coordinador
-    vots
-      .filter((v) => normalizeCI(v.asignado_por) === miCI)
-      .forEach((p) => pushUnique("votante", p));
-
-    // votantes de mis subcoordinadores
-    vots
-      .filter((v) => misSubsSet.has(normalizeCI(v.asignado_por)))
-      .forEach((p) => pushUnique("votante", p));
-
-    return out;
-  }
-
-  // SUBCOORDINADOR: ve solo sus votantes directos
-  if (role === "subcoordinador") {
-    vots
-      .filter((v) => normalizeCI(v.asignado_por) === miCI)
-      .forEach((p) => pushUnique("votante", p));
-
-    return out;
-  }
-
-  // Otros roles: por defecto nada
-  return [];
-}, [estructura, currentUser]);
-
-const resultadosBusqueda = useMemo(() => {
-  const qRaw = normalizeText(searchCI);
-
-  if (!qRaw) return personasVisibles;
-
-  // tokens permite buscar "juan perez" y que encuentre aunque esté como "Perez Juan"
-  const tokens = qRaw.split(" ").filter(Boolean);
-
-  return personasVisibles.filter(({ persona }) => {
-    const ci = normalizeText(persona?.ci);
-    const nombre = normalizeText(persona?.nombre);
-    const apellido = normalizeText(persona?.apellido);
-
-    const full1 = `${nombre} ${apellido}`.trim();
-    const full2 = `${apellido} ${nombre}`.trim();
-
-    // Si el usuario puso varios tokens, exigimos que TODOS estén contenidos
-    return tokens.every((t) => {
+    return allowed.filter(({ persona }) => {
+      const ciNorm = normalizeText(persona.ci);
+      const nombreNorm = normalizeText(persona.nombre);
+      const apellidoNorm = normalizeText(persona.apellido);
+      const nombreCompleto = `${nombreNorm} ${apellidoNorm}`;
       return (
-        ci.includes(t) ||
-        nombre.includes(t) ||
-        apellido.includes(t) ||
-        full1.includes(t) ||
-        full2.includes(t)
+        ciNorm.includes(term) ||
+        nombreNorm.includes(term) ||
+        apellidoNorm.includes(term) ||
+        nombreCompleto.includes(term)
       );
     });
-  });
-}, [searchCI, personasVisibles]);
+  }, [searchCI, estructura, currentUser]);
 
-
-  // ======================= DESCARGAR REPORTE (jsPDF + autoTable) =======================
-const descargarPDF = async () => {
-  if (!currentUser) {
-    alert("Usuario no válido");
-    return;
-  }
-
-  try {
-    let doc;
-    let filename = "reporte";
-
-    if (currentUser.role === "superadmin") {
-      doc = generateSuperadminPDF({ estructura, currentUser });
-      filename = "reporte-superadmin";
-    } else if (currentUser.role === "coordinador") {
-      doc = generateCoordinadorPDF({ estructura, currentUser });
-      filename = "reporte-coordinador";
-    } else if (currentUser.role === "subcoordinador") {
-      doc = generateSubcoordinadorPDF({ estructura, currentUser });
-      filename = "reporte-subcoordinador";
-    } else {
-      alert("Rol no soportado para reportes");
+  // ======================= DESCARGAR PDF =======================
+  const descargarPDF = async () => {
+    if (!currentUser) {
+      alert("Usuario no válido");
       return;
     }
 
-    // Generar nombre de archivo con timestamp
-    const fecha = new Date();
-    const timestamp = fecha.toISOString().slice(0, 10);
-    const nombreArchivo = `${filename}-${timestamp}.pdf`;
+    try {
+      let doc;
+      let filename = "reporte";
 
-    // Descargar PDF
-    doc.save(nombreArchivo);
-  } catch (error) {
-    console.error("Error generando PDF:", error);
-    alert("Error al generar el reporte PDF");
-  }
-};
+      if (currentUser.role === "superadmin") {
+        doc = generateSuperadminPDF({ estructura, currentUser });
+        filename = "reporte-superadmin";
+      } else if (currentUser.role === "coordinador") {
+        doc = generateCoordinadorPDF({ estructura, currentUser });
+        filename = "reporte-coordinador";
+      } else if (currentUser.role === "subcoordinador") {
+        doc = generateSubcoordinadorPDF({ estructura, currentUser });
+        filename = "reporte-subcoordinador";
+      } else {
+        alert("Rol no soportado para reportes");
+        return;
+      }
 
+      const fecha = new Date();
+      const timestamp = fecha.toISOString().slice(0, 10);
+      const nombreArchivo = `${filename}-${timestamp}.pdf`;
 
-
-
+      doc.save(nombreArchivo);
+    } catch (error) {
+      console.error("Error generando PDF:", error);
+      alert("Error al generar el reporte PDF");
+    }
+  };
 
   // ======================= UI =======================
-  return (
-    <div className="min-h-screen bg-gray-100">
-      {/* SPLASH SCREEN DE CARGA */}
-      {loadingEstructura && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col items-center justify-center h-full">
-          <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-red-600 font-semibold text-lg">Cargando estructura</p>
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin h-12 w-12 border-4 border-red-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Cargando estructura...</p>
         </div>
-      )}
+      </div>
+    );
+  }
 
-      {/* HEADER */}
-      <div className="bg-red-600 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex flex-wrap sm:flex-nowrap justify-between items-center gap-3">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold truncate">Sistema Electoral</h1>
-            <p className="text-red-200 text-xs sm:text-sm mt-1 truncate">
-              {currentUser.nombre} {currentUser.apellido} —{" "}
-              {currentUser.role === "superadmin"
-                ? "⭐ Superadmin"
-                : currentUser.role === "coordinador"
-                ? "Coordinador"
-                : "Sub-coordinador"}
-            </p>
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      {/* HERO SUPERIOR */}
+      <div className="bg-gradient-to-r from-red-900 via-red-800 to-red-900 text-white shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-0 bg-black opacity-10"></div>
+        <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
+          <div className="flex justify-between items-start mb-8">
+            <div className="flex-1">
+              <h1 className="text-5xl font-extrabold mb-3 tracking-tight text-center">
+                Sistema Electoral - José "Chechito" Lopez 2026
+              </h1>
+              <p className="text-red-100 text-lg text-center font-medium">
+                {currentUser.nombre} {currentUser.apellido} •{" "}
+                {currentUser.role === "superadmin"
+                  ? "Superadmin"
+                  : currentUser.role === "coordinador"
+                  ? "Coordinador"
+                  : "Sub-coordinador"}
+              </p>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm px-5 py-2.5 rounded-lg transition-all border border-white/20"
+            >
+              <LogOut className="w-4 h-4" />
+              Salir
+            </button>
           </div>
-
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 bg-red-700 hover:bg-red-800 px-4 h-10 rounded-lg transition shrink-0"
-          >
-            <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline">Salir</span>
-          </button>
+          
+          {/* Porcentaje y Barra de Progreso */}
+          <div className="max-w-2xl mx-auto mt-8">
+            <div className="text-center mb-4">
+              <div className="text-7xl font-black mb-2">
+                {stats?.porcentajeConfirmados ?? 0}%
+              </div>
+              <p className="text-red-100 text-sm uppercase tracking-wider font-semibold">
+                Votos Confirmados
+              </p>
+            </div>
+            <div className="bg-white/20 rounded-full h-4 overflow-hidden backdrop-blur-sm">
+              <div 
+                className="bg-gradient-to-r from-green-400 to-green-500 h-full rounded-full transition-all duration-1000 ease-out shadow-lg"
+                style={{ width: `${stats?.porcentajeConfirmados ?? 0}%` }}
+              ></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* TARJETAS ESTADÍSTICAS */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        {currentUser.role === "superadmin" && (
-  <>
-    {/* COORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
-      <p className="text-gray-600 text-xs sm:text-sm">Coordinadores</p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
-        {stats?.coordinadores ?? 0}
-      </p>
-    </div>
+      {/* KPI GRANDES */}
+      <div className="max-w-7xl mx-auto px-6 -mt-8 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {currentUser.role === "superadmin" && (
+            <>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
+                <p className="text-6xl font-black text-gray-900">{stats?.votantesTotales ?? 0}</p>
+              </div>
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-green-100 text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
+                <p className="text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
+                <p className="text-6xl font-black text-gray-900">
+                  {(stats?.votantesTotales ?? 0) - (stats?.votosConfirmadosTotales ?? 0)}
+                </p>
+              </div>
+              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-red-100 text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
+                <p className="text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
+              </div>
+            </>
+          )}
 
-    {/* SUBCOORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
-      <p className="text-gray-600 text-xs sm:text-sm">Subcoordinadores</p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
-        {stats?.subcoordinadores ?? 0}
-      </p>
-    </div>
+          {currentUser.role === "coordinador" && (
+            <>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
+                <p className="text-6xl font-black text-gray-900">{stats?.total ?? 0}</p>
+              </div>
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-green-100 text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
+                <p className="text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
+                <p className="text-6xl font-black text-gray-900">
+                  {(stats?.total ?? 0) - (stats?.votosConfirmadosTotales ?? 0)}
+                </p>
+              </div>
+              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-red-100 text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
+                <p className="text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
+              </div>
+            </>
+          )}
 
-    {/* VOTANTES */}
-    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
-      <p className="text-gray-600 text-xs sm:text-sm">Votantes</p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
-        {stats?.votantes ?? 0}
-      </p>
-    </div>
-
-    {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-3 sm:p-4">
-      <p className="text-red-700 text-xs sm:text-sm font-semibold uppercase tracking-wide">
-        Votantes totales
-      </p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-red-700 mt-1">
-        {stats?.votantesTotales ?? 0}
-      </p>
-    </div>
-  </>
-)}
-
-
-        {currentUser.role === "coordinador" && (
-  <>
-    {/* SUBCOORDINADORES */}
-    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
-      <p className="text-gray-600 text-xs sm:text-sm">Subcoordinadores</p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
-        {stats?.subcoordinadores ?? 0}
-      </p>
-    </div>
-
-    {/* VOTANTES DIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
-      <p className="text-gray-600 text-xs sm:text-sm">Votantes directos</p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
-        {stats?.votantesDirectos ?? 0}
-      </p>
-    </div>
-
-    {/* VOTANTES INDIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
-      <p className="text-gray-600 text-xs sm:text-sm">Votantes indirectos</p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
-  {stats?.votantesIndirectos ?? 0}
-</p>
-
-    </div>
-
-    {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-3 sm:p-4">
-      <p className="text-red-700 text-xs sm:text-sm font-semibold uppercase tracking-wide">
-        Votantes totales
-      </p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-red-700 mt-1">
-        {stats?.total ?? 0}
-      </p>
-    </div>
-        </>)}
-
-        {currentUser.role === "subcoordinador" && (
-  <>
-    {/* VOTANTES DIRECTOS */}
-    <div className="bg-white rounded-lg shadow p-3 sm:p-4">
-      <p className="text-gray-600 text-xs sm:text-sm">Votantes directos</p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-red-600">
-        {stats?.votantes ?? 0}
-      </p>
-    </div>
-
-    {/* VOTANTES TOTALES (DESTACADO) */}
-    <div className="bg-red-50 border-2 border-red-500 rounded-lg shadow p-3 sm:p-4">
-      <p className="text-red-700 text-xs sm:text-sm font-semibold uppercase tracking-wide">
-        Votantes totales
-      </p>
-      <p className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-red-700 mt-1">
-        {stats?.votantes ?? 0}
-      </p>
-    </div>
-  </>
-)}
-
-
+          {currentUser.role === "subcoordinador" && (
+            <>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Total en Red</p>
+                <p className="text-6xl font-black text-gray-900">{stats?.votantesTotales ?? 0}</p>
+              </div>
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-green-100 text-sm font-semibold uppercase tracking-wide mb-2">Confirmados</p>
+                <p className="text-6xl font-black">{stats?.votosConfirmadosTotales ?? 0}</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
+                <p className="text-gray-500 text-sm font-semibold uppercase tracking-wide mb-2">Pendientes</p>
+                <p className="text-6xl font-black text-gray-900">
+                  {(stats?.votantesTotales ?? 0) - (stats?.votosConfirmadosTotales ?? 0)}
+                </p>
+              </div>
+              <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow text-white">
+                <p className="text-red-100 text-sm font-semibold uppercase tracking-wide mb-2">Porcentaje</p>
+                <p className="text-6xl font-black">{stats?.porcentajeConfirmados ?? 0}%</p>
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* ACCIONES */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4 flex flex-wrap gap-2 sm:gap-3 items-center">
+      <div className="max-w-7xl mx-auto px-6 my-8 flex flex-wrap gap-3 items-center">
         {currentUser.role === "superadmin" && (
           <button
-            onClick={() => {
-              setModalType("coordinador");
-              setShowAddModal(true);
-            }}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 h-10 rounded-lg hover:bg-red-700 w-full sm:w-auto text-sm"
+            onClick={() => { setModalType("coordinador"); setShowAddModal(true); }}
+            className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all font-semibold"
           >
-            <UserPlus className="w-4 h-4" />
+            <UserPlus className="w-5 h-5" />
             Agregar Coordinador
           </button>
         )}
 
         {currentUser.role === "coordinador" && (
           <button
-            onClick={() => {
-              setModalType("subcoordinador");
-              setShowAddModal(true);
-            }}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 h-10 rounded-lg hover:bg-red-700 w-full sm:w-auto text-sm"
+            onClick={() => { setModalType("subcoordinador"); setShowAddModal(true); }}
+            className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all font-semibold"
           >
-            <UserPlus className="w-4 h-4" />
+            <UserPlus className="w-5 h-5" />
             Agregar Subcoordinador
           </button>
         )}
 
-        {(currentUser.role === "coordinador" ||
-          currentUser.role === "subcoordinador") && (
+        {(currentUser.role === "coordinador" || currentUser.role === "subcoordinador") && (
           <button
-            onClick={() => {
-              setModalType("votante");
-              setShowAddModal(true);
-            }}
-            className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 h-10 rounded-lg hover:bg-red-50 w-full sm:w-auto text-sm"
+            onClick={() => { setModalType("votante"); setShowAddModal(true); }}
+            className="flex items-center gap-2 bg-white border-2 border-red-600 text-red-600 px-6 py-3 rounded-xl hover:bg-red-50 shadow-md hover:shadow-lg transition-all font-semibold"
           >
-            <UserPlus className="w-4 h-4" />
+            <UserPlus className="w-5 h-5" />
             Agregar Votante
           </button>
         )}
 
-        {/* PDF */}
-<button
-  onClick={descargarPDF}
-  className="flex items-center gap-2 border-2 border-red-600 text-red-600 px-4 h-10 rounded-lg hover:bg-red-50 w-full sm:w-auto text-sm"
->
-  <BarChart3 className="w-4 h-4" />
-  Descargar PDF
-</button>
-
-      </div>
-{/* BUSCADOR INTERNO (solo dentro de la estructura visible por rol) */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-  <div className="bg-white rounded-lg shadow p-4 sm:p-5">
-    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-      Buscar dentro de mi estructura
-    </label>
-
-    <input
-      value={searchCI}
-      onChange={(e) => setSearchCI(e.target.value)}
-      placeholder="Buscar por CI, nombre, apellido o combinación"
-      className="w-full border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
-    />
-
-    {normalizeText(searchCI) && (
-      <p className="text-xs text-gray-500 mt-2">
-        Resultados: <b>{resultadosBusqueda.length}</b>
-      </p>
-    )}
-  </div>
-</div>
-
-{/* RESULTADOS (solo si hay búsqueda escrita) */}
-{normalizeText(searchCI) && (
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-    <div className="bg-white rounded-lg shadow">
-      <div className="p-3 sm:p-4 border-b">
-        <h3 className="font-bold text-sm sm:text-base text-gray-800">Resultados de búsqueda</h3>
-        <p className="text-xs text-gray-500">
-          Solo dentro de la estructura permitida para tu rol.
-        </p>
+        <button
+          onClick={descargarPDF}
+          className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-50 shadow-md hover:shadow-lg transition-all font-semibold"
+        >
+          <BarChart3 className="w-5 h-5" />
+          Descargar PDF
+        </button>
       </div>
 
-      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
-        {resultadosBusqueda.length === 0 ? (
-          <div className="text-xs sm:text-sm text-gray-600">
-            No se encontraron coincidencias en tu estructura.
-          </div>
-        ) : (
-          resultadosBusqueda.slice(0, 50).map(({ tipo, persona }) => (
-            <div
-              key={`${tipo}-${persona.ci}`}
-              className="border rounded-lg p-2 sm:p-3 hover:bg-gray-50"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-xs sm:text-sm flex flex-wrap items-center gap-2">
-                    <span className="truncate">{persona.nombre || "-"} {persona.apellido || ""}</span>
-                    {tipo === "votante" && persona.voto_confirmado && (
-                      <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium shrink-0">
-                        Voto Confirmado
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-xs text-gray-600 mt-1">
-                    <b>CI:</b> {persona.ci}{" "}
-                    <span className="ml-2">
-                      <b>Tipo:</b>{" "}
-                      {tipo === "coordinador"
-                        ? "Coordinador"
-                        : tipo === "subcoordinador"
-                        ? "Subcoordinador"
-                        : "Votante"}
-                    </span>
-                  </div>
-                </div>
+      {/* BUSCADOR */}
+      <div className="max-w-7xl mx-auto px-6 mb-6">
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
+            Buscar dentro de mi estructura
+          </label>
+          <input
+            value={searchCI}
+            onChange={(e) => setSearchCI(e.target.value)}
+            placeholder="Buscar por CI, nombre, apellido o combinación"
+            className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+          />
+          {normalizeText(searchCI) && (
+            <p className="text-sm text-gray-600 mt-3 font-medium">
+              Resultados: <span className="text-red-600 font-bold">{resultadosBusqueda.length}</span>
+            </p>
+          )}
+        </div>
+      </div>
 
-                <div className="flex gap-2 shrink-0">
-                  <button
-                    onClick={() => abrirTelefono(tipo, persona)}
-                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                    title="Editar teléfono"
-                  >
-                    <Phone className="w-4 h-4" />
-                  </button>
-
-                  <button
-                    onClick={() => abrirDireccion(tipo, persona)}
-                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                    title="Editar dirección"
-                  >
-                    <MapPin className="w-4 h-4" />
-                  </button>
-
-                  {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona) && (
-                    <button
-                      onClick={() => abrirConfirmVoto(persona)}
-                      className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                      title="Confirmar voto"
-                    >
-                      <Check className="w-4 h-4" />
-                    </button>
-                  )}
-
-                  {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona) && (
-                    <button
-                      onClick={() => abrirAnularConfirmacion(persona)}
-                      className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                      title="Anular confirmación"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => quitarPersona(tipo, persona)}
-                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                    title="Eliminar"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+      {/* RESULTADOS */}
+      {normalizeText(searchCI) && (
+        <div className="max-w-7xl mx-auto px-6 mb-6">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
+            <div className="p-6 border-b border-gray-100">
+              <h3 className="font-bold text-xl text-gray-800">Resultados de búsqueda</h3>
+              <p className="text-sm text-gray-500 mt-1">Solo dentro de la estructura permitida para tu rol.</p>
             </div>
-          ))
-        )}
-
-        {resultadosBusqueda.length > 50 && (
-          <div className="text-xs text-gray-500">
-            Mostrando 50 resultados. Refiná la búsqueda para acotar.
+            <div className="p-6 space-y-3">
+              {resultadosBusqueda.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">No se encontraron coincidencias en tu estructura.</div>
+              ) : (
+                <div>
+                  {resultadosBusqueda.slice(0, 50).map(({ tipo, persona }) => (
+                    <div key={`${tipo}-${persona.ci}`} className="border-2 border-gray-100 rounded-xl p-4 hover:border-red-200 hover:bg-red-50/30 transition-all mb-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="font-bold text-base flex items-center gap-3 mb-2">
+                            {persona.nombre || "-"} {persona.apellido || ""}
+                            {tipo === "votante" && persona.voto_confirmado && (
+                              <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold shadow-sm">
+                                ✓ Confirmado
+                              </span>
+                            )}
+                            {tipo === "votante" && !persona.voto_confirmado && (
+                              <span className="inline-flex items-center px-3 py-1 bg-gray-200 text-gray-600 text-xs rounded-full font-semibold">
+                                Pendiente
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            <span className="font-semibold">CI:</span> {persona.ci}
+                            <span className="ml-4">
+                              <span className="font-semibold">Tipo:</span>{" "}
+                              {tipo === "coordinador"
+                                ? "Coordinador"
+                                : tipo === "subcoordinador"
+                                ? "Subcoordinador"
+                                : "Votante"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 flex-wrap">
+                          <button
+                            onClick={() => abrirTelefono(tipo, persona)}
+                            className="inline-flex items-center justify-center w-11 h-11 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
+                            title="Editar teléfono"
+                          >
+                            <Phone className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={() => abrirDireccion(tipo, persona)}
+                            className="inline-flex items-center justify-center w-11 h-11 border-2 border-blue-500 text-blue-600 rounded-xl hover:bg-blue-50 hover:border-blue-600 transition-all shadow-sm hover:shadow-md"
+                            title="Editar dirección"
+                          >
+                            <Pencil className="w-5 h-5" />
+                          </button>
+                          {tipo === "votante" && !persona.voto_confirmado && canConfirmarVoto(persona, tipo) && (
+                            <button
+                              onClick={() => abrirConfirmVoto(persona, tipo)}
+                              className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
+                              title="Confirmar voto"
+                            >
+                              <Check className="w-5 h-5" />
+                            </button>
+                          )}
+                          {tipo === "votante" && persona.voto_confirmado && canAnularConfirmacion(persona, tipo) && (
+                            <button
+                              onClick={() => abrirAnularConfirmacion(persona, tipo)}
+                              className="inline-flex items-center justify-center w-11 h-11 border-2 border-red-500 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
+                              title="Anular confirmación"
+                            >
+                              <X className="w-5 h-5" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => quitarPersona(tipo, persona)}
+                            className="inline-flex items-center justify-center w-11 h-11 border-2 border-red-400 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {resultadosBusqueda.length > 50 && (
+                <div className="text-xs text-gray-500">
+                  Mostrando 50 resultados. Refiná la búsqueda para acotar.
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
 
-
-      {/* MI ESTRUCTURA (UI REAL) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-4 sm:p-5 border-b">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800">Mi Estructura</h2>
+      {/* MI ESTRUCTURA */}
+      <div className="max-w-7xl mx-auto px-6 mb-10">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
+          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-red-50 to-white">
+            <h2 className="text-2xl font-bold text-gray-900">Mi Estructura Electoral</h2>
+            <p className="text-sm text-gray-600 mt-1">Organización y seguimiento de la red de votantes</p>
           </div>
+          <div className="p-6">
 
-          <div className="p-4 sm:p-5">
             {/* SUPERADMIN */}
             {currentUser.role === "superadmin" && (
               <div>
-                {(estructura.coordinadores || []).map((coord) => (
-                  <div
-                    key={coord.ci}
-                    className="border rounded-lg mb-2 sm:mb-3 bg-red-50/40"
-                  >
-                    <div
-                      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 cursor-pointer"
-                      onClick={() => toggleExpand(coord.ci)}
-                    >
-                      <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
-                        {expandedCoords[normalizeCI(coord.ci)] ? (
-                          <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <DatosPersona
-                            persona={coord}
-                            rol="Coordinador"
-                            loginCode={coord.login_code}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex gap-2 shrink-0">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            abrirTelefono("coordinador", coord);
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                {(estructura.coordinadores || []).length === 0 ? (
+                  <p className="text-center text-gray-500 py-8">No hay coordinadores aún.</p>
+                ) : (
+                  <div>
+                    {(estructura.coordinadores || []).map((coord) => {
+                      const subs = (estructura.subcoordinadores || []).filter(
+                        s => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci)
+                      );
+                      const subsSet = new Set(subs.map(s => normalizeCI(s.ci)));
+                      const votantesDirectos = (estructura.votantes || []).filter(
+                        v => normalizeCI(v.asignado_por) === normalizeCI(coord.ci)
+                      );
+                      const votantesIndirectos = (estructura.votantes || []).filter(
+                        v => subsSet.has(normalizeCI(v.asignado_por))
+                      );
+                      const totalEnRed = 1 + subs.length + votantesDirectos.length + votantesIndirectos.length;
+                      const confirmadosCoord = 1 + 
+                        subs.filter(s => s.voto_confirmado).length +
+                        votantesDirectos.filter(v => v.voto_confirmado).length +
+                        votantesIndirectos.filter(v => v.voto_confirmado).length;
+                      const porcentajeCoord = totalEnRed > 0 ? Math.round((confirmadosCoord / totalEnRed) * 100) : 0;
+                      
+                      return (
+                      <div key={coord.ci} className="border-2 border-red-100 rounded-xl mb-4 bg-gradient-to-r from-red-50/50 to-white overflow-hidden hover:border-red-200 transition-all">
+                        <div
+                          className="flex items-start justify-between p-5 cursor-pointer gap-4"
+                          onClick={() => toggleCoord(coord.ci)}
                         >
-                          <Phone className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            abrirDireccion("coordinador", coord);
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                          title="Editar dirección"
-                        >
-                          <MapPin className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            quitarPersona(coord.ci, "coordinador");
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {expandedCoords[normalizeCI(coord.ci)] && (
-                      <div className="bg-white px-3 sm:px-4 pb-3 sm:pb-4 border-t animate-in fade-in duration-200 overflow-x-auto">
-                        {/* SUBS DEL COORD */}
-                        {(estructura.subcoordinadores || [])
-                          .filter(
-                            (s) =>
-                              normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci)
-                          )
-                          .map((sub) => (
-                            <div
-                              key={sub.ci}
-                              className="border rounded-lg mb-2 sm:mb-3 bg-red-50/40"
-                            >
-                              <div
-                                className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 cursor-pointer"
-                                onClick={() => toggleExpand(sub.ci)}
-                              >
-                                <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
-                                  {expandedCoords[normalizeCI(sub.ci)] ? (
-                                    <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
-                                  ) : (
-                                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
-                                  )}
-                                  <div className="flex-1 min-w-0">
-                                    <DatosPersona
-                                      persona={sub}
-                                      rol="Sub-coordinador"
-                                      loginCode={sub.login_code}
-                                    />
-                                  </div>
+                          <div className="flex items-start gap-3 flex-1">
+                            {expandedCoords[normalizeCI(coord.ci)] ? (
+                              <ChevronDown className="w-6 h-6 text-red-600" />
+                            ) : (
+                              <ChevronRight className="w-6 h-6 text-red-600" />
+                            )}
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <p className="font-bold text-lg text-gray-900">
+                                  {coord.nombre || "-"} {coord.apellido || ""}
+                                </p>
+                                <span className="inline-flex items-center px-3 py-1 bg-red-600 text-white text-xs rounded-full font-semibold">
+                                  {totalEnRed} personas
+                                </span>
+                              </div>
+                              <div className="mb-3">
+                                <div className="flex items-center justify-between text-sm mb-1">
+                                  <span className="text-gray-600 font-medium">Progreso de confirmación</span>
+                                  <span className="text-red-600 font-bold">{porcentajeCoord}%</span>
                                 </div>
-
-                                <div className="flex gap-2 shrink-0">
-                                  <button
-                                    onClick={() => abrirTelefono("subcoordinador", sub)}
-                                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                  >
-                                    <Phone className="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    onClick={() => abrirDireccion("subcoordinador", sub)}
-                                    className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                                    title="Editar dirección"
-                                  >
-                                    <MapPin className="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    onClick={() => quitarPersona(sub.ci, "subcoordinador")}
-                                    className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
+                                <div className="bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                                  <div 
+                                    className="bg-gradient-to-r from-green-500 to-green-600 h-full rounded-full transition-all duration-500"
+                                    style={{ width: `${porcentajeCoord}%` }}
+                                  ></div>
                                 </div>
                               </div>
+                              <DatosPersona 
+                                persona={coord} 
+                                rol="Coordinador" 
+                                loginCode={coord.login_code}
+                                onEditDireccion={() => abrirDireccion("coordinador", coord)}
+                                hideName={true}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-col md:flex-row gap-2">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); abrirTelefono("coordinador", coord); }}
+                              className="inline-flex items-center justify-center w-11 h-11 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
+                            >
+                              <Phone className="w-5 h-5" />
+                            </button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); quitarPersona(coord.ci, "coordinador"); }}
+                              className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </div>
 
-                              {/* Votantes del sub - expandable */}
-                              {expandedCoords[normalizeCI(sub.ci)] && (
-                                <div className="ml-2 sm:ml-4 border-l-2 border-gray-200 pl-2 sm:pl-3 animate-in fade-in duration-200">
-                                  {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                                    <div
-                                      key={v.ci}
-                                      className="bg-white border p-2 sm:p-3 mb-2 rounded flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3"
-                                    >
-                                      <div className="flex-1 min-w-0">
-                                        <DatosPersona persona={v} rol="Votante" />
-                                        {v.voto_confirmado && (
-                                          <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                            Voto Confirmado
+                        {expandedCoords[normalizeCI(coord.ci)] && (
+                          <div className="bg-gradient-to-b from-gray-50 to-white px-6 pb-4 border-t border-gray-100">
+                            {(estructura.subcoordinadores || [])
+                              .filter((s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci))
+                              .map((sub) => {
+                                const votantesDirectos = (estructura.votantes || []).filter(
+                                  v => normalizeCI(v.asignado_por) === normalizeCI(sub.ci)
+                                );
+                                const totalSub = 1 + votantesDirectos.length;
+                                const confirmadosSub = (sub.voto_confirmado ? 1 : 0) + votantesDirectos.filter(v => v.voto_confirmado).length;
+                                const porcentajeSub = totalSub > 0 ? Math.round((confirmadosSub / totalSub) * 100) : 0;
+                                
+                                return (
+                                <div key={sub.ci} className="border-l-4 border-red-400 bg-white rounded-r-xl shadow-sm p-4 mb-3 ml-8 hover:shadow-md transition-all">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="flex items-start gap-3 flex-1">
+                                      <button
+                                        onClick={(e) => { e.stopPropagation(); toggleSub(sub.ci); }}
+                                        className="mt-1"
+                                      >
+                                        {expandedSubs[normalizeCI(sub.ci)] ? (
+                                          <ChevronDown className="w-5 h-5 text-red-600 transition-transform" />
+                                        ) : (
+                                          <ChevronRight className="w-5 h-5 text-red-600 transition-transform" />
+                                        )}
+                                      </button>
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <p className="font-bold text-base text-gray-900">
+                                            {sub.nombre || "-"} {sub.apellido || ""}
+                                          </p>
+                                          <span className="inline-flex items-center px-2.5 py-0.5 bg-red-100 text-red-700 text-xs rounded-full font-semibold">
+                                            {totalSub} personas
+                                          </span>
+                                          {sub.voto_confirmado && (
+                                            <span className="inline-flex items-center px-2.5 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold">
+                                              ✓ Confirmado
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="mb-2">
+                                          <div className="flex items-center justify-between text-xs mb-1">
+                                            <span className="text-gray-600">Progreso</span>
+                                            <span className="text-red-600 font-bold">{porcentajeSub}%</span>
                                           </div>
-                                        )}
-                                      </div>
-                            <div className="flex gap-2 shrink-0">
-                                        <button
-                                          onClick={() => abrirTelefono("votante", v)}
-                                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                                        >
-                                          <Phone className="w-4 h-4" />
-                                        </button>
-
-                                        <button
-                                          onClick={() => abrirDireccion("votante", v)}
-                                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                                          title="Editar dirección"
-                                        >
-                                          <MapPin className="w-4 h-4" />
-                                        </button>
-
-                                        {!v.voto_confirmado && canConfirmarVoto(v) && (
-                                          <button
-                                            onClick={() => abrirConfirmVoto(v)}
-                                            className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                            title="Confirmar voto"
-                                          >
-                                            <Check className="w-4 h-4" />
-                                          </button>
-                                        )}
-
-                                        {v.voto_confirmado && canAnularConfirmacion(v) && (
-                                          <button
-                                            onClick={() => abrirAnularConfirmacion(v)}
-                                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                                            title="Anular confirmación"
-                                          >
-                                            <X className="w-4 h-4" />
-                                          </button>
-                                        )}
-
-                                        <button
-                                          onClick={() => quitarPersona(v.ci, "votante")}
-                                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                        >
-                                          <Trash2 className="w-4 h-4" />
-                                        </button>
+                                          <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+                                            <div 
+                                              className="bg-gradient-to-r from-green-500 to-green-600 h-full rounded-full transition-all duration-500"
+                                              style={{ width: `${porcentajeSub}%` }}
+                                            ></div>
+                                          </div>
+                                        </div>
+                                        <DatosPersona 
+                                          persona={sub} 
+                                          rol="Sub-coordinador" 
+                                          loginCode={sub.login_code}
+                                          onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
+                                          hideName={true}
+                                        />
                                       </div>
                                     </div>
-                                  ))}
+                                    <div className="flex gap-2">
+                                      <button
+                                        onClick={(e) => { e.stopPropagation(); abrirTelefono("subcoordinador", sub); }}
+                                        className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 transition-all shadow-sm"
+                                      >
+                                        <Phone className="w-5 h-5" />
+                                      </button>
+                                      <button
+                                        onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
+                                        className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md"
+                                      >
+                                        <Trash2 className="w-5 h-5" />
+                                      </button>
+                                    </div>
+                                  </div>
 
-                                  {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                                    <p className="text-gray-500 text-xs sm:text-sm">
-                                      Sin votantes asignados.
-                                    </p>
+                                  {expandedSubs[normalizeCI(sub.ci)] && (
+                                    <div className="ml-6 mt-4 border-l-2 border-green-200 pl-4 space-y-2">
+                                      {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
+                                        <VotanteCard key={v.ci} v={v} showAnular={true} />
+                                      ))}
+                                      {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
+                                        <p className="text-gray-500 text-sm py-4 text-center">Sin votantes asignados.</p>
+                                      )}
+                                    </div>
                                   )}
                                 </div>
-                              )}
-                            </div>
-                          ))}
+                                );
+                              })}
+                          </div>
+                        )}
                       </div>
-                    )}
-
+                      );
+                    })}
                   </div>
-                ))}
-
-                {(estructura.coordinadores || []).length === 0 && (
-                  <p className="text-center text-gray-500 py-8">
-                    No hay coordinadores aún.
-                  </p>
                 )}
               </div>
             )}
 
             {/* COORDINADOR */}
             {currentUser.role === "coordinador" && (
-            <>
-                {getMisSubcoordinadores(estructura, currentUser).map((sub) => (
-                  <div
-                    key={sub.ci}
-                    className="border rounded-lg mb-2 sm:mb-3 bg-red-50/40"
-                  >
+              <div>
+                {getMisSubcoordinadores(estructura, currentUser).map((sub) => {
+                  const votantesDirectos = (estructura.votantes || []).filter(
+                    v => normalizeCI(v.asignado_por) === normalizeCI(sub.ci)
+                  );
+                  const totalSub = 1 + votantesDirectos.length;
+                  const confirmadosSub = (sub.voto_confirmado ? 1 : 0) + votantesDirectos.filter(v => v.voto_confirmado).length;
+                  const porcentajeSub = totalSub > 0 ? Math.round((confirmadosSub / totalSub) * 100) : 0;
+                  
+                  return (
+                  <div key={sub.ci} className="border-2 border-red-100 rounded-xl mb-4 bg-gradient-to-r from-red-50/50 to-white overflow-hidden hover:border-red-200 transition-all">
                     <div
-                      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 cursor-pointer"
+                      className="flex items-start justify-between p-5 cursor-pointer gap-4"
                       onClick={() => toggleExpand(sub.ci)}
                     >
                       <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                         {expandedCoords[normalizeCI(sub.ci)] ? (
-                          <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
+                          <ChevronDown className="w-6 h-6 text-red-600" />
                         ) : (
-                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 shrink-0 mt-0.5" />
+                          <ChevronRight className="w-6 h-6 text-red-600" />
                         )}
-                        <div className="flex-1 min-w-0">
-                          <DatosPersona
-                            persona={sub}
-                            rol="Sub-coordinador"
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <p className="font-bold text-lg text-gray-900">
+                              {sub.nombre || "-"} {sub.apellido || ""}
+                            </p>
+                            <span className="inline-flex items-center px-3 py-1 bg-red-600 text-white text-xs rounded-full font-semibold">
+                              {totalSub} personas
+                            </span>
+                            {sub.voto_confirmado && (
+                              <span className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full font-semibold">
+                                ✓ Confirmado
+                              </span>
+                            )}
+                          </div>
+                          <div className="mb-3">
+                            <div className="flex items-center justify-between text-sm mb-1">
+                              <span className="text-gray-600 font-medium">Progreso de confirmación</span>
+                              <span className="text-red-600 font-bold">{porcentajeSub}%</span>
+                            </div>
+                            <div className="bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                              <div 
+                                className="bg-gradient-to-r from-green-500 to-green-600 h-full rounded-full transition-all duration-500"
+                                style={{ width: `${porcentajeSub}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                          <DatosPersona 
+                            persona={sub} 
+                            rol="Sub-coordinador" 
                             loginCode={sub.login_code}
+                            onEditDireccion={() => abrirDireccion("subcoordinador", sub)}
+                            hideName={true}
                           />
                         </div>
                       </div>
-
-                      <div className="flex gap-2 shrink-0">
+                      <div className="flex flex-col md:flex-row gap-2">
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            abrirTelefono("subcoordinador", sub);
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
+                          onClick={(e) => { e.stopPropagation(); abrirTelefono("subcoordinador", sub); }}
+                          className="inline-flex items-center justify-center w-11 h-11 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
                         >
                           <Phone className="w-4 h-4" />
                         </button>
@@ -1461,12 +1380,27 @@ const descargarPDF = async () => {
                         >
                           <MapPin className="w-4 h-4" />
                         </button>
+                        {!sub.voto_confirmado && canConfirmarVoto(sub, "subcoordinador") && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); abrirConfirmVoto(sub, "subcoordinador"); }}
+                            className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg"
+                            title="Confirmar voto"
+                          >
+                            <Check className="w-5 h-5" />
+                          </button>
+                        )}
+                        {sub.voto_confirmado && canAnularConfirmacion(sub, "subcoordinador") && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); abrirAnularConfirmacion(sub, "subcoordinador"); }}
+                            className="inline-flex items-center justify-center w-11 h-11 border-2 border-red-500 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shadow-sm hover:shadow-md"
+                            title="Anular confirmación"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        )}
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            quitarPersona(sub.ci, "subcoordinador");
-                          }}
-                          className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                          onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
+                          className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -1474,218 +1408,86 @@ const descargarPDF = async () => {
                     </div>
 
                     {expandedCoords[normalizeCI(sub.ci)] && (
-                      <div className="bg-white px-3 sm:px-4 pb-3 sm:pb-4 border-t animate-in fade-in duration-200 overflow-x-auto">
-                        <p className="text-xs sm:text-sm font-semibold mt-3 mb-2">Votantes</p>
-
-                        {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
-                          <div
-                            key={v.ci}
-                            className="bg-white border p-2 sm:p-3 mb-2 rounded flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3 ml-1 sm:ml-2"
-                          >
-                            <div className="flex-1 min-w-0">
-                              <DatosPersona persona={v} rol="Votante" />
-                              {v.voto_confirmado && (
-                                <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                                  Voto Confirmado
-                                </div>
-                              )}
-                            </div>
-                        <div className="flex gap-2 shrink-0">
-                              <button
-                                onClick={() => abrirTelefono("votante", v)}
-                                className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                              >
-                                <Phone className="w-4 h-4" />
-                              </button>
-
-                              <button
-                                onClick={() => abrirDireccion("votante", v)}
-                                className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                                title="Editar dirección"
-                              >
-                                <MapPin className="w-4 h-4" />
-                              </button>
-
-                              {!v.voto_confirmado && canConfirmarVoto(v) && (
-                                <button
-                                  onClick={() => abrirConfirmVoto(v)}
-                                  className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                  title="Confirmar voto"
-                                >
-                                  <Check className="w-4 h-4" />
-                                </button>
-                              )}
-
-                              {v.voto_confirmado && canAnularConfirmacion(v) && (
-                                <button
-                                  onClick={() => abrirAnularConfirmacion(v)}
-                                  className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                                  title="Anular confirmación"
-                                >
-                                  <X className="w-4 h-4" />
-                                </button>
-                              )}
-
-                              <button
-                                onClick={() => quitarPersona(v.ci, "votante")}
-                                className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-
-                        {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
-                          <p className="text-gray-500 text-xs sm:text-sm ml-1 sm:ml-2">
-                            Sin votantes asignados.
-                          </p>
-                        )}
+                      <div className="bg-gradient-to-b from-gray-50 to-white px-6 pb-4 border-t border-gray-100">
+                        <p className="text-sm font-bold text-gray-700 mt-4 mb-3 uppercase tracking-wide">Votantes Asignados</p>
+                        <div className="ml-4 border-l-2 border-green-200 pl-4 space-y-2">
+                          {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
+                            <VotanteCard key={v.ci} v={v} showAnular={true} />
+                          ))}
+                          {getVotantesDeSubcoord(estructura, sub.ci).length === 0 && (
+                            <p className="text-gray-500 text-sm py-4 text-center">Sin votantes asignados.</p>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
 
                 {getMisVotantes(estructura, currentUser).length > 0 && (
-                  <div className="border rounded-lg mb-2 sm:mb-3 p-3 sm:p-4">
-                    <p className="font-semibold text-gray-700 mb-3 text-sm sm:text-base">
-                      Mis votantes directos
+                  <div className="border-2 border-green-100 rounded-xl mb-4 p-6 bg-gradient-to-r from-green-50/30 to-white">
+                    <p className="font-bold text-xl text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="inline-block w-1 h-6 bg-green-500 rounded"></span>
+                      Mis Votantes Directos
                     </p>
-
-                    {getMisVotantes(estructura, currentUser).map((v) => (
-                      <div
-                        key={v.ci}
-                        className="bg-white border p-2 sm:p-3 mt-2 rounded flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <DatosPersona persona={v} rol="Votante" />
-                          {v.voto_confirmado && (
-                            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-                              Voto Confirmado
-                            </div>
-                          )}
-                        </div>
-        <div className="flex gap-2 shrink-0">
-                          <button
-                            onClick={() => abrirTelefono("votante", v)}
-                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-                          >
-                            <Phone className="w-4 h-4" />
-                          </button>
-
-                          <button
-                            onClick={() => abrirDireccion("votante", v)}
-                            className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-                            title="Editar dirección"
-                          >
-                            <MapPin className="w-4 h-4" />
-                          </button>
-
-                          {!v.voto_confirmado && canConfirmarVoto(v) && (
-                            <button
-                              onClick={() => abrirConfirmVoto(v)}
-                              className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                              title="Confirmar voto"
-                            >
-                              <Check className="w-4 h-4" />
-                            </button>
-                          )}
-
-                          {v.voto_confirmado && canAnularConfirmacion(v) && (
-                            <button
-                              onClick={() => abrirAnularConfirmacion(v)}
-                              className="inline-flex items-center justify-center w-10 h-10 border-2 border-red-600 text-red-700 rounded-lg hover:bg-red-50"
-                              title="Anular confirmación"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          )}
-
-                          <button
-                            onClick={() => quitarPersona(v.ci, "votante")}
-                            className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                    <div className="space-y-2">
+                      {getMisVotantes(estructura, currentUser).map((v) => (
+                        <VotanteCard key={v.ci} v={v} showAnular={true} />
+                      ))}
+                    </div>
                   </div>
                 )}
 
                 {getMisSubcoordinadores(estructura, currentUser).length === 0 &&
                   getMisVotantes(estructura, currentUser).length === 0 && (
-                    <p className="text-gray-500 py-6 text-sm sm:text-base">
-                      Aún no tiene subcoordinadores ni votantes asignados.
-                    </p>
+                    <div className="text-center py-16">
+                      <div className="inline-block p-6 bg-gray-50 rounded-2xl">
+                        <p className="text-gray-600 text-lg">
+                          Aún no tiene subcoordinadores ni votantes asignados.
+                        </p>
+                        <p className="text-gray-500 text-sm mt-2">
+                          Comience agregando personas a su red electoral.
+                        </p>
+                      </div>
+                    </div>
                   )}
-            </>
-            )} 
-{/* SUBCOORDINADOR */}
-{currentUser.role === "subcoordinador" && (
-  <div>
-    {getMisVotantes(estructura, currentUser).map((v) => (
-      <div
-        key={v.ci}
-        className="bg-white border p-2 sm:p-3 mt-2 rounded flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3"
-      >
-        <div className="flex-1 min-w-0">
-          <DatosPersona persona={v} rol="Votante" />
-          {v.voto_confirmado && (
-            <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-medium">
-              Voto Confirmado
-            </div>
-          )}
-        </div>
-              <div className="flex gap-2 shrink-0">
-          <button
-            onClick={() => abrirTelefono("votante", v)}
-            className="inline-flex items-center justify-center w-10 h-10 border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50"
-          >
-            <Phone className="w-4 h-4" />
-          </button>
+              </div>
+            )}
 
-          <button
-            onClick={() => abrirDireccion("votante", v)}
-            className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
-            title="Editar dirección"
-          >
-            <MapPin className="w-4 h-4" />
-          </button>
-
-          {!v.voto_confirmado && canConfirmarVoto(v) && (
-            <button
-              onClick={() => abrirConfirmVoto(v)}
-              className="inline-flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-lg hover:bg-green-700"
-              title="Confirmar voto"
-            >
-              <Check className="w-4 h-4" />
-            </button>
-          )}
-
-          <button
-            onClick={() => quitarPersona(v.ci, "votante")}
-            className="inline-flex items-center justify-center w-10 h-10 bg-red-600 text-white rounded-lg hover:bg-red-700"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    ))}
-
-    {getMisVotantes(estructura, currentUser).length === 0 && (
-      <p className="text-gray-500 py-6 text-sm sm:text-base">
-        No tiene votantes asignados.
-      </p>
-    )}
-  </div>
-)}
+            {/* SUBCOORDINADOR */}
+            {currentUser.role === "subcoordinador" && (
+              <div>
+                {getMisVotantes(estructura, currentUser).length > 0 && (
+                  <div className="border-2 border-green-100 rounded-xl p-6 bg-gradient-to-r from-green-50/30 to-white">
+                    <p className="font-bold text-xl text-gray-900 mb-4 flex items-center gap-2">
+                      <span className="inline-block w-1 h-6 bg-green-500 rounded"></span>
+                      Mis Votantes Asignados
+                    </p>
+                    <div className="space-y-2">
+                      {getMisVotantes(estructura, currentUser).map((v) => (
+                        <VotanteCard key={v.ci} v={v} showAnular={false} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {getMisVotantes(estructura, currentUser).length === 0 && (
+                  <div className="text-center py-16">
+                    <div className="inline-block p-6 bg-gray-50 rounded-2xl">
+                      <p className="text-gray-600 text-lg">No tiene votantes asignados.</p>
+                      <p className="text-gray-500 text-sm mt-2">
+                        Su coordinador le asignará votantes pronto.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
           </div>
         </div>
       </div>
 
-      {/* MODAL TELÉFONO (tu componente) */}
+      {/* MODALES */}
       <ModalTelefono
         open={phoneModalOpen}
         persona={phoneTarget}
@@ -1699,7 +1501,6 @@ const descargarPDF = async () => {
         onSave={guardarTelefono}
       />
 
-      {/* MODAL DIRECCIÓN */}
       <ModalDireccion
         open={direccionModalOpen}
         persona={direccionTarget}
@@ -1713,7 +1514,6 @@ const descargarPDF = async () => {
         onSave={guardarDireccion}
       />
 
-      {/* MODAL AGREGAR PERSONA */}
       <AddPersonModal
         show={showAddModal}
         onClose={() => setShowAddModal(false)}
@@ -1722,7 +1522,6 @@ const descargarPDF = async () => {
         disponibles={disponibles}
       />
 
-      {/* MODAL CONFIRMACIÓN DE VOTO */}
       <ConfirmVotoModal
         open={confirmVotoModalOpen}
         votante={confirmVotoTarget}
