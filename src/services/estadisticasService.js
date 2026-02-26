@@ -9,19 +9,35 @@ export const getEstadisticas = (estructura, currentUser) => {
     const subcoordinadores = estructura.subcoordinadores.length;
     const votantes = estructura.votantes.length;
 
-    // Votos confirmados
+    // Confirmed subs
+    const subsConfirmados = estructura.subcoordinadores.filter(
+      (s) => s.confirmado === true
+    ).length;
+
+    // Confirmed voters
     const votosConfirmados = estructura.votantes.filter(
       (v) => v.voto_confirmado === true
     ).length;
+
+    // Coordinadores are always counted as 1 confirmed vote each (automatic).
+    // Total confirmable = coordinadores + subs + voters
+    // Total confirmed  = coordinadores (auto) + confirmedSubs + confirmedVoters
+    const totalConfirmable = coordinadores + subcoordinadores + votantes;
+    const totalConfirmados = coordinadores + subsConfirmados + votosConfirmados;
     const porcentajeConfirmados =
-      votantes > 0 ? Math.round((votosConfirmados / votantes) * 100) : 0;
+      totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
     return {
       coordinadores,
       subcoordinadores,
+      subsConfirmados,
       votantes,
-      votantesTotales: coordinadores + subcoordinadores + votantes,
+      totalRed: coordinadores + subcoordinadores + votantes,
+      totalVotantes: votantes,
+      totalConfirmable,
+      totalConfirmados,
       votosConfirmados,
+      votosPendientes: totalConfirmable - totalConfirmados,
       porcentajeConfirmados,
     };
   }
@@ -30,15 +46,18 @@ export const getEstadisticas = (estructura, currentUser) => {
   if (currentUser.role === "coordinador") {
     const miCI = normalizeCI(currentUser.ci);
 
+    // Subcoordinadores under this coord
     const subs = estructura.subcoordinadores.filter(
       (s) => normalizeCI(s.coordinador_ci) === miCI
     );
 
+    // Voters assigned directly by this coord
     const votantesDirectos = estructura.votantes.filter(
       (v) => normalizeCI(v.asignado_por) === miCI
     );
 
-    const votantesDeSubs = subs.reduce(
+    // Voters assigned by each sub (indirect)
+    const votantesIndirectos = subs.reduce(
       (acc, sub) =>
         acc +
         estructura.votantes.filter(
@@ -47,17 +66,18 @@ export const getEstadisticas = (estructura, currentUser) => {
       0
     );
 
-    const totalEnRed =
-      votantesDirectos.length +
-      votantesDeSubs +
-      subs.length; // 👈 LOS SUBS CUENTAN COMO VOTANTES
+    // Total voters = direct + indirect
+    const totalVotantes = votantesDirectos.length + votantesIndirectos;
 
-    // Votos confirmados en la red
+    // Confirmed subs
+    const subsConfirmados = subs.filter((s) => s.confirmado === true).length;
+
+    // Confirmed votes: direct confirmed + indirect confirmed
     const votosDirectosConfirmados = votantesDirectos.filter(
       (v) => v.voto_confirmado === true
     ).length;
 
-    const votosSubsConfirmados = subs.reduce(
+    const votosIndirectosConfirmados = subs.reduce(
       (acc, sub) =>
         acc +
         estructura.votantes.filter(
@@ -68,18 +88,27 @@ export const getEstadisticas = (estructura, currentUser) => {
       0
     );
 
-    const votosConfirmadosTotales =
-      votosDirectosConfirmados + votosSubsConfirmados;
+    const votosConfirmados = votosDirectosConfirmados + votosIndirectosConfirmados;
+
+    // Coordinador self is always counted as 1 confirmed vote (automatic).
+    // Total confirmable = 1 (self) + subs + all voters
+    // Total confirmed  = 1 (self auto) + confirmedSubs + confirmedVoters
+    const totalConfirmable = 1 + subs.length + totalVotantes;
+    const totalConfirmados = 1 + subsConfirmados + votosConfirmados;
     const porcentajeConfirmados =
-      totalEnRed > 0 ? Math.round((votosConfirmadosTotales / totalEnRed) * 100) : 0;
+      totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
     return {
       subcoordinadores: subs.length,
+      subsConfirmados,
       votantesDirectos: votantesDirectos.length,
-      votantesIndirectos: votantesDeSubs,
-      total: totalEnRed,
-      votantesTotales: totalEnRed,
-      votosConfirmados: votosConfirmadosTotales,
+      votantesIndirectos,
+      totalRed: 1 + subs.length + totalVotantes,
+      totalVotantes,
+      totalConfirmable,
+      totalConfirmados,
+      votosConfirmados,
+      votosPendientes: totalConfirmable - totalConfirmados,
       porcentajeConfirmados,
     };
   }
@@ -101,11 +130,21 @@ export const getEstadisticas = (estructura, currentUser) => {
         ? Math.round((votosConfirmados / misVotantes.length) * 100)
         : 0;
 
+    // Sub self is always counted as 1 confirmed vote (automatic).
+    const totalConfirmable = 1 + misVotantes.length;
+    const totalConfirmados = 1 + votosConfirmados;
+    const porcentajeTotal =
+      totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
+
     return {
       votantes: misVotantes.length,
-      votantesTotales: misVotantes.length + 1, // 👈 el sub también es votante
+      totalRed: 1 + misVotantes.length,
+      totalVotantes: misVotantes.length,
+      totalConfirmable,
+      totalConfirmados,
       votosConfirmados,
-      porcentajeConfirmados,
+      votosPendientes: totalConfirmable - totalConfirmados,
+      porcentajeConfirmados: porcentajeTotal,
     };
   }
 
