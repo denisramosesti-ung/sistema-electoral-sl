@@ -871,10 +871,11 @@ const Dashboard = ({ currentUser, onLogout }) => {
         {/* =========== STATS CARDS =========== */}
         <section aria-label="Resumen estadístico">
           {currentUser.role === "superadmin" && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+              <StatCard label="Total red" value={stats?.totalRed} icon={TrendingUp} accent />
               <StatCard label="Coordinadores" value={stats?.coordinadores} icon={Users} />
               <StatCard label="Subcoordinadores" value={stats?.subcoordinadores} icon={Users} />
-              <StatCard label="Total votantes" value={stats?.votantes} icon={Users} accent />
+              <StatCard label="Votantes" value={stats?.votantes} icon={Users} />
               <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
               <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
             </div>
@@ -890,10 +891,11 @@ const Dashboard = ({ currentUser, onLogout }) => {
           )}
 
           {currentUser.role === "coordinador" && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+              <StatCard label="Total red" value={stats?.totalRed} icon={TrendingUp} accent />
               <StatCard label="Subcoordinadores" value={stats?.subcoordinadores} icon={Users} />
               <StatCard label="Votantes directos" value={stats?.votantesDirectos} icon={Users} />
-              <StatCard label="Total votantes" value={stats?.totalVotantes} icon={TrendingUp} accent />
+              <StatCard label="Total votantes" value={stats?.totalVotantes} icon={Users} />
               <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
               <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
             </div>
@@ -909,8 +911,9 @@ const Dashboard = ({ currentUser, onLogout }) => {
           )}
 
           {currentUser.role === "subcoordinador" && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-              <StatCard label="Mis votantes" value={stats?.votantes} icon={Users} accent />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              <StatCard label="Total red" value={stats?.totalRed} icon={TrendingUp} accent />
+              <StatCard label="Mis votantes" value={stats?.votantes} icon={Users} />
               <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
               <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
             </div>

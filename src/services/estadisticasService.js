@@ -20,6 +20,7 @@ export const getEstadisticas = (estructura, currentUser) => {
       coordinadores,
       subcoordinadores,
       votantes,
+      totalRed: coordinadores + subcoordinadores + votantes,
       totalVotantes: votantes,
       votosConfirmados,
       votosPendientes: votantes - votosConfirmados,
@@ -80,6 +81,7 @@ export const getEstadisticas = (estructura, currentUser) => {
       subcoordinadores: subs.length,
       votantesDirectos: votantesDirectos.length,
       votantesIndirectos,
+      totalRed: 1 + subs.length + totalVotantes,
       totalVotantes,
       votosConfirmados,
       votosPendientes: totalVotantes - votosConfirmados,
@@ -106,6 +108,7 @@ export const getEstadisticas = (estructura, currentUser) => {
 
     return {
       votantes: misVotantes.length,
+      totalRed: 1 + misVotantes.length,
       totalVotantes: misVotantes.length,
       votosConfirmados,
       votosPendientes: misVotantes.length - votosConfirmados,
