@@ -469,10 +469,12 @@ const Dashboard = ({ currentUser, onLogout }) => {
     setIsConfirmVotoLoading(true);
     try {
       const newStatus = !isVotoUndoing;
+      const targetCI = normalizeCI(confirmVotoTarget.ci);
+
       const { error } = await supabase
         .from("votantes")
         .update({ voto_confirmado: newStatus })
-        .eq("ci", confirmVotoTarget.ci);
+        .eq("ci", targetCI);
 
       if (error) {
         console.error("Error confirmando voto:", error);
@@ -480,9 +482,20 @@ const Dashboard = ({ currentUser, onLogout }) => {
         setIsConfirmVotoLoading(false);
         return;
       }
+
+      // Update local state instead of reloading the full structure.
+      // This gives instant UI feedback without a network round-trip.
+      setEstructura((prev) => ({
+        ...prev,
+        votantes: prev.votantes.map((v) =>
+          normalizeCI(v.ci) === targetCI
+            ? { ...v, voto_confirmado: newStatus }
+            : v
+        ),
+      }));
+
       setConfirmVotoModalOpen(false);
       setConfirmVotoTarget(null);
-      await recargarEstructura();
     } catch (e) {
       console.error("Error confirmando voto:", e);
       alert("Error procesando confirmación");
