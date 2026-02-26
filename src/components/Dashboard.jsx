@@ -314,14 +314,23 @@ const Dashboard = ({ currentUser, onLogout }) => {
 
   const [loadingEstructura, setLoadingEstructura] = useState(true);
 
+  // Non-blocking toast notification (replaces alert() to prevent scroll jump)
+  const [toastMsg, setToastMsg] = useState(null);
+  const toastTimer = React.useRef(null);
+  const showToast = useCallback((msg, duration = 2500) => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToastMsg(msg);
+    toastTimer.current = setTimeout(() => setToastMsg(null), duration);
+  }, []);
+
   // ======================= HELPERS =======================
   const copyToClipboard = useCallback(async (text) => {
     if (!text) return;
     try {
       await navigator.clipboard.writeText(text);
-      alert("Código copiado!");
+      showToast("Codigo copiado");
     } catch {
-      alert("No se pudo copiar.");
+      showToast("No se pudo copiar");
     }
   }, []);
 
@@ -627,20 +636,20 @@ const Dashboard = ({ currentUser, onLogout }) => {
     const { error } = await supabase.from(tabla).update({ telefono }).eq("ci", targetCI);
     if (error) { console.error("Error guardando teléfono:", error); alert(error.message || "Error guardando teléfono"); return; }
 
-    // Update local state
-    const updateTel = (arr) => arr.map((x) =>
-      normalizeCI(x.ci) === targetCI ? { ...x, telefono } : x
-    );
+    // Update only the affected array, preserve all other references
+    const tipo = phoneTarget.tipo;
+    const key = tipo === "coordinador" ? "coordinadores" : tipo === "subcoordinador" ? "subcoordinadores" : "votantes";
     setEstructura((prev) => ({
-      coordinadores: phoneTarget.tipo === "coordinador" ? updateTel(prev.coordinadores) : prev.coordinadores,
-      subcoordinadores: phoneTarget.tipo === "subcoordinador" ? updateTel(prev.subcoordinadores) : prev.subcoordinadores,
-      votantes: phoneTarget.tipo === "votante" ? updateTel(prev.votantes) : prev.votantes,
+      ...prev,
+      [key]: prev[key].map((x) =>
+        normalizeCI(x.ci) === targetCI ? { ...x, telefono } : x
+      ),
     }));
 
     setPhoneModalOpen(false);
     setPhoneTarget(null);
     setPhoneValue("+595");
-    alert("Teléfono actualizado correctamente");
+    showToast("Teléfono actualizado correctamente");
   };
 
   // ======================= DIRECCIÓN =======================
@@ -678,20 +687,20 @@ const Dashboard = ({ currentUser, onLogout }) => {
     const { error } = await supabase.from(tabla).update({ direccion_override }).eq("ci", targetCI);
     if (error) { console.error("Error guardando dirección:", error); alert(error.message || "Error guardando dirección"); return; }
 
-    // Update local state
-    const updateDir = (arr) => arr.map((x) =>
-      normalizeCI(x.ci) === targetCI ? { ...x, direccion_override } : x
-    );
+    // Update only the affected array, preserve all other references
+    const tipo = direccionTarget.tipo;
+    const key = tipo === "coordinador" ? "coordinadores" : tipo === "subcoordinador" ? "subcoordinadores" : "votantes";
     setEstructura((prev) => ({
-      coordinadores: direccionTarget.tipo === "coordinador" ? updateDir(prev.coordinadores) : prev.coordinadores,
-      subcoordinadores: direccionTarget.tipo === "subcoordinador" ? updateDir(prev.subcoordinadores) : prev.subcoordinadores,
-      votantes: direccionTarget.tipo === "votante" ? updateDir(prev.votantes) : prev.votantes,
+      ...prev,
+      [key]: prev[key].map((x) =>
+        normalizeCI(x.ci) === targetCI ? { ...x, direccion_override } : x
+      ),
     }));
 
     setDireccionModalOpen(false);
     setDireccionTarget(null);
     setDireccionValue("");
-    alert("Dirección actualizada correctamente");
+    showToast("Dirección actualizada correctamente");
   };
 
   // ======================= AGREGAR PERSONA =======================
@@ -715,7 +724,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
         coordinadores: [...prev.coordinadores, newCoord],
       }));
 
-      alert(`Código de acceso del coordinador:\n\n${accessCode}`);
+      showToast(`Coordinador creado. Codigo: ${accessCode}`);
+      try { await navigator.clipboard.writeText(accessCode); } catch { /* noop */ }
       setShowAddModal(false);
       return;
     }
@@ -740,7 +750,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
         subcoordinadores: [...prev.subcoordinadores, newSub],
       }));
 
-      alert(`Código de acceso del subcoordinador:\n\n${accessCode}`);
+      showToast(`Subcoordinador creado. Codigo: ${accessCode}`);
+      try { await navigator.clipboard.writeText(accessCode); } catch { /* noop */ }
       setShowAddModal(false);
       return;
     }
@@ -1661,6 +1672,16 @@ const Dashboard = ({ currentUser, onLogout }) => {
         descConfirm="¿Está seguro que desea confirmar a este subcoordinador? Esto indica que el subcoordinador ha sido verificado y está activo."
         descUndo="¿Está seguro que desea anular la confirmación de este subcoordinador? El registro volverá al estado pendiente."
       />
+
+      {/* Non-blocking toast */}
+      {toastMsg && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-medium shadow-lg">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            {toastMsg}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
