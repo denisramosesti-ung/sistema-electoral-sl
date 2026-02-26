@@ -604,14 +604,24 @@ const Dashboard = ({ currentUser, onLogout }) => {
     if (phoneTarget.tipo === "coordinador") tabla = "coordinadores";
     if (phoneTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
 
-    const { error } = await supabase.from(tabla).update({ telefono }).eq("ci", phoneTarget.ci);
+    const targetCI = normalizeCI(phoneTarget.ci);
+    const { error } = await supabase.from(tabla).update({ telefono }).eq("ci", targetCI);
     if (error) { console.error("Error guardando teléfono:", error); alert(error.message || "Error guardando teléfono"); return; }
+
+    // Update local state
+    const updateTel = (arr) => arr.map((x) =>
+      normalizeCI(x.ci) === targetCI ? { ...x, telefono } : x
+    );
+    setEstructura((prev) => ({
+      coordinadores: phoneTarget.tipo === "coordinador" ? updateTel(prev.coordinadores) : prev.coordinadores,
+      subcoordinadores: phoneTarget.tipo === "subcoordinador" ? updateTel(prev.subcoordinadores) : prev.subcoordinadores,
+      votantes: phoneTarget.tipo === "votante" ? updateTel(prev.votantes) : prev.votantes,
+    }));
 
     setPhoneModalOpen(false);
     setPhoneTarget(null);
     setPhoneValue("+595");
     alert("Teléfono actualizado correctamente");
-    recargarEstructura();
   };
 
   // ======================= DIRECCIÓN =======================
@@ -645,14 +655,24 @@ const Dashboard = ({ currentUser, onLogout }) => {
     if (direccionTarget.tipo === "subcoordinador") tabla = "subcoordinadores";
 
     const direccion_override = String(direccionValue || "").trim();
-    const { error } = await supabase.from(tabla).update({ direccion_override }).eq("ci", direccionTarget.ci);
+    const targetCI = normalizeCI(direccionTarget.ci);
+    const { error } = await supabase.from(tabla).update({ direccion_override }).eq("ci", targetCI);
     if (error) { console.error("Error guardando dirección:", error); alert(error.message || "Error guardando dirección"); return; }
+
+    // Update local state
+    const updateDir = (arr) => arr.map((x) =>
+      normalizeCI(x.ci) === targetCI ? { ...x, direccion_override } : x
+    );
+    setEstructura((prev) => ({
+      coordinadores: direccionTarget.tipo === "coordinador" ? updateDir(prev.coordinadores) : prev.coordinadores,
+      subcoordinadores: direccionTarget.tipo === "subcoordinador" ? updateDir(prev.subcoordinadores) : prev.subcoordinadores,
+      votantes: direccionTarget.tipo === "votante" ? updateDir(prev.votantes) : prev.votantes,
+    }));
 
     setDireccionModalOpen(false);
     setDireccionTarget(null);
     setDireccionValue("");
     alert("Dirección actualizada correctamente");
-    recargarEstructura();
   };
 
   // ======================= AGREGAR PERSONA =======================
@@ -663,29 +683,46 @@ const Dashboard = ({ currentUser, onLogout }) => {
     if (modalType === "coordinador") {
       if (currentUser.role !== "superadmin") { alert("Solo el superadmin puede agregar coordinadores."); return; }
       const accessCode = generarAccessCode(8);
-      const { error } = await supabase.from("coordinadores").insert([{
+      const { data: inserted, error } = await supabase.from("coordinadores").insert([{
         ci, login_code: accessCode, asignado_por_nombre: "Superadmin",
-      }]);
+      }]).select();
       if (error) { console.error("Error creando coordinador:", error); alert(error.message || "Error creando coordinador"); return; }
+
+      // Merge with padron data and add to local state
+      const padronEntry = padron.find((p) => normalizeCI(p.ci) === ci) || {};
+      const newCoord = { ...padronEntry, ...(inserted?.[0] || { ci, login_code: accessCode, asignado_por_nombre: "Superadmin" }), ci };
+      setEstructura((prev) => ({
+        ...prev,
+        coordinadores: [...prev.coordinadores, newCoord],
+      }));
+
       alert(`Código de acceso del coordinador:\n\n${accessCode}`);
       setShowAddModal(false);
-      recargarEstructura();
       return;
     }
 
     if (modalType === "subcoordinador") {
       if (currentUser.role !== "coordinador") { alert("Solo un coordinador puede agregar subcoordinadores."); return; }
       const accessCode = generarAccessCode(8);
-      const { error } = await supabase.from("subcoordinadores").insert([{
+      const insertPayload = {
         ci,
         coordinador_ci: normalizeCI(currentUser.ci),
         login_code: accessCode,
         asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
-      }]);
+      };
+      const { data: inserted, error } = await supabase.from("subcoordinadores").insert([insertPayload]).select();
       if (error) { console.error("Error creando subcoordinador:", error); alert(error.message || "Error creando subcoordinador"); return; }
+
+      // Merge with padron data and add to local state
+      const padronEntry = padron.find((p) => normalizeCI(p.ci) === ci) || {};
+      const newSub = { ...padronEntry, ...(inserted?.[0] || insertPayload), ci };
+      setEstructura((prev) => ({
+        ...prev,
+        subcoordinadores: [...prev.subcoordinadores, newSub],
+      }));
+
       alert(`Código de acceso del subcoordinador:\n\n${accessCode}`);
       setShowAddModal(false);
-      recargarEstructura();
       return;
     }
 
@@ -701,39 +738,72 @@ const Dashboard = ({ currentUser, onLogout }) => {
         coordinador_ci = normalizeCI(sub?.coordinador_ci);
       }
       if (!coordinador_ci) { alert("Error interno: no se pudo resolver coordinador_ci"); return; }
-      const { error } = await supabase.from("votantes").insert([{
+      const insertPayload = {
         ci,
         asignado_por: normalizeCI(currentUser.ci),
         asignado_por_nombre: `${currentUser.nombre} ${currentUser.apellido}`,
         coordinador_ci,
-      }]);
+      };
+      const { data: inserted, error } = await supabase.from("votantes").insert([insertPayload]).select();
       if (error) { console.error("Error creando votante:", error); alert(error.message || "Error creando votante"); return; }
+
+      // Merge with padron data and add to local state
+      const padronEntry = padron.find((p) => normalizeCI(p.ci) === ci) || {};
+      const newVotante = { ...padronEntry, ...(inserted?.[0] || insertPayload), ci };
+      setEstructura((prev) => ({
+        ...prev,
+        votantes: [...prev.votantes, newVotante],
+      }));
+
       setShowAddModal(false);
-      recargarEstructura();
     }
   };
 
   // ======================= QUITAR PERSONA =======================
-  const quitarPersona = async (ci, tipo) => {
+  const quitarPersona = async (ciRaw, tipo) => {
     if (!window.confirm("¿Quitar persona?")) return;
     const isSuper = currentUser.role === "superadmin";
-    ci = normalizeCI(ci);
+    const ci = normalizeCI(ciRaw);
     try {
       if (tipo === "coordinador") {
         if (!isSuper) return alert("Solo superadmin.");
+        // DB: cascade delete subs and voters under this coord
         await supabase.from("subcoordinadores").delete().eq("coordinador_ci", ci);
         await supabase.from("votantes").delete().eq("coordinador_ci", ci);
         await supabase.from("votantes").delete().eq("asignado_por", ci);
         await supabase.from("coordinadores").delete().eq("ci", ci);
+        // Local: remove coord + their subs + all voters under that coord
+        setEstructura((prev) => {
+          const subsToRemove = new Set(
+            prev.subcoordinadores.filter((s) => normalizeCI(s.coordinador_ci) === ci).map((s) => normalizeCI(s.ci))
+          );
+          return {
+            coordinadores: prev.coordinadores.filter((c) => normalizeCI(c.ci) !== ci),
+            subcoordinadores: prev.subcoordinadores.filter((s) => normalizeCI(s.coordinador_ci) !== ci),
+            votantes: prev.votantes.filter((v) =>
+              normalizeCI(v.coordinador_ci) !== ci && normalizeCI(v.asignado_por) !== ci && !subsToRemove.has(normalizeCI(v.asignado_por))
+            ),
+          };
+        });
       }
       if (tipo === "subcoordinador") {
         await supabase.from("votantes").delete().eq("asignado_por", ci);
         await supabase.from("subcoordinadores").delete().eq("ci", ci);
+        // Local: remove sub + their voters
+        setEstructura((prev) => ({
+          ...prev,
+          subcoordinadores: prev.subcoordinadores.filter((s) => normalizeCI(s.ci) !== ci),
+          votantes: prev.votantes.filter((v) => normalizeCI(v.asignado_por) !== ci),
+        }));
       }
       if (tipo === "votante") {
         await supabase.from("votantes").delete().eq("ci", ci);
+        // Local: remove voter
+        setEstructura((prev) => ({
+          ...prev,
+          votantes: prev.votantes.filter((v) => normalizeCI(v.ci) !== ci),
+        }));
       }
-      recargarEstructura();
     } catch (e) {
       console.error("Error quitando persona:", e);
       alert("Error quitando persona");
