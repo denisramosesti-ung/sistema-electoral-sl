@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
-import { Users } from "lucide-react";
+import { ShieldCheck, Eye, EyeOff } from "lucide-react";
 import Dashboard from "./components/Dashboard";
 import { normalizeCI } from "./utils/estructuraHelpers";
 
@@ -35,12 +35,13 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loginID, setLoginID] = useState("");
   const [loginPass, setLoginPass] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [isLogging, setIsLogging] = useState(false);
 
   // ======================= SESIÓN PERSISTENTE =======================
   useEffect(() => {
     const saved = localStorage.getItem("currentUser");
     if (!saved) return;
-
     try {
       const u = JSON.parse(saved);
       if (u && u.ci && u.role) setCurrentUser(u);
@@ -49,130 +50,87 @@ const App = () => {
     }
   }, []);
 
-  const getPersonasBuscables = () => {
-  if (!currentUser || !estructura) return [];
-
-  // SUPERADMIN: toda la estructura
-  if (currentUser.role === "superadmin") {
-    return [
-      ...estructura.coordinadores.map((c) => ({
-        ...c,
-        tipo: "coordinador",
-      })),
-      ...estructura.subcoordinadores.map((s) => ({
-        ...s,
-        tipo: "subcoordinador",
-      })),
-      ...estructura.votantes.map((v) => ({
-        ...v,
-        tipo: "votante",
-      })),
-    ];
-  }
-
-  // COORDINADOR
-  if (currentUser.role === "coordinador") {
-    return [
-      {
-        ...currentUser,
-        tipo: "coordinador",
-      },
-      ...estructura.subcoordinadores
-        .filter((s) => s.coordinadorCI === currentUser.ci)
-        .map((s) => ({ ...s, tipo: "subcoordinador" })),
-      ...estructura.votantes
-        .filter((v) => v.asignadoPor === currentUser.ci)
-        .map((v) => ({ ...v, tipo: "votante" })),
-    ];
-  }
-
-  // SUBCOORDINADOR
-  if (currentUser.role === "subcoordinador") {
-    return [
-      {
-        ...currentUser,
-        tipo: "subcoordinador",
-      },
-      ...estructura.votantes
-        .filter((v) => v.asignadoPor === currentUser.ci)
-        .map((v) => ({ ...v, tipo: "votante" })),
-    ];
-  }
-
-  return [];
-};
-
+  const isSuperadminLogin = SUPERADMINS.some((s) => s.ci === loginID.trim());
 
   // ======================= LOGIN =======================
   const handleLogin = async () => {
     const code = loginID.trim();
     if (!code) return alert("Ingrese CI o código.");
 
-    // ======================= SUPERADMIN LOCAL =======================
-    const superadmin = SUPERADMINS.find((s) => s.ci === code);
+    setIsLogging(true);
 
-    if (superadmin) {
-      if (loginPass !== superadmin.pass) {
-        return alert("Contraseña incorrecta.");
+    try {
+      // ======================= SUPERADMIN LOCAL =======================
+      const superadmin = SUPERADMINS.find((s) => s.ci === code);
+
+      if (superadmin) {
+        if (loginPass !== superadmin.pass) {
+          alert("Contraseña incorrecta.");
+          return;
+        }
+        const u = {
+          ci: superadmin.ci,
+          nombre: superadmin.nombre,
+          apellido: superadmin.apellido,
+          role: "superadmin",
+        };
+        setCurrentUser(u);
+        localStorage.setItem("currentUser", JSON.stringify(u));
+        return;
       }
 
-      const u = {
-        ci: superadmin.ci,
-        nombre: superadmin.nombre,
-        apellido: superadmin.apellido,
-        role: "superadmin",
-      };
+      // ======================= COORDINADOR =======================
+      const { data: coord, error: coordErr } = await supabase
+        .from("coordinadores")
+        .select("ci,login_code,telefono,padron(*)")
+        .eq("login_code", code)
+        .maybeSingle();
 
-      setCurrentUser(u);
-      localStorage.setItem("currentUser", JSON.stringify(u));
-      return;
+      if (coordErr) console.error("Error login coord:", coordErr);
+
+      if (coord?.padron) {
+        const u = {
+          ci: normalizeCI(coord.ci),
+          nombre: coord.padron.nombre,
+          apellido: coord.padron.apellido,
+          telefono: coord.telefono || "",
+          role: "coordinador",
+        };
+        setCurrentUser(u);
+        localStorage.setItem("currentUser", JSON.stringify(u));
+        return;
+      }
+
+      // ======================= SUBCOORDINADOR =======================
+      const { data: sub, error: subErr } = await supabase
+        .from("subcoordinadores")
+        .select("ci,login_code,telefono,coordinador_ci,padron(*)")
+        .eq("login_code", code)
+        .maybeSingle();
+
+      if (subErr) console.error("Error login sub:", subErr);
+
+      if (sub?.padron) {
+        const u = {
+          ci: normalizeCI(sub.ci),
+          nombre: sub.padron.nombre,
+          apellido: sub.padron.apellido,
+          telefono: sub.telefono || "",
+          role: "subcoordinador",
+        };
+        setCurrentUser(u);
+        localStorage.setItem("currentUser", JSON.stringify(u));
+        return;
+      }
+
+      alert("Usuario no encontrado.");
+    } finally {
+      setIsLogging(false);
     }
+  };
 
-    // ======================= COORDINADOR =======================
-    const { data: coord, error: coordErr } = await supabase
-      .from("coordinadores")
-      .select("ci,login_code,telefono,padron(*)")
-      .eq("login_code", code)
-      .maybeSingle();
-
-    if (coordErr) console.error("Error login coord:", coordErr);
-
-    if (coord?.padron) {
-      const u = {
-        ci: normalizeCI(coord.ci),
-        nombre: coord.padron.nombre,
-        apellido: coord.padron.apellido,
-        telefono: coord.telefono || "",
-        role: "coordinador",
-      };
-      setCurrentUser(u);
-      localStorage.setItem("currentUser", JSON.stringify(u));
-      return;
-    }
-
-    // ======================= SUBCOORDINADOR =======================
-    const { data: sub, error: subErr } = await supabase
-      .from("subcoordinadores")
-      .select("ci,login_code,telefono,coordinador_ci,padron(*)")
-      .eq("login_code", code)
-      .maybeSingle();
-
-    if (subErr) console.error("Error login sub:", subErr);
-
-    if (sub?.padron) {
-      const u = {
-        ci: normalizeCI(sub.ci),
-        nombre: sub.padron.nombre,
-        apellido: sub.padron.apellido,
-        telefono: sub.telefono || "",
-        role: "subcoordinador",
-      };
-      setCurrentUser(u);
-      localStorage.setItem("currentUser", JSON.stringify(u));
-      return;
-    }
-
-    alert("Usuario no encontrado.");
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleLogin();
   };
 
   const handleLogout = () => {
@@ -182,69 +140,129 @@ const App = () => {
     setLoginPass("");
   };
 
+  // ======================= DASHBOARD =======================
+  if (currentUser) {
+    return <Dashboard currentUser={currentUser} onLogout={handleLogout} />;
+  }
+
   // ======================= LOGIN VIEW =======================
-  if (!currentUser) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center px-4 py-6">
-        <div className="bg-white/95 backdrop-blur-sm p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md">
-          <div className="text-center mb-6 sm:mb-8">
-            <Users className="w-12 h-12 sm:w-16 sm:h-16 text-red-600 mx-auto" />
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mt-3">
+  return (
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4 py-8">
+      {/* Background decoration */}
+      <div
+        className="absolute inset-0 overflow-hidden pointer-events-none"
+        aria-hidden="true"
+      >
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-brand-100 opacity-50" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-brand-50 opacity-60" />
+      </div>
+
+      <div className="relative w-full max-w-md">
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-card-md overflow-hidden">
+          {/* Header band */}
+          <div className="bg-brand-700 px-8 py-6 text-white text-center">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-white/10 rounded-full mb-3">
+              <ShieldCheck className="w-7 h-7 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight">
               Sistema Electoral
             </h1>
-            <p className="text-sm sm:text-base text-gray-600">Gestión de Votantes</p>
+            <p className="text-brand-200 text-sm mt-1">
+              Gestión de Votantes — SL 2026
+            </p>
           </div>
 
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            CI o Código de Acceso
-          </label>
-          <input
-            type="text"
-            value={loginID}
-            onChange={(e) => setLoginID(e.target.value)}
-            className="w-full px-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-500 mb-4"
-            placeholder="Ej: A1B2C3D4"
-          />
+          {/* Form */}
+          <div className="px-8 py-7 space-y-5">
+            {/* CI / Código */}
+            <div>
+              <label
+                htmlFor="loginID"
+                className="block text-sm font-medium text-slate-700 mb-1.5"
+              >
+                CI o Código de Acceso
+              </label>
+              <input
+                id="loginID"
+                type="text"
+                value={loginID}
+                onChange={(e) => setLoginID(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-slate-50 placeholder-slate-400"
+                placeholder="Ej: A1B2C3D4"
+                autoComplete="username"
+              />
+            </div>
 
-          {/* CONTRASEÑA SOLO PARA SUPERADMINS */}
-{SUPERADMINS.some((s) => s.ci === loginID.trim()) && (
-  <>
-    <label className="block text-sm font-medium text-gray-700 mb-1">
-      Contraseña Superadmin
-    </label>
-    <input
-      type="password"
-      value={loginPass}
-      onChange={(e) => setLoginPass(e.target.value)}
-      className="w-full px-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-500 mb-4"
-      placeholder="Ingrese contraseña"
-    />
-  </>
-)}
+            {/* Contraseña — solo superadmin */}
+            {isSuperadminLogin && (
+              <div className="animate-fade-in">
+                <label
+                  htmlFor="loginPass"
+                  className="block text-sm font-medium text-slate-700 mb-1.5"
+                >
+                  Contraseña Superadmin
+                </label>
+                <div className="relative">
+                  <input
+                    id="loginPass"
+                    type={showPass ? "text" : "password"}
+                    value={loginPass}
+                    onChange={(e) => setLoginPass(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="w-full px-4 py-2.5 pr-11 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-slate-50 placeholder-slate-400"
+                    placeholder="Ingrese contraseña"
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0 border-0 bg-transparent shadow-none"
+                    aria-label={showPass ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  >
+                    {showPass ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
 
+            {/* Submit */}
+            <button
+              onClick={handleLogin}
+              disabled={isLogging}
+              className="w-full h-11 bg-brand-600 hover:bg-brand-700 disabled:bg-brand-400 text-white rounded-xl font-semibold text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
+            >
+              {isLogging ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Ingresando...
+                </>
+              ) : (
+                "Iniciar Sesión"
+              )}
+            </button>
+          </div>
 
-          <button
-            onClick={handleLogin}
-            className="w-full h-10 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold mb-3"
-          >
-            Iniciar Sesión
-          </button>
-
-          <div className="mt-4 sm:mt-6 bg-red-50 p-3 sm:p-4 rounded-lg border border-red-200 text-xs sm:text-sm text-red-700">
-            <p className="font-semibold mb-2">Instrucciones:</p>
-            <ol className="list-decimal ml-5 space-y-1">
-              <li>Ingrese CI o código.</li>
-              <li>Ingrese su contraseña.</li>
-              <li>Ante dudas, comuníquese con el administrador.</li>
-            </ol>
+          {/* Footer note */}
+          <div className="px-8 pb-7">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-600 space-y-1">
+              <p className="font-semibold text-slate-700 mb-2">Instrucciones</p>
+              <ol className="list-decimal ml-4 space-y-1 leading-relaxed">
+                <li>Ingrese su CI o código de acceso proporcionado.</li>
+                <li>Los superadmins deben ingresar su contraseña.</li>
+                <li>Ante dudas, comuníquese con el administrador.</li>
+              </ol>
+            </div>
           </div>
         </div>
       </div>
-    );
-  }
-
-  // ======================= DASHBOARD =======================
-  return <Dashboard currentUser={currentUser} onLogout={handleLogout} />;
+    </div>
+  );
 };
 
 export default App;

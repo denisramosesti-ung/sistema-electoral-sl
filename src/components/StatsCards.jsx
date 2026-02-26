@@ -1,13 +1,15 @@
+import React from "react";
+import { CheckCircle2 } from "lucide-react";
+
 export default function StatsCards({ role, stats }) {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
       {role === "superadmin" && (
         <>
-          <Card title="Coordinadores" value={stats.coordinadores} />
-          <Card title="Subcoordinadores" value={stats.subcoordinadores} />
-          <Card title="Votantes" value={stats.votantes} />
+          <Card label="Coordinadores" value={stats.coordinadores} />
+          <Card label="Subcoordinadores" value={stats.subcoordinadores} />
+          <Card label="Votantes" value={stats.votantes} />
           <CardProgress
-            title="Votos Confirmados"
             confirmed={stats.votosConfirmados}
             total={stats.votantes}
             percentage={stats.porcentajeConfirmados}
@@ -17,11 +19,10 @@ export default function StatsCards({ role, stats }) {
 
       {role === "coordinador" && (
         <>
-          <Card title="Subcoordinadores" value={stats.subcoordinadores} />
-          <Card title="Votantes directos" value={stats.votantesDirectos} />
-          <Card title="Total en red" value={stats.total} />
+          <Card label="Subcoordinadores" value={stats.subcoordinadores} />
+          <Card label="Votantes directos" value={stats.votantesDirectos} />
+          <Card label="Total en red" value={stats.total} />
           <CardProgress
-            title="Votos Confirmados"
             confirmed={stats.votosConfirmados}
             total={stats.total}
             percentage={stats.porcentajeConfirmados}
@@ -31,9 +32,8 @@ export default function StatsCards({ role, stats }) {
 
       {role === "subcoordinador" && (
         <>
-          <Card title="Mis votantes" value={stats.votantes} />
+          <Card label="Mis votantes" value={stats.votantes} />
           <CardProgress
-            title="Votos Confirmados"
             confirmed={stats.votosConfirmados}
             total={stats.votantes}
             percentage={stats.porcentajeConfirmados}
@@ -44,29 +44,45 @@ export default function StatsCards({ role, stats }) {
   );
 }
 
-function Card({ title, value }) {
+function Card({ label, value }) {
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">{title}</p>
-      <p className="text-4xl font-bold text-red-600">{value}</p>
+    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-card">
+      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
+        {label}
+      </p>
+      <p className="text-3xl font-bold text-slate-800">{value ?? 0}</p>
     </div>
   );
 }
 
-function CardProgress({ title, confirmed, total, percentage }) {
+function CardProgress({ confirmed, total, percentage }) {
+  const pct = percentage ?? 0;
+  const colorBar =
+    pct >= 75 ? "bg-emerald-500" : pct >= 50 ? "bg-amber-500" : "bg-brand-500";
+  const colorText =
+    pct >= 75 ? "text-emerald-600" : pct >= 50 ? "text-amber-600" : "text-slate-600";
+
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <p className="text-gray-600 text-sm">{title}</p>
-      <p className="text-3xl font-bold text-green-600 mb-2">
-        {confirmed}/{total}
-      </p>
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div
-          className="bg-green-600 h-2 rounded-full transition-all"
-          style={{ width: `${percentage}%` }}
-        ></div>
+    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-card">
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Votos Confirmados
+        </p>
+        <div className="p-1.5 bg-emerald-50 rounded-lg">
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+        </div>
       </div>
-      <p className="text-sm text-gray-600 mt-2">{percentage}% confirmado</p>
+      <p className="text-2xl font-bold text-slate-800 mb-2">
+        {confirmed ?? 0}
+        <span className="text-base text-slate-400 font-normal">/{total ?? 0}</span>
+      </p>
+      <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+        <div
+          className={`h-1.5 rounded-full transition-all duration-500 ${colorBar}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <p className={`text-xs font-bold mt-1.5 ${colorText}`}>{pct}% confirmado</p>
     </div>
   );
 }

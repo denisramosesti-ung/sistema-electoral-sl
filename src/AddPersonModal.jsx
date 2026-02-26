@@ -1,49 +1,32 @@
-// AddPersonModal.jsx
 import React, { useState, useEffect } from "react";
-import { Search, X } from "lucide-react";
+import { Search, X, UserPlus, ChevronLeft, ChevronRight } from "lucide-react";
 
 const AddPersonModal = ({ show, onClose, tipo, onAdd, disponibles }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (!show) {
-      setSearchTerm("");
-      setPage(1);
-    }
+    if (!show) { setSearchTerm(""); setPage(1); }
   }, [show]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [searchTerm]);
+  useEffect(() => { setPage(1); }, [searchTerm]);
 
   if (!show) return null;
 
   const term = searchTerm.trim();
 
-  // Normalizador: elimina tildes y mayúsculas
   const normalize = (text) =>
-    (text || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+    (text || "").toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-  // FILTRADO + BÚSQUEDA AVANZADA
   const filtered = term
     ? disponibles
         .filter((p) => {
           const fullName = `${p.nombre ?? ""} ${p.apellido ?? ""}`;
           const fullNameNorm = normalize(fullName);
           const ciTxt = (p.ci ?? "").toString().toLowerCase();
-
-          const words = normalize(term)
-            .split(" ")
-            .filter(Boolean); // separa por espacios
-
-          // Cada palabra debe existir en CI o en fullName (insensible a tildes)
-          return words.every(
-            (w) => ciTxt.includes(w) || fullNameNorm.includes(w)
-          );
+          const words = normalize(term).split(" ").filter(Boolean);
+          return words.every((w) => ciTxt.includes(w) || fullNameNorm.includes(w));
         })
         .sort((a, b) => {
           const exactA = a.ci?.toString() === searchTerm;
@@ -54,107 +37,116 @@ const AddPersonModal = ({ show, onClose, tipo, onAdd, disponibles }) => {
         })
     : [];
 
-
   const pageSize = 20;
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const startIdx = (page - 1) * pageSize;
   const pageData = filtered.slice(startIdx, startIdx + pageSize);
 
   const titulo =
-    tipo === "coordinador"
-      ? "Agregar Coordinador"
-      : tipo === "subcoordinador"
-      ? "Agregar Subcoordinador"
-      : "Agregar Votante";
+    tipo === "coordinador" ? "Agregar Coordinador"
+    : tipo === "subcoordinador" ? "Agregar Subcoordinador"
+    : "Agregar Votante";
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
-      <div className="bg-white rounded-2xl w-full max-w-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-        
-        {/* HEADER */}
-        <div className="p-3 sm:p-4 border-b bg-red-600 text-white flex justify-between items-center">
-          <h3 className="text-base sm:text-lg font-bold">{titulo}</h3>
-          <button onClick={onClose} className="hover:text-gray-200 transition shrink-0">
-            <X className="w-5 h-5 sm:w-6 sm:h-6" />
+    <div
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div className="bg-white rounded-2xl w-full max-w-xl shadow-modal overflow-hidden flex flex-col max-h-[90vh] animate-fade-in">
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50 shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 bg-brand-100 rounded-lg">
+              <UserPlus className="w-4 h-4 text-brand-600" />
+            </div>
+            <h3 className="text-base font-bold text-slate-800">{titulo}</h3>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors border-0 bg-transparent shadow-none"
+            aria-label="Cerrar"
+          >
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* BUSCADOR */}
-        <div className="p-3 sm:p-4 border-b">
+        {/* Search */}
+        <div className="px-5 py-3 border-b border-slate-100 shrink-0">
           <div className="relative">
-            <Search className="absolute left-3 top-2.5 sm:top-3 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               value={searchTerm}
-              placeholder="Buscar CI, nombre o apellido..."
+              placeholder="Buscar por CI, nombre o apellido..."
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 sm:pl-10 pr-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-500"
+              className="w-full pl-9 pr-9 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-slate-50"
+              autoFocus
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0 bg-transparent border-0 shadow-none"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
-
           {searchTerm && (
-            <p className="text-xs sm:text-sm text-gray-600 mt-2">
-              Resultados: {filtered.length}
+            <p className="text-xs text-slate-500 mt-1.5">
+              {filtered.length} resultado{filtered.length !== 1 ? "s" : ""}
             </p>
           )}
         </div>
 
-        {/* LISTA */}
-        <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-2 space-y-2">
+        {/* List */}
+        <div className="flex-1 overflow-y-auto px-5 py-3 space-y-1.5">
           {!searchTerm ? (
-            <p className="text-center text-gray-500 py-6 text-sm">
-              Escriba para buscar...
-            </p>
+            <div className="text-center py-10">
+              <Search className="w-8 h-8 text-slate-200 mx-auto mb-2" />
+              <p className="text-sm text-slate-400">Escriba para buscar personas del padrón.</p>
+            </div>
           ) : pageData.length === 0 ? (
-            <p className="text-center text-gray-500 py-6 text-sm">
-              No se encontraron resultados
-            </p>
+            <div className="text-center py-10">
+              <Search className="w-8 h-8 text-slate-200 mx-auto mb-2" />
+              <p className="text-sm text-slate-400">No se encontraron resultados.</p>
+            </div>
           ) : (
             pageData.map((persona) => {
               const bloqueado = persona.asignado === true;
-              const labelRol = persona.asignadoRol
-                ? ` (${persona.asignadoRol})`
-                : "";
               const asignador =
                 persona.asignadoPorNombreResolved ||
                 persona.asignadoPorNombre ||
-                (persona.asignadoRol === "Coordinador"
-                  ? "Superadmin"
-                  : "Asignado");
-              const asignadorRol =
-                persona.asignadoPorRolResolved || persona.asignadoRol || "";
+                (persona.asignadoRol === "Coordinador" ? "Superadmin" : "Asignado");
+              const asignadorRol = persona.asignadoPorRolResolved || persona.asignadoRol || "";
 
               return (
                 <div
                   key={persona.ci}
                   onClick={() => !bloqueado && onAdd(persona)}
-                  className={`p-3 sm:p-4 border rounded-lg transition ${
+                  className={`p-3 border rounded-xl transition-colors ${
                     bloqueado
-                      ? "bg-gray-200 opacity-60 cursor-not-allowed"
-                      : "bg-gray-50 hover:bg-red-50 cursor-pointer"
+                      ? "bg-slate-50 opacity-60 cursor-not-allowed border-slate-200"
+                      : "bg-white hover:bg-brand-50 hover:border-brand-200 cursor-pointer border-slate-200 active:bg-brand-100"
                   }`}
                 >
-                  <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">
+                  <p className="font-semibold text-sm text-slate-800 truncate">
                     {(persona.nombre || "").toUpperCase()}{" "}
                     {(persona.apellido || "").toUpperCase()}
                   </p>
-
-                  <div className="text-xs sm:text-sm text-gray-600 space-y-0.5">
-                    <p className="truncate">CI: {persona.ci}</p>
-                    {persona.seccional && (
-                      <p className="truncate">Seccional: {persona.seccional}</p>
-                    )}
-                    {persona.local_votacion && (
-                      <p className="truncate">Local de votación: {persona.local_votacion}</p>
-                    )}
-                    {persona.mesa && <p>Mesa: {persona.mesa}</p>}
-                    {persona.orden && <p>Orden: {persona.orden}</p>}
+                  <div className="text-xs text-slate-500 mt-0.5 space-y-0.5">
+                    <p>CI: {persona.ci}</p>
+                    <div className="flex flex-wrap gap-x-3">
+                      {persona.seccional && <span>Seccional: {persona.seccional}</span>}
+                      {persona.local_votacion && <span className="truncate">Local: {persona.local_votacion}</span>}
+                      {persona.mesa && <span>Mesa: {persona.mesa}</span>}
+                      {persona.orden && <span>Orden: {persona.orden}</span>}
+                    </div>
                   </div>
-
                   {bloqueado && (
-                    <p className="text-xs text-red-600 mt-2 truncate">
+                    <p className="text-xs text-brand-600 mt-1 font-medium truncate">
                       Ya asignado por {asignador}
-                      {asignadorRol ? ` (${asignadorRol})` : labelRol}
+                      {asignadorRol ? ` (${asignadorRol})` : ""}
                     </p>
                   )}
                 </div>
@@ -163,34 +155,36 @@ const AddPersonModal = ({ show, onClose, tipo, onAdd, disponibles }) => {
           )}
         </div>
 
-        {/* PAGINACIÓN */}
+        {/* Pagination */}
         {filtered.length > pageSize && (
-          <div className="flex justify-between items-center p-3 sm:p-4 border-t bg-white text-sm">
+          <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-slate-50 shrink-0">
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="px-3 h-10 border rounded disabled:opacity-40 text-xs sm:text-sm"
+              className="inline-flex items-center gap-1 px-3 h-8 border border-slate-200 rounded-lg text-xs text-slate-600 disabled:opacity-40 bg-white hover:bg-slate-50 transition-colors"
             >
-              ◀ Anterior
+              <ChevronLeft className="w-3.5 h-3.5" />
+              Anterior
             </button>
-            <span className="text-xs sm:text-sm">
+            <span className="text-xs text-slate-500">
               Página {page} de {totalPages}
             </span>
             <button
               disabled={page === totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="px-3 h-10 border rounded disabled:opacity-40 text-xs sm:text-sm"
+              className="inline-flex items-center gap-1 px-3 h-8 border border-slate-200 rounded-lg text-xs text-slate-600 disabled:opacity-40 bg-white hover:bg-slate-50 transition-colors"
             >
-              Siguiente ▶
+              Siguiente
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         )}
 
-        {/* BOTÓN CERRAR */}
-        <div className="p-3 sm:p-4 border-t">
+        {/* Footer */}
+        <div className="px-5 py-4 border-t border-slate-100 shrink-0">
           <button
             onClick={onClose}
-            className="w-full h-10 bg-gray-300 hover:bg-gray-400 rounded-lg text-sm"
+            className="w-full h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium transition-colors border-0"
           >
             Cerrar
           </button>
