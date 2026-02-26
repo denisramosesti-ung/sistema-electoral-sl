@@ -179,7 +179,7 @@ const VoteProgressCard = ({ confirmed, total, percentage }) => (
 const VoteCounter = ({ confirmed, total }) => {
   if (total === undefined || total === null) return null;
   return (
-    <span className="inline-flex items-center gap-0.5 text-xs font-medium ml-1.5 shrink-0">
+    <span className="inline-flex items-center gap-0.5 text-xs font-medium shrink-0">
       <span className="text-emerald-600 font-bold">{confirmed ?? 0}</span>
       <span className="text-slate-400">/</span>
       <span className="text-slate-500">{total}</span>
@@ -188,12 +188,14 @@ const VoteCounter = ({ confirmed, total }) => {
 };
 
 // ======================= PERSONA DATA =======================
-const DatosPersona = ({ persona, rol, loginCode, onCopy }) => {
+// counter: optional ReactNode rendered inline next to the name (e.g. VoteCounter)
+const DatosPersona = ({ persona, rol, loginCode, onCopy, counter }) => {
   const direccionMostrar = persona.direccion_override || persona.direccion;
   return (
     <div className="space-y-0.5 text-xs sm:text-sm">
-      <p className="font-semibold text-slate-800 truncate">
-        {persona.nombre || "-"} {persona.apellido || ""}
+      <p className="font-semibold text-slate-800 flex items-center gap-1 flex-wrap">
+        <span>{persona.nombre || "-"} {persona.apellido || ""}</span>
+        {counter}
       </p>
       <p className="text-slate-500 truncate">
         CI: <span className="text-slate-700 font-medium">{persona.ci}</span>
@@ -1118,10 +1120,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
                               : <ChevronRight className="w-4 h-4" />}
                           </span>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center flex-wrap gap-x-1">
-                              <DatosPersona persona={coord} rol="Coordinador" loginCode={coord.login_code} onCopy={copyToClipboard} />
-                              <VoteCounter confirmed={coordCounts.confirmed} total={coordCounts.total} />
-                            </div>
+                            <DatosPersona
+                              persona={coord}
+                              rol="Coordinador"
+                              loginCode={coord.login_code}
+                              onCopy={copyToClipboard}
+                              counter={<VoteCounter confirmed={coordCounts.confirmed} total={coordCounts.total} />}
+                            />
                           </div>
                         </div>
                         <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -1160,10 +1165,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                           : <ChevronRight className="w-3.5 h-3.5" />}
                                       </span>
                                       <div className="flex-1 min-w-0">
-                                        <div className="flex items-center flex-wrap gap-x-1">
-                                          <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} onCopy={copyToClipboard} />
-                                          <VoteCounter confirmed={subCounts.confirmed} total={subCounts.total} />
-                                        </div>
+                                        <DatosPersona
+                                          persona={sub}
+                                          rol="Sub-coordinador"
+                                          loginCode={sub.login_code}
+                                          onCopy={copyToClipboard}
+                                          counter={<VoteCounter confirmed={subCounts.confirmed} total={subCounts.total} />}
+                                        />
                                       </div>
                                     </div>
                                     <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -1180,7 +1188,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                   </div>
 
                                   {/* Sub votantes */}
-                                  {expandedCoords[normalizeCI(sub.ci)] && (
+                                  {expandedCoords[subCI] && (
                                     <div className="border-t border-slate-100 bg-slate-50 px-3 pb-3 pt-2 overflow-x-auto animate-fade-in">
                                       <div className="space-y-1.5 min-w-0">
                                         {getVotantesDeSubcoord(estructura, sub.ci).map((v) => (
@@ -1244,10 +1252,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
                               : <ChevronRight className="w-4 h-4" />}
                           </span>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center flex-wrap gap-x-1">
-                              <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} onCopy={copyToClipboard} />
-                              <VoteCounter confirmed={subCounts.confirmed} total={subCounts.total} />
-                            </div>
+                            <DatosPersona
+                              persona={sub}
+                              rol="Sub-coordinador"
+                              loginCode={sub.login_code}
+                              onCopy={copyToClipboard}
+                              counter={<VoteCounter confirmed={subCounts.confirmed} total={subCounts.total} />}
+                            />
                           </div>
                         </div>
                         <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
