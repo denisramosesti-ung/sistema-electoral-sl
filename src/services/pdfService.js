@@ -7,15 +7,18 @@ const PAGE_FORMAT = "a4";
 const PAGE_ORIENTATION = "portrait";
 const M = { top: 15, bottom: 15, left: 15, right: 15 };
 
+// Brand colors matching app UI (tailwind.config.js)
+const COLOR_BRAND      = [220, 38, 38];    // brand-600 #dc2626
+const COLOR_BRAND_DARK = [185, 28, 28];    // brand-700 #b91c1c
 const COLOR_TEXT       = [15, 23, 42];     // slate-900
 const COLOR_MUTED      = [100, 116, 139];  // slate-500
-const COLOR_LINE       = [203, 213, 225];  // slate-300
-const COLOR_HEADER_BG  = [30, 41, 59];     // slate-800
+const COLOR_LINE       = [220, 38, 38];    // brand-600 for separator
+const COLOR_HEADER_BG  = [185, 28, 28];    // brand-700 for table headers
 const COLOR_HEADER_TXT = [255, 255, 255];
-const COLOR_ALT_ROW    = [248, 250, 252];  // slate-50
-const COLOR_GREEN_TXT  = [22, 101, 52];    // green-800
-const COLOR_RED_TXT    = [153, 27, 27];    // red-800
-const COLOR_SECTION_BG = [241, 245, 249];  // slate-100
+const COLOR_ALT_ROW    = [254, 242, 242];  // brand-50 #fef2f2
+const COLOR_GREEN_TXT  = [22, 163, 74];    // green-600 (app success)
+const COLOR_RED_TXT    = [220, 38, 38];    // brand-600 (app danger)
+const COLOR_SECTION_BG = [254, 226, 226];  // brand-100 #fee2e2
 
 // ======================= HELPERS =======================
 function fecha() {
@@ -29,14 +32,42 @@ function fecha() {
 function str(v) { return v != null ? String(v) : ""; }
 function name(p) { return `${str(p.nombre)} ${str(p.apellido)}`.trim() || "—"; }
 
-// ======================= HEADER =======================
-function addHeader(doc, reportType, userName) {
-  const pw = doc.internal.pageSize.getWidth();
+// Load logo image as base64 for embedding in PDF
+async function loadLogo() {
+  try {
+    const response = await fetch("/anr.png");
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return null;
+  }
+}
 
-  // Centered main title
+// ======================= HEADER =======================
+// logoImg is optional - if provided, renders logo at top left
+function addHeader(doc, reportType, userName, logoImg = null) {
+  const pw = doc.internal.pageSize.getWidth();
+  const logoW = 22;
+  const logoH = 15; // approx aspect ratio
+
+  // Logo at top left (if available)
+  if (logoImg) {
+    try {
+      doc.addImage(logoImg, "PNG", M.left, M.top, logoW, logoH);
+    } catch (e) {
+      console.warn("Could not add logo to PDF:", e);
+    }
+  }
+
+  // Centered main title (offset slightly right to account for logo)
   doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(...COLOR_TEXT);
+  doc.setTextColor(...COLOR_BRAND_DARK);
   doc.text("Jose Chechito Lopez - Concejal 2026", pw / 2, M.top + 8, { align: "center" });
 
   // Report type
@@ -52,9 +83,9 @@ function addHeader(doc, reportType, userName) {
   // Date
   doc.text(`Fecha: ${fecha()}`, pw / 2, M.top + 27, { align: "center" });
 
-  // Separator line
-  doc.setDrawColor(...COLOR_LINE);
-  doc.setLineWidth(0.4);
+  // Separator line using brand color
+  doc.setDrawColor(...COLOR_BRAND);
+  doc.setLineWidth(0.6);
   doc.line(M.left, M.top + 31, pw - M.right, M.top + 31);
 
   return M.top + 36;
@@ -267,9 +298,10 @@ function ensureSpace(doc, needed, afterY) {
 // ====================================================================
 // SUPERADMIN PDF
 // ====================================================================
-export const generateSuperadminPDF = ({ estructura, currentUser }) => {
+export const generateSuperadminPDF = async ({ estructura, currentUser }) => {
   const doc = new jsPDF(PAGE_ORIENTATION, "mm", PAGE_FORMAT);
   const userName = name(currentUser);
+  const logoImg = await loadLogo();
 
   const { coordinadores = [], subcoordinadores = [], votantes = [] } = estructura;
 
@@ -281,7 +313,7 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
   const pct = totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
   // ---- Page 1: Global Summary ----
-  let y = addHeader(doc, "Reporte Superadmin", userName);
+  let y = addHeader(doc, "Reporte Superadmin", userName, logoImg);
 
   y = sectionTitle(doc, "Resumen Global", y);
   y = addSummaryBox(doc, y, [
@@ -309,7 +341,7 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
 
     // Always start a new page per coordinator
     doc.addPage();
-    y = addHeader(doc, "Reporte Superadmin", userName);
+    y = addHeader(doc, "Reporte Superadmin", userName, logoImg);
 
     // Coordinator section header
     y = sectionTitle(doc, `Coordinador: ${name(coord)}`, y);
@@ -367,9 +399,10 @@ export const generateSuperadminPDF = ({ estructura, currentUser }) => {
 // ====================================================================
 // COORDINADOR PDF
 // ====================================================================
-export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
+export const generateCoordinadorPDF = async ({ estructura, currentUser }) => {
   const doc = new jsPDF(PAGE_ORIENTATION, "mm", PAGE_FORMAT);
   const userName = name(currentUser);
+  const logoImg = await loadLogo();
   const miCI = normalizeCI(currentUser.ci);
 
   const { subcoordinadores = [], votantes = [] } = estructura;
@@ -385,7 +418,7 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
   const pct = totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
   // ---- Summary ----
-  let y = addHeader(doc, "Reporte Coordinador", userName);
+  let y = addHeader(doc, "Reporte Coordinador", userName, logoImg);
   y = sectionTitle(doc, "Resumen de Mi Red", y);
   y = addSummaryBox(doc, y, [
     ["Total Red", String(totalConfirmable)],
@@ -432,9 +465,10 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
 // ====================================================================
 // SUBCOORDINADOR PDF
 // ====================================================================
-export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
+export const generateSubcoordinadorPDF = async ({ estructura, currentUser }) => {
   const doc = new jsPDF(PAGE_ORIENTATION, "mm", PAGE_FORMAT);
   const userName = name(currentUser);
+  const logoImg = await loadLogo();
   const miCI = normalizeCI(currentUser.ci);
 
   const { votantes = [] } = estructura;
@@ -445,7 +479,7 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
   const pct = totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
   // ---- Summary ----
-  let y = addHeader(doc, "Reporte Subcoordinador", userName);
+  let y = addHeader(doc, "Reporte Subcoordinador", userName, logoImg);
   y = sectionTitle(doc, "Resumen", y);
   y = addSummaryBox(doc, y, [
     ["Total Red", String(totalConfirmable)],

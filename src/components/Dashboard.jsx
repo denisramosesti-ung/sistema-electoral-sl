@@ -958,13 +958,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
       let doc;
       let filename = "reporte";
       if (currentUser.role === "superadmin") {
-        doc = generateSuperadminPDF({ estructura, currentUser });
+        doc = await generateSuperadminPDF({ estructura, currentUser });
         filename = "reporte-superadmin";
       } else if (currentUser.role === "coordinador") {
-        doc = generateCoordinadorPDF({ estructura, currentUser });
+        doc = await generateCoordinadorPDF({ estructura, currentUser });
         filename = "reporte-coordinador";
       } else if (currentUser.role === "subcoordinador") {
-        doc = generateSubcoordinadorPDF({ estructura, currentUser });
+        doc = await generateSubcoordinadorPDF({ estructura, currentUser });
         filename = "reporte-subcoordinador";
       } else {
         alert("Rol no soportado para reportes");
