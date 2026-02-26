@@ -19,9 +19,11 @@ export const getEstadisticas = (estructura, currentUser) => {
       (v) => v.voto_confirmado === true
     ).length;
 
-    // Total confirmable = subs + voters; confirmed = confirmedSubs + confirmedVoters
-    const totalConfirmable = subcoordinadores + votantes;
-    const totalConfirmados = subsConfirmados + votosConfirmados;
+    // Coordinadores are always counted as 1 confirmed vote each (automatic).
+    // Total confirmable = coordinadores + subs + voters
+    // Total confirmed  = coordinadores (auto) + confirmedSubs + confirmedVoters
+    const totalConfirmable = coordinadores + subcoordinadores + votantes;
+    const totalConfirmados = coordinadores + subsConfirmados + votosConfirmados;
     const porcentajeConfirmados =
       totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
@@ -88,9 +90,11 @@ export const getEstadisticas = (estructura, currentUser) => {
 
     const votosConfirmados = votosDirectosConfirmados + votosIndirectosConfirmados;
 
-    // Total confirmable = subs + all voters; confirmed = confirmedSubs + confirmedVoters
-    const totalConfirmable = subs.length + totalVotantes;
-    const totalConfirmados = subsConfirmados + votosConfirmados;
+    // Coordinador self is always counted as 1 confirmed vote (automatic).
+    // Total confirmable = 1 (self) + subs + all voters
+    // Total confirmed  = 1 (self auto) + confirmedSubs + confirmedVoters
+    const totalConfirmable = 1 + subs.length + totalVotantes;
+    const totalConfirmados = 1 + subsConfirmados + votosConfirmados;
     const porcentajeConfirmados =
       totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
 
@@ -126,15 +130,21 @@ export const getEstadisticas = (estructura, currentUser) => {
         ? Math.round((votosConfirmados / misVotantes.length) * 100)
         : 0;
 
+    // Sub self is always counted as 1 confirmed vote (automatic).
+    const totalConfirmable = 1 + misVotantes.length;
+    const totalConfirmados = 1 + votosConfirmados;
+    const porcentajeTotal =
+      totalConfirmable > 0 ? Math.round((totalConfirmados / totalConfirmable) * 100) : 0;
+
     return {
       votantes: misVotantes.length,
       totalRed: 1 + misVotantes.length,
       totalVotantes: misVotantes.length,
-      totalConfirmable: misVotantes.length,
-      totalConfirmados: votosConfirmados,
+      totalConfirmable,
+      totalConfirmados,
       votosConfirmados,
-      votosPendientes: misVotantes.length - votosConfirmados,
-      porcentajeConfirmados,
+      votosPendientes: totalConfirmable - totalConfirmados,
+      porcentajeConfirmados: porcentajeTotal,
     };
   }
 

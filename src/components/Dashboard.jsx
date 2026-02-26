@@ -836,11 +836,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
   );
 
   // ======================= PER-PERSON VOTE COUNTS =======================
-  // Map: normalizedCI -> { confirmed, total }
-  // For a coordinador: total = all voters where coordinador_ci === coord.ci
-  //                    confirmed = those with voto_confirmado = true
-  // For a subcoordinador: total = all voters where asignado_por === sub.ci
-  //                       confirmed = those with voto_confirmado = true
+  // Coordinador inline counter: 1 (self auto) + subs + voters
+  // Subcoordinador inline counter: 1 (self auto) + voters
   const voteCountsByCoord = useMemo(() => {
     const map = {};
     (estructura.coordinadores || []).forEach((coord) => {
@@ -853,9 +850,10 @@ const Dashboard = ({ currentUser, onLogout }) => {
       );
       const subsConfirmed = subs.filter((s) => s.confirmado === true).length;
       const votersConfirmed = voters.filter((v) => v.voto_confirmado === true).length;
+      // +1 for coord self (always auto-confirmed)
       map[ci] = {
-        total: subs.length + voters.length,
-        confirmed: subsConfirmed + votersConfirmed,
+        total: 1 + subs.length + voters.length,
+        confirmed: 1 + subsConfirmed + votersConfirmed,
       };
     });
     return map;
@@ -868,9 +866,11 @@ const Dashboard = ({ currentUser, onLogout }) => {
       const voters = (estructura.votantes || []).filter(
         (v) => normalizeCI(v.asignado_por) === ci
       );
+      const votersConfirmed = voters.filter((v) => v.voto_confirmado === true).length;
+      // +1 for sub self (always auto-confirmed)
       map[ci] = {
-        total: voters.length,
-        confirmed: voters.filter((v) => v.voto_confirmado === true).length,
+        total: 1 + voters.length,
+        confirmed: 1 + votersConfirmed,
       };
     });
     return map;
