@@ -298,23 +298,37 @@ export const generateCoordinadorPDF = ({ estructura, currentUser }) => {
       allVotantes.push(...arr);
     }
 
-    const votantesTableData = allVotantes.map((v) => [
-      v.nombre + " " + v.apellido,
-      v.ci,
-      v.telefono || "—",
-      v.voto_confirmado ? "Confirmado" : "Pendiente",
-    ]);
+    const votantesTableData = allVotantes.map((v) => {
+      const direccionMostrar = v.direccion_override || v.direccion || "—";
+      const estadoTexto = v.voto_confirmado ? "Confirmado" : "Pendiente";
+      return [
+        v.nombre + " " + v.apellido,
+        v.ci,
+        v.rol || "Votante",
+        v.seccional || "—",
+        v.local_votacion || "—",
+        v.mesa || "—",
+        v.orden || "—",
+        direccionMostrar,
+        estadoTexto,
+      ];
+    });
 
     autoTable(doc, {
       startY: currentY + 5,
-      head: [["Votante", "CI", "Teléfono", "Estado"]],
+      head: [["Nombre", "CI", "Rol", "Seccional", "Local", "Mesa", "Orden", "Dirección", "Estado"]],
       body: votantesTableData,
       margin: { ...MARGINS },
       columnStyles: {
-        0: { cellWidth: 60 },
-        1: { cellWidth: 40 },
-        2: { cellWidth: 40 },
-        3: { cellWidth: 30, halign: "center" },
+        0: { cellWidth: 35, overflow: "linebreak", fontStyle: "normal" }, // Nombre
+        1: { cellWidth: 18, overflow: "linebreak" }, // CI
+        2: { cellWidth: 15, overflow: "linebreak" }, // Rol
+        3: { cellWidth: 15, overflow: "linebreak" }, // Seccional
+        4: { cellWidth: 15, overflow: "linebreak" }, // Local
+        5: { cellWidth: 12, overflow: "linebreak", halign: "center" }, // Mesa
+        6: { cellWidth: 12, overflow: "linebreak", halign: "center" }, // Orden
+        7: { cellWidth: 40, overflow: "linebreak" }, // Dirección
+        8: { cellWidth: 20, overflow: "linebreak", halign: "center" }, // Estado
       },
       headStyles: { fillColor: [139, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
       bodyStyles: { textColor: [0, 0, 0] },
@@ -416,23 +430,37 @@ export const generateSubcoordinadorPDF = ({ estructura, currentUser }) => {
     doc.setFontSize(9);
     doc.text("No tiene votantes asignados", MARGINS.left, currentY + 6);
   } else {
-    const votantesTableData = misVotantes.map((v) => [
-      v.nombre + " " + v.apellido,
-      v.ci,
-      v.telefono || "—",
-      v.voto_confirmado ? "Confirmado" : "Pendiente",
-    ]);
+    const votantesTableData = misVotantes.map((v) => {
+      const direccionMostrar = v.direccion_override || v.direccion || "—";
+      const estadoTexto = v.voto_confirmado ? "Confirmado" : "Pendiente";
+      return [
+        v.nombre + " " + v.apellido,
+        v.ci,
+        v.rol || "Votante",
+        v.seccional || "—",
+        v.local_votacion || "—",
+        v.mesa || "—",
+        v.orden || "—",
+        direccionMostrar,
+        estadoTexto,
+      ];
+    });
 
     autoTable(doc, {
       startY: currentY + 5,
-      head: [["Votante", "CI", "Teléfono", "Estado"]],
+      head: [["Nombre", "CI", "Rol", "Seccional", "Local", "Mesa", "Orden", "Dirección", "Estado"]],
       body: votantesTableData,
       margin: { ...MARGINS },
       columnStyles: {
-        0: { cellWidth: 60 },
-        1: { cellWidth: 40 },
-        2: { cellWidth: 40 },
-        3: { cellWidth: 30, halign: "center" },
+        0: { cellWidth: 35, overflow: "linebreak", fontStyle: "normal" }, // Nombre
+        1: { cellWidth: 18, overflow: "linebreak" }, // CI
+        2: { cellWidth: 15, overflow: "linebreak" }, // Rol
+        3: { cellWidth: 15, overflow: "linebreak" }, // Seccional
+        4: { cellWidth: 15, overflow: "linebreak" }, // Local
+        5: { cellWidth: 12, overflow: "linebreak", halign: "center" }, // Mesa
+        6: { cellWidth: 12, overflow: "linebreak", halign: "center" }, // Orden
+        7: { cellWidth: 40, overflow: "linebreak" }, // Dirección
+        8: { cellWidth: 20, overflow: "linebreak", halign: "center" }, // Estado
       },
       headStyles: { fillColor: [139, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
       bodyStyles: { textColor: [0, 0, 0] },

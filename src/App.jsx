@@ -173,38 +173,38 @@ const App = () => {
   // ======================= LOGIN VIEW =======================
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center p-4">
-        <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-xl w-full max-w-md">
-          <div className="text-center mb-8">
-            <Users className="w-16 h-16 text-red-600 mx-auto" />
-            <h1 className="text-3xl font-bold text-gray-800 mt-3">
+      <div className="min-h-screen bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center px-4 py-6">
+        <div className="bg-white/95 backdrop-blur-sm p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md">
+          <div className="text-center mb-6 sm:mb-8">
+            <Users className="w-12 h-12 sm:w-16 sm:h-16 text-red-600 mx-auto" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mt-3">
               Sistema Electoral
             </h1>
-            <p className="text-gray-600">Gestión de Votantes</p>
+            <p className="text-sm sm:text-base text-gray-600">Gestión de Votantes</p>
           </div>
 
-          <label className="text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             CI o Código de Acceso
           </label>
           <input
             type="text"
             value={loginID}
             onChange={(e) => setLoginID(e.target.value)}
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 mb-4"
+            className="w-full px-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-500 mb-4"
             placeholder="Ej: A1B2C3D4"
           />
 
           {/* CONTRASEÑA SOLO PARA SUPERADMINS */}
 {SUPERADMINS.some((s) => s.ci === loginID.trim()) && (
   <>
-    <label className="text-sm font-medium text-gray-700">
+    <label className="block text-sm font-medium text-gray-700 mb-1">
       Contraseña Superadmin
     </label>
     <input
       type="password"
       value={loginPass}
       onChange={(e) => setLoginPass(e.target.value)}
-      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 mb-4"
+      className="w-full px-4 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-500 mb-4"
       placeholder="Ingrese contraseña"
     />
   </>
@@ -213,12 +213,12 @@ const App = () => {
 
           <button
             onClick={handleLogin}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold mb-3"
+            className="w-full h-10 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold mb-3"
           >
             Iniciar Sesión
           </button>
 
-          <div className="mt-6 bg-red-50 p-4 rounded-lg border border-red-200 text-sm text-red-700">
+          <div className="mt-4 sm:mt-6 bg-red-50 p-3 sm:p-4 rounded-lg border border-red-200 text-xs sm:text-sm text-red-700">
             <p className="font-semibold mb-2">Instrucciones:</p>
             <ol className="list-decimal ml-5 space-y-1">
               <li>Ingrese CI o código.</li>

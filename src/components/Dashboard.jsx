@@ -635,13 +635,13 @@ const Dashboard = ({ currentUser, onLogout }) => {
               e.stopPropagation();
               copyToClipboard(loginCode);
             }}
-            className="p-1 border rounded text-red-600 inline-flex items-center gap-1"
+            className="px-2 py-1 border rounded text-red-600 inline-flex items-center gap-1 text-xs hover:bg-red-50"
           >
-            <Copy className="w-4 h-4" /> Copiar acceso
+            <Copy className="w-3 h-3 sm:w-4 sm:h-4" /> Copiar acceso
           </button>
         )}
-        {persona.seccional && <p>Seccional: {persona.seccional}</p>}
-        {persona.local_votacion && <p>Local: {persona.local_votacion}</p>}
+        {persona.seccional && <p className="truncate">Seccional: {persona.seccional}</p>}
+        {persona.local_votacion && <p className="truncate">Local: {persona.local_votacion}</p>}
         {persona.mesa && <p>Mesa: {persona.mesa}</p>}
         {persona.orden && <p>Orden: {persona.orden}</p>}
         {persona.direccion && (
@@ -1322,7 +1322,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
                       className="flex items-start justify-between p-5 cursor-pointer gap-4"
                       onClick={() => toggleExpand(sub.ci)}
                     >
-                      <div className="flex items-start gap-3 flex-1">
+                      <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                         {expandedCoords[normalizeCI(sub.ci)] ? (
                           <ChevronDown className="w-6 h-6 text-red-600" />
                         ) : (
@@ -1368,7 +1368,17 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           onClick={(e) => { e.stopPropagation(); abrirTelefono("subcoordinador", sub); }}
                           className="inline-flex items-center justify-center w-11 h-11 border-2 border-green-500 text-green-600 rounded-xl hover:bg-green-50 hover:border-green-600 transition-all shadow-sm hover:shadow-md"
                         >
-                          <Phone className="w-5 h-5" />
+                          <Phone className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            abrirDireccion("subcoordinador", sub);
+                          }}
+                          className="inline-flex items-center justify-center w-10 h-10 border-2 border-blue-600 text-blue-700 rounded-lg hover:bg-blue-50"
+                          title="Editar dirección"
+                        >
+                          <MapPin className="w-4 h-4" />
                         </button>
                         {!sub.voto_confirmado && canConfirmarVoto(sub, "subcoordinador") && (
                           <button
@@ -1392,7 +1402,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
                           onClick={(e) => { e.stopPropagation(); quitarPersona(sub.ci, "subcoordinador"); }}
                           className="inline-flex items-center justify-center w-11 h-11 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
