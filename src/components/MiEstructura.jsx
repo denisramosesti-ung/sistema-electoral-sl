@@ -30,7 +30,7 @@ const MiEstructura = ({
   // ======================= DATOS PERSONA =======================
   const DatosPersona = ({ persona, rol, loginCode }) => (
     <div className="space-y-1 text-xs md:text-sm">
-      <p className="font-semibold">
+      <p className="font-semibold break-words">
         {persona.nombre} {persona.apellido}
       </p>
       <p>
@@ -74,14 +74,14 @@ const MiEstructura = ({
               className="border rounded-lg mb-3 bg-red-50/40"
             >
               <div
-                className="flex items-start justify-between p-4 cursor-pointer gap-4"
+                className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 cursor-pointer"
                 onClick={() => toggleExpand(coord.ci)}
               >
-                <div className="flex items-start gap-3 flex-1">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
                   {expandedCoords[normalizeCI(coord.ci)] ? (
-                    <ChevronDown className="w-5 h-5 text-red-600" />
+                    <ChevronDown className="w-5 h-5 text-red-600 shrink-0" />
                   ) : (
-                    <ChevronRight className="w-5 h-5 text-red-600" />
+                    <ChevronRight className="w-5 h-5 text-red-600 shrink-0" />
                   )}
                   <DatosPersona
                     persona={coord}
@@ -90,7 +90,7 @@ const MiEstructura = ({
                   />
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 sm:justify-start">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -134,7 +134,7 @@ const MiEstructura = ({
                         {getVotantesDeSubcoord(sub.ci).map((v) => (
                           <div
                             key={v.ci}
-                            className="bg-white border p-2 mt-2 rounded flex justify-between"
+                            className="bg-white border p-2 mt-2 rounded flex flex-col gap-2 sm:flex-row sm:justify-between"
                           >
                             <DatosPersona persona={v} rol="Votante" />
                             <div className="flex gap-2">
@@ -163,7 +163,7 @@ const MiEstructura = ({
                   {getVotantesDirectosCoord(coord.ci).map((v) => (
                     <div
                       key={v.ci}
-                      className="bg-white border p-2 mt-2 rounded flex justify-between"
+                      className="bg-white border p-2 mt-2 rounded flex flex-col gap-2 sm:flex-row sm:justify-between"
                     >
                       <DatosPersona persona={v} rol="Votante" />
                       <div className="flex gap-2">
@@ -195,14 +195,14 @@ const MiEstructura = ({
               className="border rounded-lg mb-3 bg-red-50/40"
             >
               <div
-                className="flex items-start justify-between p-4 cursor-pointer gap-4"
+                className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 cursor-pointer"
                 onClick={() => toggleExpand(sub.ci)}
               >
-                <div className="flex items-start gap-3 flex-1">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
                   {expandedCoords[normalizeCI(sub.ci)] ? (
-                    <ChevronDown className="w-5 h-5 text-red-600" />
+                    <ChevronDown className="w-5 h-5 text-red-600 shrink-0" />
                   ) : (
-                    <ChevronRight className="w-5 h-5 text-red-600" />
+                    <ChevronRight className="w-5 h-5 text-red-600 shrink-0" />
                   )}
                   <DatosPersona
                     persona={sub}
@@ -217,7 +217,7 @@ const MiEstructura = ({
                   {getVotantesDeSubcoord(sub.ci).map((v) => (
                     <div
                       key={v.ci}
-                      className="bg-white border p-2 mt-2 rounded flex justify-between"
+                      className="bg-white border p-2 mt-2 rounded flex flex-col gap-2 sm:flex-row sm:justify-between"
                     >
                       <DatosPersona persona={v} rol="Votante" />
                       <div className="flex gap-2">
@@ -246,7 +246,7 @@ const MiEstructura = ({
           getMisVotantes().map((v) => (
             <div
               key={v.ci}
-              className="bg-white border p-3 mt-2 rounded flex justify-between"
+              className="bg-white border p-3 mt-2 rounded flex flex-col gap-2 sm:flex-row sm:justify-between"
             >
               <DatosPersona persona={v} rol="Votante" />
               <div className="flex gap-2">
