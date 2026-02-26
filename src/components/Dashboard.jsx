@@ -191,10 +191,14 @@ const VoteCounter = ({ confirmed, total }) => {
 // counter: optional ReactNode rendered inline next to the name (e.g. VoteCounter)
 const DatosPersona = ({ persona, rol, loginCode, onCopy, counter }) => {
   const direccionMostrar = persona.direccion_override || persona.direccion;
+  const hasName = Boolean(persona.nombre);
+  const displayName = hasName
+    ? `${persona.nombre} ${persona.apellido || ""}`.trim()
+    : "Cargando...";
   return (
     <div className="space-y-0.5 text-xs sm:text-sm">
-      <p className="font-semibold text-slate-800 flex items-center gap-1 flex-wrap">
-        <span>{persona.nombre || "-"} {persona.apellido || ""}</span>
+      <p className={`font-semibold flex items-center gap-1 flex-wrap ${hasName ? "text-slate-800" : "text-slate-400 italic"}`}>
+        <span>{displayName}</span>
         {counter}
       </p>
       <p className="text-slate-500 truncate">
@@ -333,27 +337,31 @@ const Dashboard = ({ currentUser, onLogout }) => {
         .from("padron")
         .select("ci", { count: "exact", head: true });
 
-      if (countError) { console.error("Error count padrón:", countError); return; }
-      if (!count || count <= 0) { setPadron([]); return; }
+      if (countError) { console.error("Error count padrón:", countError); return []; }
+      if (!count || count <= 0) { setPadron([]); return []; }
 
       const { data, error } = await supabase
         .from("padron")
         .select("*")
         .range(0, count - 1);
 
-      if (error) { console.error("Error cargando padrón:", error); return; }
-      setPadron(data || []);
+      if (error) { console.error("Error cargando padrón:", error); return []; }
+      const result = data || [];
+      setPadron(result);
+      return result;
     } catch (e) {
       console.error("Error cargando padrón:", e);
+      return [];
     }
   };
 
   // ======================= RECARGAR ESTRUCTURA =======================
-  const recargarEstructura = useCallback(async () => {
+  // Accepts an optional padronData arg to avoid stale closure over padron state.
+  const recargarEstructura = useCallback(async (padronDataOverride) => {
     try {
       setLoadingEstructura(true);
 
-      let padronData = padron;
+      let padronData = padronDataOverride || padron;
       if (!padronData || padronData.length === 0) {
         const { data: p } = await supabase.from("padron").select("*");
         padronData = p || [];
@@ -396,8 +404,19 @@ const Dashboard = ({ currentUser, onLogout }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => { cargarPadronCompleto(); }, []);
-  useEffect(() => { if (!currentUser) return; recargarEstructura(); }, [currentUser, recargarEstructura]);
+  // Sequential init: load padron first, then pass it to recargarEstructura.
+  useEffect(() => {
+    if (!currentUser) return;
+    let cancelled = false;
+    const init = async () => {
+      const padronData = await cargarPadronCompleto();
+      if (!cancelled) {
+        await recargarEstructura(padronData);
+      }
+    };
+    init();
+    return () => { cancelled = true; };
+  }, [currentUser, recargarEstructura]);
 
   // ======================= RBAC =======================
   const canEditarTelefono = (tipo, persona) => {
@@ -1168,8 +1187,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2 mb-0.5">
-                            <span className="font-semibold text-sm text-slate-800 truncate">
-                              {persona.nombre || "-"} {persona.apellido || ""}
+                            <span className={`font-semibold text-sm truncate ${persona.nombre ? "text-slate-800" : "text-slate-400 italic"}`}>
+                              {persona.nombre ? `${persona.nombre} ${persona.apellido || ""}`.trim() : "Cargando..."}
                             </span>
                             <Badge
                               variant={
@@ -1241,8 +1260,18 @@ const Dashboard = ({ currentUser, onLogout }) => {
 
             <div className="p-4 sm:p-5">
 
+              {/* Loading guard: prevent rendering rows while structure is still building */}
+              {loadingEstructura && (
+                <div className="flex items-center justify-center py-12">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-2 border-brand-200 border-t-brand-600 rounded-full animate-spin" />
+                    <p className="text-sm text-slate-400">Cargando estructura...</p>
+                  </div>
+                </div>
+              )}
+
               {/* ====== SUPERADMIN ====== */}
-              {currentUser.role === "superadmin" && (
+              {!loadingEstructura && currentUser.role === "superadmin" && (
                 <div className="space-y-2">
                   {(estructura.coordinadores || []).length === 0 && (
                     <div className="text-center py-10">
@@ -1423,7 +1452,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
               )}
 
               {/* ====== COORDINADOR ====== */}
-              {currentUser.role === "coordinador" && (
+              {!loadingEstructura && currentUser.role === "coordinador" && (
                 <div className="space-y-2">
                   {getMisSubcoordinadores(estructura, currentUser).map((sub) => {
                     const subCI = normalizeCI(sub.ci);
@@ -1554,7 +1583,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
               )}
 
               {/* ====== SUBCOORDINADOR ====== */}
-              {currentUser.role === "subcoordinador" && (
+              {!loadingEstructura && currentUser.role === "subcoordinador" && (
                 <div className="space-y-1.5">
                   {getMisVotantes(estructura, currentUser).map((v) => (
                     <VotanteRow
