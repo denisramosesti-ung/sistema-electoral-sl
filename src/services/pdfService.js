@@ -129,6 +129,7 @@ const VOTER_COLUMNS = [
   { header: "CI", dataKey: "ci" },
   { header: "Telefono", dataKey: "telefono" },
   { header: "Mesa", dataKey: "mesa" },
+  { header: "Orden", dataKey: "orden" },
   { header: "Local de votacion", dataKey: "local" },
   { header: "Confirmado", dataKey: "confirmado" },
 ];
@@ -139,6 +140,7 @@ function addVoterTable(doc, startY, voters) {
     ci: str(v.ci) || "—",
     telefono: str(v.telefono) || "—",
     mesa: str(v.mesa) || "—",
+    orden: str(v.orden) || "—",
     local: str(v.local_votacion) || "—",
     confirmado: v.voto_confirmado ? "Si" : "No",
   }));
@@ -163,10 +165,11 @@ function addVoterTable(doc, startY, voters) {
     },
     columnStyles: {
       nombre: { cellWidth: "auto" },
-      ci: { cellWidth: 22 },
-      telefono: { cellWidth: 25 },
-      mesa: { cellWidth: 14, halign: "center" },
-      local: { cellWidth: 38 },
+      ci: { cellWidth: 20 },
+      telefono: { cellWidth: 24 },
+      mesa: { cellWidth: 12, halign: "center" },
+      orden: { cellWidth: 14, halign: "center" },
+      local: { cellWidth: 34 },
       confirmado: { cellWidth: 20, halign: "center" },
     },
     alternateRowStyles: { fillColor: COLOR_ALT_ROW },
