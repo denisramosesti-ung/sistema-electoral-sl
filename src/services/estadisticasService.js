@@ -22,6 +22,7 @@ export const getEstadisticas = (estructura, currentUser) => {
       votantes,
       votantesTotales: coordinadores + subcoordinadores + votantes,
       votosConfirmados,
+      votosPendientes: votantes - votosConfirmados,
       porcentajeConfirmados,
     };
   }
@@ -80,6 +81,7 @@ export const getEstadisticas = (estructura, currentUser) => {
       total: totalEnRed,
       votantesTotales: totalEnRed,
       votosConfirmados: votosConfirmadosTotales,
+      votosPendientes: totalEnRed - votosConfirmadosTotales,
       porcentajeConfirmados,
     };
   }
@@ -103,8 +105,9 @@ export const getEstadisticas = (estructura, currentUser) => {
 
     return {
       votantes: misVotantes.length,
-      votantesTotales: misVotantes.length + 1, // 👈 el sub también es votante
+      votantesTotales: misVotantes.length + 1, // el sub también es votante
       votosConfirmados,
+      votosPendientes: misVotantes.length - votosConfirmados,
       porcentajeConfirmados,
     };
   }

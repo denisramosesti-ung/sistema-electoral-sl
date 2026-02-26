@@ -20,6 +20,7 @@ import {
   Clock,
   TrendingUp,
   Shield,
+  AlertCircle,
 } from "lucide-react";
 
 import AddPersonModal from "../AddPersonModal";
@@ -171,6 +172,20 @@ const VoteProgressCard = ({ confirmed, total, percentage }) => (
     </div>
   </div>
 );
+
+// ======================= VOTE COUNTER BADGE =======================
+// Shows (confirmed/total) next to a coord or subcoord name.
+// confirmed number is green; total is muted gray.
+const VoteCounter = ({ confirmed, total }) => {
+  if (total === undefined || total === null) return null;
+  return (
+    <span className="inline-flex items-center gap-0.5 text-xs font-medium ml-1.5 shrink-0">
+      <span className="text-emerald-600 font-bold">{confirmed ?? 0}</span>
+      <span className="text-slate-400">/</span>
+      <span className="text-slate-500">{total}</span>
+    </span>
+  );
+};
 
 // ======================= PERSONA DATA =======================
 const DatosPersona = ({ persona, rol, loginCode, onCopy }) => {
@@ -415,6 +430,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
     const role = currentUser?.role;
     if (!role || !votante) return false;
     if (role === "superadmin") return false;
+    // Coordinador can confirm any voter whose coordinador_ci matches theirs
+    // (covers direct voters AND voters assigned by their subcoordinadores)
     if (role === "coordinador") return normalizeCI(votante.coordinador_ci) === normalizeCI(currentUser.ci);
     if (role === "subcoordinador") return normalizeCI(votante.asignado_por) === normalizeCI(currentUser.ci);
     return false;
@@ -423,7 +440,10 @@ const Dashboard = ({ currentUser, onLogout }) => {
   const canAnularConfirmacion = useCallback((votante) => {
     const role = currentUser?.role;
     if (!role || !votante) return false;
+    // Coordinador can anular any voter in their network (direct + subcoord voters)
     if (role === "coordinador") return normalizeCI(votante.coordinador_ci) === normalizeCI(currentUser.ci);
+    // Subcoordinador can also anular their own voters
+    if (role === "subcoordinador") return normalizeCI(votante.asignado_por) === normalizeCI(currentUser.ci);
     return false;
   }, [currentUser]);
 
@@ -653,6 +673,42 @@ const Dashboard = ({ currentUser, onLogout }) => {
     [estructura, currentUser]
   );
 
+  // ======================= PER-PERSON VOTE COUNTS =======================
+  // Map: normalizedCI -> { confirmed, total }
+  // For a coordinador: total = all voters where coordinador_ci === coord.ci
+  //                    confirmed = those with voto_confirmado = true
+  // For a subcoordinador: total = all voters where asignado_por === sub.ci
+  //                       confirmed = those with voto_confirmado = true
+  const voteCountsByCoord = useMemo(() => {
+    const map = {};
+    (estructura.coordinadores || []).forEach((coord) => {
+      const ci = normalizeCI(coord.ci);
+      const voters = (estructura.votantes || []).filter(
+        (v) => normalizeCI(v.coordinador_ci) === ci
+      );
+      map[ci] = {
+        total: voters.length,
+        confirmed: voters.filter((v) => v.voto_confirmado === true).length,
+      };
+    });
+    return map;
+  }, [estructura]);
+
+  const voteCountsBySub = useMemo(() => {
+    const map = {};
+    (estructura.subcoordinadores || []).forEach((sub) => {
+      const ci = normalizeCI(sub.ci);
+      const voters = (estructura.votantes || []).filter(
+        (v) => normalizeCI(v.asignado_por) === ci
+      );
+      map[ci] = {
+        total: voters.length,
+        confirmed: voters.filter((v) => v.voto_confirmado === true).length,
+      };
+    });
+    return map;
+  }, [estructura]);
+
   // ======================= DISPONIBLES =======================
   const disponibles = useMemo(
     () => getPersonasDisponibles(padron, estructura),
@@ -800,10 +856,16 @@ const Dashboard = ({ currentUser, onLogout }) => {
         {/* =========== STATS CARDS =========== */}
         <section aria-label="Resumen estadístico">
           {currentUser.role === "superadmin" && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
               <StatCard label="Coordinadores" value={stats?.coordinadores} icon={Users} />
               <StatCard label="Subcoordinadores" value={stats?.subcoordinadores} icon={Users} />
-              <StatCard label="Votantes" value={stats?.votantes} icon={Users} />
+              <StatCard label="Total votantes" value={stats?.votantes} icon={Users} accent />
+              <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
+              <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
+            </div>
+          )}
+          {currentUser.role === "superadmin" && (
+            <div className="mt-3">
               <VoteProgressCard
                 confirmed={stats?.votosConfirmados}
                 total={stats?.votantes}
@@ -813,10 +875,16 @@ const Dashboard = ({ currentUser, onLogout }) => {
           )}
 
           {currentUser.role === "coordinador" && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
               <StatCard label="Subcoordinadores" value={stats?.subcoordinadores} icon={Users} />
               <StatCard label="Votantes directos" value={stats?.votantesDirectos} icon={Users} />
-              <StatCard label="Votantes indirectos" value={stats?.votantesIndirectos} icon={TrendingUp} />
+              <StatCard label="Total en red" value={stats?.total} icon={TrendingUp} accent />
+              <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
+              <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
+            </div>
+          )}
+          {currentUser.role === "coordinador" && (
+            <div className="mt-3">
               <VoteProgressCard
                 confirmed={stats?.votosConfirmados}
                 total={stats?.total}
@@ -826,14 +894,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
           )}
 
           {currentUser.role === "subcoordinador" && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               <StatCard label="Mis votantes" value={stats?.votantes} icon={Users} />
-              <StatCard
-                label="Total en red"
-                value={stats?.votantesTotales}
-                icon={TrendingUp}
-                accent
-              />
+              <StatCard label="Total en red" value={stats?.votantesTotales} icon={TrendingUp} accent />
+              <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
+              <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
+            </div>
+          )}
+          {currentUser.role === "subcoordinador" && (
+            <div className="mt-3">
               <VoteProgressCard
                 confirmed={stats?.votosConfirmados}
                 total={stats?.votantes}
@@ -1032,7 +1101,10 @@ const Dashboard = ({ currentUser, onLogout }) => {
                     </div>
                   )}
 
-                  {(estructura.coordinadores || []).map((coord) => (
+                  {(estructura.coordinadores || []).map((coord) => {
+                    const coordCI = normalizeCI(coord.ci);
+                    const coordCounts = voteCountsByCoord[coordCI] ?? { confirmed: 0, total: 0 };
+                    return (
                     <div key={coord.ci} className="border border-slate-200 rounded-xl overflow-hidden">
                       {/* Coord header */}
                       <div
@@ -1041,12 +1113,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
                       >
                         <div className="flex items-start gap-2 flex-1 min-w-0">
                           <span className="text-brand-600 shrink-0 mt-0.5">
-                            {expandedCoords[normalizeCI(coord.ci)]
+                            {expandedCoords[coordCI]
                               ? <ChevronDown className="w-4 h-4" />
                               : <ChevronRight className="w-4 h-4" />}
                           </span>
                           <div className="flex-1 min-w-0">
-                            <DatosPersona persona={coord} rol="Coordinador" loginCode={coord.login_code} onCopy={copyToClipboard} />
+                            <div className="flex items-center flex-wrap gap-x-1">
+                              <DatosPersona persona={coord} rol="Coordinador" loginCode={coord.login_code} onCopy={copyToClipboard} />
+                              <VoteCounter confirmed={coordCounts.confirmed} total={coordCounts.total} />
+                            </div>
                           </div>
                         </div>
                         <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -1063,12 +1138,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
                       </div>
 
                       {/* Coord expanded */}
-                      {expandedCoords[normalizeCI(coord.ci)] && (
+                      {expandedCoords[coordCI] && (
                         <div className="border-t border-slate-100 bg-slate-50/50 px-4 pb-4 pt-3 overflow-x-auto animate-fade-in">
                           <div className="space-y-2 min-w-0">
                             {(estructura.subcoordinadores || [])
-                              .filter((s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci))
-                              .map((sub) => (
+                              .filter((s) => normalizeCI(s.coordinador_ci) === coordCI)
+                              .map((sub) => {
+                                const subCI = normalizeCI(sub.ci);
+                                const subCounts = voteCountsBySub[subCI] ?? { confirmed: 0, total: 0 };
+                                return (
                                 <div key={sub.ci} className="border border-slate-200 rounded-lg bg-white overflow-hidden">
                                   {/* Sub header */}
                                   <div
@@ -1077,12 +1155,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                   >
                                     <div className="flex items-start gap-2 flex-1 min-w-0">
                                       <span className="text-brand-500 shrink-0 mt-0.5">
-                                        {expandedCoords[normalizeCI(sub.ci)]
+                                        {expandedCoords[subCI]
                                           ? <ChevronDown className="w-3.5 h-3.5" />
                                           : <ChevronRight className="w-3.5 h-3.5" />}
                                       </span>
                                       <div className="flex-1 min-w-0">
-                                        <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} onCopy={copyToClipboard} />
+                                        <div className="flex items-center flex-wrap gap-x-1">
+                                          <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} onCopy={copyToClipboard} />
+                                          <VoteCounter confirmed={subCounts.confirmed} total={subCounts.total} />
+                                        </div>
                                       </div>
                                     </div>
                                     <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -1124,10 +1205,11 @@ const Dashboard = ({ currentUser, onLogout }) => {
                                     </div>
                                   )}
                                 </div>
-                              ))}
+                              );
+                              })}
 
                             {(estructura.subcoordinadores || []).filter(
-                              (s) => normalizeCI(s.coordinador_ci) === normalizeCI(coord.ci)
+                              (s) => normalizeCI(s.coordinador_ci) === coordCI
                             ).length === 0 && (
                               <p className="text-xs text-slate-400 text-center py-2">
                                 Sin subcoordinadores asignados.
@@ -1137,14 +1219,18 @@ const Dashboard = ({ currentUser, onLogout }) => {
                         </div>
                       )}
                     </div>
-                  ))}
+                  );
+                  })}
                 </div>
               )}
 
               {/* ====== COORDINADOR ====== */}
               {currentUser.role === "coordinador" && (
                 <div className="space-y-2">
-                  {getMisSubcoordinadores(estructura, currentUser).map((sub) => (
+                  {getMisSubcoordinadores(estructura, currentUser).map((sub) => {
+                    const subCI = normalizeCI(sub.ci);
+                    const subCounts = voteCountsBySub[subCI] ?? { confirmed: 0, total: 0 };
+                    return (
                     <div key={sub.ci} className="border border-slate-200 rounded-xl overflow-hidden">
                       {/* Sub header */}
                       <div
@@ -1153,12 +1239,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
                       >
                         <div className="flex items-start gap-2 flex-1 min-w-0">
                           <span className="text-brand-600 shrink-0 mt-0.5">
-                            {expandedCoords[normalizeCI(sub.ci)]
+                            {expandedCoords[subCI]
                               ? <ChevronDown className="w-4 h-4" />
                               : <ChevronRight className="w-4 h-4" />}
                           </span>
                           <div className="flex-1 min-w-0">
-                            <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} onCopy={copyToClipboard} />
+                            <div className="flex items-center flex-wrap gap-x-1">
+                              <DatosPersona persona={sub} rol="Sub-coordinador" loginCode={sub.login_code} onCopy={copyToClipboard} />
+                              <VoteCounter confirmed={subCounts.confirmed} total={subCounts.total} />
+                            </div>
                           </div>
                         </div>
                         <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -1175,7 +1264,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
                       </div>
 
                       {/* Sub votantes expanded */}
-                      {expandedCoords[normalizeCI(sub.ci)] && (
+                      {expandedCoords[subCI] && (
                         <div className="border-t border-slate-100 bg-slate-50 px-3 pb-3 pt-2 overflow-x-auto animate-fade-in">
                           <p className="text-xs font-semibold text-slate-600 mb-2">
                             Votantes asignados
@@ -1203,7 +1292,8 @@ const Dashboard = ({ currentUser, onLogout }) => {
                         </div>
                       )}
                     </div>
-                  ))}
+                  );
+                  })}
 
                   {/* Votantes directos del coordinador */}
                   {getMisVotantes(estructura, currentUser).length > 0 && (
