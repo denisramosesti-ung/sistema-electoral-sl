@@ -883,7 +883,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
             <div className="mt-3">
               <VoteProgressCard
                 confirmed={stats?.votosConfirmados}
-                total={stats?.votantes}
+                total={stats?.totalVotantes}
                 percentage={stats?.porcentajeConfirmados}
               />
             </div>
@@ -893,7 +893,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
               <StatCard label="Subcoordinadores" value={stats?.subcoordinadores} icon={Users} />
               <StatCard label="Votantes directos" value={stats?.votantesDirectos} icon={Users} />
-              <StatCard label="Total en red" value={stats?.total} icon={TrendingUp} accent />
+              <StatCard label="Total votantes" value={stats?.totalVotantes} icon={TrendingUp} accent />
               <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
               <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
             </div>
@@ -902,16 +902,15 @@ const Dashboard = ({ currentUser, onLogout }) => {
             <div className="mt-3">
               <VoteProgressCard
                 confirmed={stats?.votosConfirmados}
-                total={stats?.total}
+                total={stats?.totalVotantes}
                 percentage={stats?.porcentajeConfirmados}
               />
             </div>
           )}
 
           {currentUser.role === "subcoordinador" && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-              <StatCard label="Mis votantes" value={stats?.votantes} icon={Users} />
-              <StatCard label="Total en red" value={stats?.votantesTotales} icon={TrendingUp} accent />
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+              <StatCard label="Mis votantes" value={stats?.votantes} icon={Users} accent />
               <StatCard label="Confirmados" value={stats?.votosConfirmados} icon={CheckCircle2} />
               <StatCard label="Pendientes" value={stats?.votosPendientes} icon={AlertCircle} />
             </div>
@@ -920,7 +919,7 @@ const Dashboard = ({ currentUser, onLogout }) => {
             <div className="mt-3">
               <VoteProgressCard
                 confirmed={stats?.votosConfirmados}
-                total={stats?.votantes}
+                total={stats?.totalVotantes}
                 percentage={stats?.porcentajeConfirmados}
               />
             </div>
