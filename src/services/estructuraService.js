@@ -56,8 +56,8 @@ if (!padron || padron.length === 0) {
     ...v,
     ...mapPadron(v.ci),
   })),
+ };
 };
-
 // ======================= AGREGAR PERSONA =======================
 export const agregarPersonaService = async ({
   persona,
