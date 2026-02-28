@@ -7,6 +7,7 @@ function openDB() {
 
     request.onupgradeneeded = function (event) {
       const db = event.target.result;
+
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME, { keyPath: "ci" });
       }
@@ -19,23 +20,28 @@ function openDB() {
 
 export async function savePadron(padron) {
   const db = await openDB();
-  const tx = db.transaction(STORE_NAME, "readwrite");
-  const store = tx.objectStore(STORE_NAME);
 
-  for (const persona of padron) {
-    store.put(persona);
-  }
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
 
-  return tx.complete;
+    for (const persona of padron) {
+      store.put(persona);
+    }
+
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
 }
 
 export async function getAllPadron() {
   const db = await openDB();
-  const tx = db.transaction(STORE_NAME, "readonly");
-  const store = tx.objectStore(STORE_NAME);
 
   return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
     const request = store.getAll();
+
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
