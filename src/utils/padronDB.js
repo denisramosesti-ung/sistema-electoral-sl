@@ -1,6 +1,6 @@
 const DB_NAME = "padronDB";
 const STORE_NAME = "padronStore";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export const initDB = () => {
   return new Promise((resolve, reject) => {
