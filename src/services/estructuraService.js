@@ -39,11 +39,23 @@ if (!padron || padron.length === 0) {
   const mapPadron = (ci) => padronMap.get(normalizeCI(ci));
 
   // 5) Retornar estructura enriquecida
-  return {
-    coordinadores: (coords || []).map((c) => ({ ...c, ...mapPadron(c.ci) })),
-    subcoordinadores: (subs || []).map((s) => ({ ...s, ...mapPadron(s.ci) })),
-    votantes: (votos || []).map((v) => ({ ...v, ...mapPadron(v.ci) })),
-  };
+ return {
+  padron: padron || [],
+
+  coordinadores: (coords || []).map((c) => ({
+    ...c,
+    ...mapPadron(c.ci),
+  })),
+
+  subcoordinadores: (subs || []).map((s) => ({
+    ...s,
+    ...mapPadron(s.ci),
+  })),
+
+  votantes: (votos || []).map((v) => ({
+    ...v,
+    ...mapPadron(v.ci),
+  })),
 };
 
 // ======================= AGREGAR PERSONA =======================
