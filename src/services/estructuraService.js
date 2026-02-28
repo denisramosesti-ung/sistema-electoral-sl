@@ -2,17 +2,44 @@
 
 import { supabase } from "../supabaseClient";
 import { normalizeCI } from "../utils/estructuraHelpers";
+import { savePadron, getAllPadron } from "../utils/padronDB";
 
 // ======================= CARGAR ESTRUCTURA COMPLETA =======================
 export const cargarEstructuraCompleta = async () => {
-  const { data: padron } = await supabase.from("padron").select("*");
-  const { data: coords } = await supabase.from("coordinadores").select("*");
-  const { data: subs } = await supabase.from("subcoordinadores").select("*");
-  const { data: votos } = await supabase.from("votantes").select("*");
+  // 1) Intentar cargar padrón desde IndexedDB
+  let padron = await getAllPadron();
 
-  const mapPadron = (ci) =>
-    padron.find((p) => normalizeCI(p.ci) === normalizeCI(ci));
+  // 2) Si no existe, descargar desde Supabase y guardar
+  if (!padron || padron.length === 0) {
+    const { data, error } = await supabase
+      .from("padron")
+      .select("*")
+      .range(0, 100000); // ✅ para 88k
 
+    if (error) throw error;
+
+    padron = data || [];
+    await savePadron(padron);
+  }
+
+  // 3) Cargar estructura (estas tablas suelen ser mucho más chicas)
+  const { data: coords, error: e1 } = await supabase.from("coordinadores").select("*");
+  if (e1) throw e1;
+
+  const { data: subs, error: e2 } = await supabase.from("subcoordinadores").select("*");
+  if (e2) throw e2;
+
+  const { data: votos, error: e3 } = await supabase.from("votantes").select("*");
+  if (e3) throw e3;
+
+  // 4) Crear mapa para búsquedas O(1) (clave para velocidad)
+  const padronMap = new Map(
+    (padron || []).map((p) => [normalizeCI(p.ci), p])
+  );
+
+  const mapPadron = (ci) => padronMap.get(normalizeCI(ci));
+
+  // 5) Retornar estructura enriquecida
   return {
     coordinadores: (coords || []).map((c) => ({ ...c, ...mapPadron(c.ci) })),
     subcoordinadores: (subs || []).map((s) => ({ ...s, ...mapPadron(s.ci) })),
