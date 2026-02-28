@@ -2,26 +2,25 @@
 
 import { supabase } from "../supabaseClient";
 import { normalizeCI } from "../utils/estructuraHelpers";
-import { savePadron, getAllPadron } from "../utils/padronDB";
+import { getPadronCache, setPadronCache } from "../utils/padronCache";
 
 // ======================= CARGAR ESTRUCTURA COMPLETA =======================
 export const cargarEstructuraCompleta = async () => {
-  // 1) Intentar cargar padrón desde IndexedDB
-  let padron = await getAllPadron();
+ // 1) Intentar cargar padrón desde localStorage (cache)
+let padron = getPadronCache();
 
-  // 2) Si no existe, descargar desde Supabase y guardar
-  if (!padron || padron.length === 0) {
-    const { data, error } = await supabase
-      .from("padron")
-      .select("*")
-      .range(0, 100000); // ✅ para 88k
+// 2) Si no existe, descargar desde Supabase y guardar en cache
+if (!padron || padron.length === 0) {
+  const { data, error } = await supabase
+    .from("padron")
+    .select("*")
+    .range(0, 100000); // ✅ para 88k
 
-    if (error) throw error;
+  if (error) throw error;
 
-    padron = data || [];
-    await savePadron(padron);
-  }
-
+  padron = data || [];
+  setPadronCache(padron); // ✅ guardar en cache
+}
   // 3) Cargar estructura (estas tablas suelen ser mucho más chicas)
   const { data: coords, error: e1 } = await supabase.from("coordinadores").select("*");
   if (e1) throw e1;
