@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { generarAccessCode } from "../utils/accessCode";
+import { cargarEstructuraCompleta } from "../services/estructuraService";
 
 import {
   UserPlus,
@@ -415,17 +416,24 @@ const Dashboard = ({ currentUser, onLogout }) => {
 
   // Sequential init: load padron first, then pass it to recargarEstructura.
   useEffect(() => {
-    if (!currentUser) return;
-    let cancelled = false;
-    const init = async () => {
-      const padronData = await cargarPadronCompleto();
-      if (!cancelled) {
-        await recargarEstructura(padronData);
-      }
-    };
-    init();
-    return () => { cancelled = true; };
-  }, [currentUser, recargarEstructura]);
+  if (!currentUser) return;
+
+  const init = async () => {
+    try {
+      setLoadingEstructura(true);
+
+      const data = await cargarEstructuraCompleta();
+
+      setEstructura(data);
+    } catch (err) {
+      console.error("Error cargando estructura:", err);
+    } finally {
+      setLoadingEstructura(false);
+    }
+  };
+
+  init();
+}, [currentUser]);
 
   // ======================= RBAC =======================
   const canEditarTelefono = (tipo, persona) => {
