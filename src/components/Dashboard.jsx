@@ -422,9 +422,9 @@ const Dashboard = ({ currentUser, onLogout }) => {
     try {
       setLoadingEstructura(true);
 
-      const data = await cargarEstructuraCompleta();
-
-      setEstructura(data);
+     const data = await cargarEstructuraCompleta();
+setEstructura(data);
+setPadron(data.padron || []);
     } catch (err) {
       console.error("Error cargando estructura:", err);
     } finally {
