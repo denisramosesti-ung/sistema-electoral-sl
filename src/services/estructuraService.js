@@ -2,7 +2,6 @@
 
 import { supabase } from "../supabaseClient";
 import { normalizeCI } from "../utils/estructuraHelpers";
-import { getPadronCache, setPadronCache } from "../utils/padronCache";
 
 // ======================= CARGAR ESTRUCTURA COMPLETA =======================
 export const cargarEstructuraCompleta = async () => {
